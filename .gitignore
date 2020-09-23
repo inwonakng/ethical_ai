@@ -1,4 +1,2 @@
-ethicssite/ethicssite/__pycache__/__init__.cpython-38.pyc
-ethicssite/ethicssite/__pycache__/settings.cpython-38.pyc
-ethicssite/ethicssite/__pycache__/urls.cpython-38.pyc
-ethicssite/ethicssite/__pycache__/wsgi.cpython-38.pyc
+*.pyc
+.vscode/*

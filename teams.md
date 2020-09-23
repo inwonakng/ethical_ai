@@ -1,0 +1,4 @@
+- Login/Token creation for mturkers (try to take look at opra)
+- Survey model creation, delivery to frontend
+- Survey random generation (I will fix my code to be ran in django)
+- Survey design/layout (Should we stick to table, how to make the survey as easily digestable as possible)

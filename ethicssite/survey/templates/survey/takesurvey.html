@@ -1,0 +1,9 @@
+{% if scenarios %}
+    <ul>
+    {% for s in scenarios %}
+        <li><a href="/survey/{{ s.id }}/">{{ s.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No.</p>
+{% endif %}
