@@ -10,3 +10,8 @@ class DummyModel(models.Model):
     def create(cls,text=None):
         obj = cls(question_text = text)
         return obj
+
+# Model for user settings
+ 
+# generator for a set of scenarios (likned to the user settings)
+

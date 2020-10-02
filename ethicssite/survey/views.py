@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
-from .story_gen import make_story
+# from .story_gen import make_story
 from .models import DummyModel
 from django.shortcuts import render
 
