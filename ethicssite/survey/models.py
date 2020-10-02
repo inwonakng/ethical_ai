@@ -15,3 +15,4 @@ class DummyModel(models.Model):
  
 # generator for a set of scenarios (likned to the user settings)
 
+# model for storing user input scores.
