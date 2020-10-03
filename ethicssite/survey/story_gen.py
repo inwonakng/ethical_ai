@@ -1,4 +1,4 @@
-class story_generator(self):
+class story_generator():
     def __init__(self, adaptive = False):
         self.adaptive = adaptive
         # generate random scenrios
