@@ -1,6 +1,3 @@
 *.pyc
 .vscode/*
 ethicssite/survey/migrations/*
-
-# python virtual environment
-ethicsenv 
