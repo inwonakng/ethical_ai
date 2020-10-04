@@ -9,29 +9,31 @@ class questionModel(models.Model):
 	# Question description (text field shown to user)
 	question_desc: models.TextField(null=False, blank=False)
 
+	# Not including images (like OPRA) because what happens if the image is
+	# inappropriate (since we're having literally anyone have access to creating)?
+
+	# minimum of 2 options that must be entered which can dynamically grow
+	# options = models.Array || WHAT DATABASE??
+
 	# Date when question was submitted (auto done in backend)
 	date = models.DateField(("Date"), default=datetime.date.today)
 
-	# minimum of 2 options that must be entered which can dynamically grow
-
-	# every option has an **optional**..  option description (not required)
-
+	# Implement options when the options object is created above ^^
+    @classmethod
+    def create(cls, questionTXT, questionDESC, optionsTXT):
+    	# I don't think I need to pass in a parameter for the date 
+        questionObject = cls(question_txt = questionTXT, question_desc = questionDESC, options = optionsTXT, date = datetime.date.today)
+        return(questionObject)
+        
 	# Print the question if invoked
 	def __str__(self):
-		return self.question_text
-
-	# fix this
-    @classmethod
-    def create(cls,text=None):
-        obj = cls(question_text = text)
-        return obj
+		return self.question_txt
 
 # Model for user settings
 class userSettings(models.Model):
-	# generator for a set of scenarios (likned to the user settings)
+	# generator for a set of scenarios (linked to the user settings)
 	return(None)
 
-
-# model for storing user input scores.
+# Model for storing user input scores
 class inputScores(models.Model):
 	return(None)
