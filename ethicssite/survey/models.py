@@ -58,4 +58,5 @@ class DummyModel(models.Model):
 # Model for user settings
 # generator for a set of scenarios (linked to the user settings)
 
+
 # Model for storing user input scores
