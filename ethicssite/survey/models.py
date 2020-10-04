@@ -1,9 +1,10 @@
 import datetime
+from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 
 # Question model
 @python_2_unicode_compatible
-class questionModel(models.Model):
+class Question(models.Model):
 	# Question field (text field shown to user)
 	question_txt: models.CharField(max_length=200, null=False)
 
@@ -30,7 +31,7 @@ class questionModel(models.Model):
 
 # Option/choice model (from OPRA)
 @python_2_unicode_compatible
-class option(models.Model):
+class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     option_txt = models.CharField(max_length=200)
     timestamp = models.DateTimeField('item timestamp')
