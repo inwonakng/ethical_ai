@@ -13,6 +13,8 @@ class questionModel(models.Model):
 	# Not including images (like OPRA) because what happens if the image is
 	# inappropriate (since we're having anyone have access to creating)?
 
+	# Can always add more fields to the db if needed
+
 	# Date when question was submitted (auto done in backend)
 	date = models.DateTimeField(default=datetime.date.today)
 
@@ -20,9 +22,10 @@ class questionModel(models.Model):
 	def __str__(self):
 		return self.question_txt
 
+	# Alternative to overriding __init__ (initial)
 	@classmethod
 	def create(cls, questionTXT, questionDESC):
-	    questionObject = cls(question_txt = questionTXT, question_desc = questionDESC)
+	    questionObject = cls(question_txt=questionTXT, question_desc=questionDESC)
 	    return(questionObject)
 
 # Option/choice model (from OPRA)
