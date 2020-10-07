@@ -10,12 +10,39 @@
 
 Since custom package and specific package version are used in this project, we recommend using `venv` for development so your local python env won't be polluted.
 
-## Installing and setting up MySQL
-linux: ```sudo apt install mysql-server```
+## Configure MySQL
+
+### Using Docker
+
+#### Starting MySQL and PHPMyAdmin
+
+```bash
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+This command will run a latest mysql w/ combination `root/password` on `127.0.0.1:3306` and phpmyadmin on `127.0.0.1:8088`. You may use this web interface to manage the database.
+
+#### Remove/Recreate Mysql
+
+```bash
+docker-compose -f docker-compose.dev.yml down
+```
+
+And recreate using the first command.
+
+## Manually installing and setting up MySQL
+
+linux:
+
+```
+sudo apt install mysql-server
+```
+
 If you install the server any other way and are prompted with a password, leave the field blank.
-If you set the password, you may not need to do the step below. 
+If you set the password, you may not need to do the step below.
 
 ### Fixing privilege
+
 After running MySQL with admin priveges (sudo), run the following queries to reset the root password.
 
 ```
@@ -27,11 +54,11 @@ FLUSH PRIVILEGES;
 
 ### Hotfix to run db with django 2.2
 
-```python3 -m site```
+`python3 -m site`
 to find your site packages directory
 
 Then go locate the file in django directory
-```django/db/backends/mysql/operations.py```
+`django/db/backends/mysql/operations.py`
 
 Find the line with `query = query.decode(errors='replace')`
 
