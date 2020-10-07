@@ -23,6 +23,7 @@ DROP USER 'root'@'localhost';
 CREATE USER 'root'@'%' IDENTIFIED BY '';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
+CREATE DATABASE mysqldb
 ```
 
 ### Hotfix to run db with django 2.2
