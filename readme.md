@@ -10,7 +10,34 @@
 
 Since custom package and specific package version are used in this project, we recommend using `venv` for development so your local python env won't be polluted.
 
-**If you intended to install on global field, please ignore `venv` part**
+## Installing and setting up MySQL
+linux: ```sudo apt install mysql-server```
+If you install the server any other way and are prompted with a password, leave the field blank.
+If you set the password, you may not need to do the step below. 
+
+### Fixing privilege
+After running MySQL with admin priveges (sudo), run the following queries to reset the root password.
+
+```
+DROP USER 'root'@'localhost';
+CREATE USER 'root'@'%' IDENTIFIED BY '';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
+
+### Hotfix to run db with django 2.2
+
+```python3 -m site```
+to find your site packages directory
+
+Then go locate the file in django directory
+```django/db/backends/mysql/operations.py```
+
+Find the line with `query = query.decode(errors='replace')`
+
+Remove the line and put `query = errors='replace'`
+
+### If you intended to install on global field, please ignore `venv` part
 
 ## venv
 

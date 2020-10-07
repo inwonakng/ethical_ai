@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from .story_gen import story_generator
-from .models import DummyModel
+# from .models import DummyModel
 from django.shortcuts import render
 
 # Create your views here.
