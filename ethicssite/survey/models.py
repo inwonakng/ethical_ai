@@ -101,13 +101,13 @@ class Person(models.Model):
 			MinValueValidator(0)
 		]
 	)
-	survival_chance_with_jacket = models.IntegerField(
+	survival_with_jacket = models.IntegerField(
 		validators=[
 			MaxValueValidator(100),
 			MinValueValidator(0)
 		]
 	)
-	survival_chance_without_jacket = models.IntegerField(
+	survival_without_jacket = models.IntegerField(
 		validators=[
 			MaxValueValidator(100),
 			MinValueValidator(0)
