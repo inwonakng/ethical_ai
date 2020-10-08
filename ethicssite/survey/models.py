@@ -62,6 +62,7 @@ class DummyModel(models.Model):
 # Model for scenario
 # contains 'person_set'
 class Scenario(models.Model):
+
 	prompt = models.CharField(max_length=300)
 
 	def __str__(self):
@@ -100,10 +101,20 @@ class Person(models.Model):
 			MinValueValidator(0)
 		]
 	)
+	survival_chance_with_jacket = models.IntegerField(
+		validators=[
+			MaxValueValidator(100),
+			MinValueValidator(0)
+		]
+	)
+	survival_chance_without_jacket = models.IntegerField(
+		validators=[
+			MaxValueValidator(100),
+			MinValueValidator(0)
+		]
+	)
 
 	def __str__(self):
-		desc = '{} years old, '
-		desc += ''
-		return 
+		return "Person"
 
 # Model for storing user input scores
