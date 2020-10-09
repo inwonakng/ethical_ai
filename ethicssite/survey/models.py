@@ -6,10 +6,10 @@ from django.db import models
 @python_2_unicode_compatible
 class Question(models.Model):
 	# Question field (text field shown to user)
-	question_txt: models.CharField(max_length=200, null=False)
+	question_txt = models.CharField(max_length=200, null=False)
 
 	# Question description (text field shown to user)
-	question_desc: models.TextField(null=False, blank=False)
+	question_desc = models.TextField(null=False, blank=False)
 
 	# Not including images (like OPRA) because what happens if the image is
 	# inappropriate (since we're having anyone have access to creating)?

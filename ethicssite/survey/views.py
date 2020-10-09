@@ -15,14 +15,34 @@ def randomsurvey(request):
     }
     return render(request,'survey/takesurvey.html',context)
 
-    # start survey
+# stores everything into the Question model
+def generatePoll(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        questionString = request.POST['questionTitle']
+        questionDesc = request.POST['desc']
 
-    # collect user input from survey
+        question = Question(question_txt=questionString, question_desc=questionDesc)
 
-    # page for user survey creation
-        # get user defined rules back
-    
-    # function to grab new scenario
+        question.save()
+
+    """
+    OPRA Code
+        return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
+    return render(request,'polls/add_step1.html', {})
+    """
+
+    # eventually return something
+    return(None)
+
+# Start survey
+
+# Collect user input from survey
+
+# page for user survey creation <-- ??
+    # get user defined rules back <-- ??
+
+# Function to grab new scenario
 
 def getsurvey(request):
     # grabbing the sample json
