@@ -62,11 +62,35 @@ class DummyModel(models.Model):
 # Model for scenario
 # contains 'person_set'
 class Scenario(models.Model):
-
+    # textfield for scenario details
 	prompt = models.CharField(max_length=300)
+
+    # auto-filled date to differentiate same scenario w/ diff choices
+	date = models.DateTimeField(default=datetime.date.today)
 
 	def __str__(self):
 		return self.prompt
+
+# Model for a generic field for a choice (e.g. Person's age or health)
+class Field(models.Model):
+    # field name
+    name = models.CharField(max_length=30)
+
+    # field value
+    value = models.CharField(max_length=30)
+
+    # consider having a set of allwoed values?
+    # allowed = models.??
+
+    # or specifying the type of value? (int, bool, etc)
+
+# Model for a generic choice in a Scenario (e.g. Person)
+class Choice(models.Model):
+    # link to given scenario
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+
+    # many-to-many relation to given fields (allows generic number of fields for a choice)
+    fields = models.ManyToManyField(Field, related_name='choice_details')
 
 # Model for person
 # dependency of scenario
