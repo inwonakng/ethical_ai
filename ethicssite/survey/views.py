@@ -4,8 +4,11 @@ from .story_gen import story_generator
 from django.shortcuts import render
 import json 
 
-# Create your views here.
-def randomsurvey(request):
+"""
+    Create your views here.
+"""
+
+def random_survey(request):
     # grab the story here
     content = story_generator().get_story()
     # When creating a survey, the model for the survey should save all the information about the scenarios
@@ -24,7 +27,7 @@ def randomsurvey(request):
     
     # function to grab new scenario
 
-def getsurvey(request):
+def get_survey(request):
     # grabbing the sample json
     sample = json.load(open('ethicssite/survey/sample.json','r'))
 
@@ -35,4 +38,12 @@ def getsurvey(request):
     
     # once you navigate to http://127.0.0.1:8000/survey/getsurvey and press ctrl+shift+i and switch to console tab, 
     # you can see the json object printed on the console
-    
+
+# Django view to handle the survey results page.
+def survey_result(request):
+    results = {}
+    return render(request, 'survey/surveyresult.html', results)
+
+# Django view to handle unknown paths
+def unknown_path(request, random):
+    return render(request, 'survey/unknownpath.html')
