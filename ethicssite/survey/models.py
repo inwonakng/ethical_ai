@@ -2,6 +2,7 @@ import datetime
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 
+
 # Question model
 @python_2_unicode_compatible
 class Question(models.Model):
