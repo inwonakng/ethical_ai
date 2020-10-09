@@ -29,7 +29,7 @@ def random_survey(request):
 
 def get_survey(request):
     # grabbing the sample json
-    sample = json.load(open('ethicssite/survey/sample.json','r'))
+    sample = json.load(open('survey/sample.json','r'))
 
     print(sample)
 
