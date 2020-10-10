@@ -16,6 +16,7 @@ def randomsurvey(request):
     return render(request,'survey/takesurvey.html',context)
 
 # stores everything into the Question model
+# (newQuiz from opra)
 def generatePoll(request):
     context = RequestContext(request)
     if request.method == 'POST':
@@ -26,6 +27,7 @@ def generatePoll(request):
 
         question.save()
 
+        
     """
     OPRA Code
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
