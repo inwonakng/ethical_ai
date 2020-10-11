@@ -5,6 +5,7 @@ __pycache__/
 
 # Virtualenv
 venv/
+ethicsenv/
 
 # C extensions
 *.so
@@ -17,6 +18,7 @@ venv/
 !.vscode/extensions.json
 *.code-workspace
 .idea/
+.vscode
 
 # Project
 

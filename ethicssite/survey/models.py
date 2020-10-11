@@ -3,6 +3,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+
 # Question model
 @python_2_unicode_compatible
 class Question(models.Model):
