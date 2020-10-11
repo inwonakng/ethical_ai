@@ -1,6 +1,11 @@
 import datetime
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
+<<<<<<< HEAD
+=======
+
+# Create your models here.
+>>>>>>> issue2
 
 
 # Question model
@@ -60,5 +65,33 @@ class DummyModel(models.Model):
 # Model for user settings
 # generator for a set of scenarios (linked to the user settings)
 
+
+class GenericRules(models.Model):
+    title = models.CharField(max_length=100)
+
+
+
+class OptionSetting(models.Model):
+    optionSettingText = models.CharField(max_length=300)
+    isRadio = models.BooleanField(default=False)
+    genericRules = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.optionSettingText
+
+
+class Option(models.Model):
+    optionText = models.CharField(max_length=200)
+    optionSetting = models.ForeignKey(OptionSetting, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.optionText
+    
+
+# class GenericResponse(models.Model):
+#     ruleSet = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
+
+
+# generator for a set of scenarios (likned to the user settings)
 
 # Model for storing user input scores
