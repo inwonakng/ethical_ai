@@ -35,45 +35,37 @@
       "3": "3",
       "4": "4",
       "5": "5"
+    },
+    "survival without": {
+      "range":[20,50],
+      "unit": "%"
+    },
+    "survival difference": {
+      "range":[50,80],
+      "unit": "%"
     }
+
   },
   "bad combo": {
-    "8": {
-      "categories": [],
-      "classes": {
+    "age": {
+      "8": {
+        "number of dependents": ["1", "2", "3", "4", "5"]
+      },
+      "12": {
         "income level": ["2"],
         "number of dependents": ["1", "2", "3", "4", "5"]
-      }
-    },
-    "12": {
-      "categories": [],
-      "classes": {
-        "income level": ["2"],
-        "number of dependents": ["1", "2", "3", "4", "5"]
-      }
-    },
-    "18": {
-      "categories": [],
-      "classes": {
+      },
+      "18": {
         "income level": ["2"],
         "number of dependents": ["4", "5"]
-      }
-    },
-    "23": {
-      "categories": [],
-      "classes": {
+      },
+      "23": {
         "number of dependents": ["4", "5"]
-      }
-    },
-    "61": {
-      "categories": [],
-      "classes": {
+      },
+      "61": {
         "number of dependents": ["4", "5"]
-      }
-    },
-    "72": {
-      "categories": [],
-      "classes": {
+      },
+      "72": {
         "number of dependents": ["3", "4", "5"]
       }
     }
