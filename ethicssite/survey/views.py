@@ -9,7 +9,7 @@ import json
 """
 
 
-def random_survey(request):
+def take_survey(request):
     # grab the story here
     content = story_generator().get_story()
     # When creating a survey, the model for the survey
