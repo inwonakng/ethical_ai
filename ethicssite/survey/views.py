@@ -27,7 +27,7 @@ def random_survey(request):
     # function to grab new scenario
 
 
-def get_survey(request):
+def submit_survey(request):
     # grabbing the sample json
     sample = json.load(open('survey/sample.json', 'r'))
 
