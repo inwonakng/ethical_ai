@@ -71,7 +71,7 @@ def submit_survey(request):
     # For frontend, check the html to
     # see how the object is grabbed.
     return render(request,
-                  'survey/surveysample.html', context={"sample": sample})
+                  'survey/surveysample.html', context={"survey_information": survey_information})
 
     # once you navigate to http://127.0.0.1:8000/survey/getsurvey
     # and press ctrl+shift+i and switch to console tab,
