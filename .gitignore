@@ -5,19 +5,12 @@ __pycache__/
 
 # Virtualenv
 venv/
+ethicsenv/
 
 # C extensions
 *.so
 
 # IDEs
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-.idea/
-
-# Project
-
 ethicssite/survey/migrations/*
+ethicsenv
