@@ -4,14 +4,18 @@ import os
 import sys
 import subprocess
 
+
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ethicssite.settings')
     # compiling typescript here
     try:
         print('compiling typescript...')
-        subprocess.run(['tsc','-p','ethicssite/survey/scripts/tsconfig.json'])
+        subprocess.run(
+            ['tsc', '-p', 'ethicssite/survey/static/scripts/tsconfig.json']
+            )
         print('compilation successful!')
-    except: print('typescript compile failed!')
+    except:
+        print('typescript compile failed!')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
