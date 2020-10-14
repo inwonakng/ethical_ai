@@ -103,3 +103,9 @@ class Option(models.Model):
 # generator for a set of scenarios (likned to the user settings)
 
 # Model for storing user input scores
+class Response(models.Model):
+	# choice that is being scored
+	choice = models.ForeignKey(Choice)
+
+	# score for the given choice
+	score = models.IntegerField()
