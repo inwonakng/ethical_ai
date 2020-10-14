@@ -11,7 +11,7 @@ def main():
     try:
         print('compiling typescript...')
         subprocess.run(
-            ['tsc', '-p', 'ethicssite/survey/scripts/tsconfig.json']
+            ['tsc', '-p', 'ethicssite/survey/static/scripts/tsconfig.json']
             )
         print('compilation successful!')
     except:

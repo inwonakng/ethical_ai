@@ -1,17 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
-from .story_gen import story_generator
+from .generation.Generator import Generator
 from django.shortcuts import render
 import json
 
-"""
-    Create your views here.
-"""
-
-
 def random_survey(request):
     # grab the story here
-    content = story_generator().get_story()
+    # content = story_generator().get_story()
     # When creating a survey, the model for the survey
     # should save all the information about the scenarios
     scenarios = []
@@ -69,9 +64,14 @@ def generatePoll(request):
 
 def get_survey(request):
     # grabbing the sample json
-    sample = json.load(open('survey/sample.json', 'r'))
+    rule = json.load(open('ethicssite/survey/generation/rule/rule.json','r'))
+    story_gen = Generator(rule=rule)
+    ss = story_gen.get_scenario()
+    print(ss)
+    sample = json.dumps(ss)
+    # sample = json.dumps({'a':1,'b':2})
 
-    print(sample)
+    # print(sample)
 
     # For frontend, check the html to
     # see how the object is grabbed.

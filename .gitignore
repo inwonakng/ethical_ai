@@ -12,14 +12,5 @@ ethicsenv/
 
 # IDEs
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-.idea/
-.vscode
-
-# Project
-
 ethicssite/survey/migrations/*
+ethicsenv

@@ -1,4 +1,4 @@
-# Ethitical AI Platform
+# Ethical AI Platform
 
 # Todo:
 
@@ -95,15 +95,24 @@ deactivate
 python3 -m pip install -r requirements.txt
 ```
 
-<!--@TODO if custom packages uses, we could have a script to move then into `venv` or let user do their global package stuff.-->
+### Add new dependency
 
+After adding new dependency, run the following command to lock requirements.txt
+
+```bash
+pip freeze > requirements.txt
+```
+
+<!--@TODO if custom packages uses, we could have a script to move then into `venv` or let user do their global package stuff.-->
 
 ## Configuring typescript
 
 ### Download npm
+
 if you do not have npm downloaded already, use `sudo apt install npm` to install npm.
 
 ### Install typescript
+
 use this command to then install typescript `sudo npm install -g typescript`
 
 ## Migration & Start Server

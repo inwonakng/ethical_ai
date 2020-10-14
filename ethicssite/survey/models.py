@@ -3,6 +3,20 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+"""
+class DummyModel(models.Model):
+	question_text = models.CharField(max_length=200)
+	pub_date = models.DateTimeField('date published')
+
+	@classmethod
+	def create(cls,text=None):
+		obj = cls(question_text = text)
+		return obj
+"""
+
+
+
+
 
 # Question model
 @python_2_unicode_compatible
@@ -29,15 +43,67 @@ class Survey(models.Model):
 	    return(questionObject)
 		
 """
-class DummyModel(models.Model):
-	question_text = models.CharField(max_length=200)
-	pub_date = models.DateTimeField('date published')
+    Structure: 
 
-	@classmethod
-	def create(cls,text=None):
-		obj = cls(question_text = text)
-		return obj
+        SettingsCollection 1 : <title>
+            - Setting 1: Closest Age
+                - SettingOption 1: 10
+                - SettingOption 2: 15
+                - SettingOption 3: 20
+                - SettingOption 4: 25
+            - Setting 2: Gender
+                - SettingOption 1: Male
+                - SettingOption 2: Female
+
+        ...
+
+    Usage:
+
+        # Creating a Settings Collection
+        sc = SettingsCollection(title="This is a title")
+        sc.save()
+
+        # Create a new setting
+        newSetting = Setting(settingText="Age")
+
+        # Add options to the setting
+        newSetting.settingoption_set.create(optionText="20")
+        newSetting.settingoption_set.create(optionText="25")
+
+        # Add the setting to the original settings collection
+        sc.setting_set.add(newSetting)
+        
 """
+class SettingsCollection(models.Model):
+
+    # title of the collection
+    title = models.CharField(max_length=100)
+
+# Generic model for a setting that the user could add to a settings collection
+class Setting(models.Model):
+
+    # Text describing the setting
+    settingText = models.CharField(max_length=300)
+
+    # The generic rule set that this setting is a part of
+    genericRules = models.ForeignKey(SettingsCollection, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.settingText
+
+# Option that belongs to a particular Setting
+class SettingOption(models.Model):
+
+    # Text defining choosing the option
+    optionText = models.CharField(max_length=200)
+
+    # The Setting that this option is a part of
+    optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.optionText
+
+
 
 
 # Model for user settings
@@ -99,5 +165,33 @@ class Person(models.Model):
 
 	def __str__(self):
 		return "Person"
+
+# class GenericRules(models.Model):
+#     title = models.CharField(max_length=100)
+
+
+
+# class OptionSetting(models.Model):
+#     optionSettingText = models.CharField(max_length=300)
+#     isRadio = models.BooleanField(default=False)
+#     genericRules = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
+    
+#     def __str__(self):
+#         return self.optionSettingText
+
+
+# class Option(models.Model):
+#     optionText = models.CharField(max_length=200)
+#     optionSetting = models.ForeignKey(OptionSetting, on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return self.optionText
+    
+
+# class GenericResponse(models.Model):
+#     ruleSet = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
+
+
+# generator for a set of scenarios (likned to the user settings)
 
 # Model for storing user input scores
