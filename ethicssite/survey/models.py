@@ -167,11 +167,11 @@ class SettingCollection(models.Model):
 class Setting(models.Model):
 
     # Text describing the setting
-    settingText = models.CharField(max_length=300)
+    settingText = models.CharField(max_length=300, default="---")
 
     # The generic rule set that this setting is a part of
     genericRules = models.ForeignKey(
-    	SettingCollection, on_delete=models.CASCADE, default=0)
+    	SettingCollection, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.settingText
@@ -182,10 +182,10 @@ class Setting(models.Model):
 class SettingOption(models.Model):
 
     # Text defining choosing the option
-    optionText = models.CharField(max_length=200)
+    optionText = models.CharField(max_length=200, default="---")
 
     # The Setting that this option is a part of
-    optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE, default=0)
+    optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.optionText
@@ -198,7 +198,7 @@ class SettingOption(models.Model):
 # contains 'person_set'
 class Scenario(models.Model):
 
-	prompt = models.CharField(max_length=300)
+	prompt = models.CharField(max_length=300, default="---")
 
 	def __str__(self):
 		return self.prompt
@@ -251,31 +251,6 @@ class Person(models.Model):
 
 	def __str__(self):
 		return "Person"
-
-# class GenericRules(models.Model):
-#     title = models.CharField(max_length=100)
-
-
-
-# class OptionSetting(models.Model):
-#     optionSettingText = models.CharField(max_length=300)
-#     isRadio = models.BooleanField(default=False)
-#     genericRules = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
-    
-#     def __str__(self):
-#         return self.optionSettingText
-
-
-# class Option(models.Model):
-#     optionText = models.CharField(max_length=200)
-#     optionSetting = models.ForeignKey(OptionSetting, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return self.optionText
-    
-
-# class GenericResponse(models.Model):
-#     ruleSet = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
 
 
 # generator for a set of scenarios (likned to the user settings)
