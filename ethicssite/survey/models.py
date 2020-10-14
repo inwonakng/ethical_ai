@@ -140,29 +140,6 @@ class Choice(models.Model):
 	# many-to-many relation to given attributes (e.h. Person <-> age, health, occupation)
 	attributes = models.ManyToManyField(Attribute, related_name='choice_attributes')
 
-<<<<<<< HEAD
-class GenericRules(models.Model):
-	title = models.CharField(max_length=100)
-
-
-
-class OptionSetting(models.Model):
-	optionSettingText = models.CharField(max_length=300)
-	isRadio = models.BooleanField(default=False)
-	genericRules = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
-	
-	def __str__(self):
-		return self.optionSettingText
-
-
-class Option(models.Model):
-	optionText = models.CharField(max_length=200)
-	optionSetting = models.ForeignKey(OptionSetting, on_delete=models.CASCADE)
-
-	def __str__(self):
-		return self.optionText
-	
-=======
 # class GenericRules(models.Model):
 #     title = models.CharField(max_length=100)
 
@@ -184,7 +161,6 @@ class Option(models.Model):
 #     def __str__(self):
 #         return self.optionText
     
->>>>>>> c5bd8b7d0acc31350752ea710ec306171d6afde4
 
 # class GenericResponse(models.Model):
 #     ruleSet = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
