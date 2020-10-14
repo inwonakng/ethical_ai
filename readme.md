@@ -1,4 +1,4 @@
-# Ethitical AI Platform
+# Ethical AI Platform
 
 # Todo:
 
