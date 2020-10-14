@@ -63,7 +63,7 @@ class Option(models.Model):
 
 
 
-# Collection of profile settings defined by a user
+# Model for Collection of profile settings defined by a user
 
 
 """
