@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -41,7 +42,9 @@ class Question(models.Model):
 	def create(cls, questionTXT, questionDESC):
 	    questionObject = cls(question_txt=questionTXT, question_desc=questionDESC)
 	    return(questionObject)
-		
+
+
+# Model for user settings {
 """
     Structure: 
 
@@ -61,10 +64,12 @@ class Question(models.Model):
 
         # Creating a Settings Collection
         sc = SettingsCollection(title="This is a title")
-        sc.save()
+        sc_primaryKey = sc.save()
 
         # Create a new setting
         newSetting = Setting(settingText="Age")
+
+		newSetting.save()
 
         # Add options to the setting
         newSetting.settingoption_set.create(optionText="20")
@@ -74,7 +79,55 @@ class Question(models.Model):
         sc.setting_set.add(newSetting)
         
 """
-class SettingsCollection(models.Model):
+
+
+"""
+	{
+		'title': 'example title',
+		'settings': [
+			{
+				'setingText': 'example setting text 1',
+				'settingsOptions': [
+					'this is option 1',
+					'this is option 2',
+					...
+				]
+			},
+			{
+				'setingText': 'example setting text 2',
+				'settingsOptions': [
+					'this is option 1',
+					'this is option 2',
+					'this is option 3',
+					...
+				]
+			}
+		]
+	}
+"""
+def addOptionsToSetting(settingObject, optionTextsList):
+	# settingsObject is assumed to be already saved with settingObject.save()
+	# optionsList is a list of strings
+	for option in optionTextsList:
+		settingObject.settingoption_set.create(optionText=option)
+	
+
+def createNewSettingsCollection(input_json):
+	input_dict = json.loads(input_json)
+	sc = SettingCollection(title=input_dict['title'])
+	return_pk = sc.save()
+
+	for settingJson in input_dict['settings']:
+		newSetting = Setting(settingJson['settingText'])
+		newSetting.save()
+		addOptionsToSetting(newSetting, settingJson['settingsOptions'])
+		sc.setting_set.add(newSetting)
+	return return_pk
+
+
+	
+
+class SettingCollection(models.Model):
 
     # title of the collection
     title = models.CharField(max_length=100)
@@ -86,7 +139,7 @@ class Setting(models.Model):
     settingText = models.CharField(max_length=300)
 
     # The generic rule set that this setting is a part of
-    genericRules = models.ForeignKey(SettingsCollection, on_delete=models.CASCADE)
+    genericRules = models.ForeignKey(SettingCollection, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.settingText
@@ -103,10 +156,9 @@ class SettingOption(models.Model):
     def __str__(self):
         return self.optionText
 
+# } End Model for user setting
 
 
-
-# Model for user settings
 
 # Model for scenario
 # contains 'person_set'
