@@ -63,7 +63,7 @@ class Question(models.Model):
     Usage:
 
         # Creating a Settings Collection
-        sc = SettingsCollection(title="This is a title")
+        sc = SettingCollection(title="This is a title")
         sc_primaryKey = sc.save()
 
         # Create a new setting
@@ -105,32 +105,63 @@ class Question(models.Model):
 		]
 	}
 """
+
+
 def addOptionsToSetting(settingObject, optionTextsList):
-	# settingsObject is assumed to be already saved with settingObject.save()
+	# settingsObject is assumed to be already saved with a primary key (i.e. added to a SettingsCollection)
 	# optionsList is a list of strings
+
+	# create an option for every string in optionTextsList
 	for option in optionTextsList:
 		settingObject.settingoption_set.create(optionText=option)
-	
 
-def createNewSettingsCollection(input_json):
-	input_dict = json.loads(input_json)
+
+def createNewSettingsCollection(input_json_string):
+	# creates and saves a new SettingsCollection object
+	# parsed from a json string
+	# see format in 'rule_test.json'
+
+	# parse string into python dictionaries
+	input_dict = json.loads(input_json_string)
+
+	# create a new sc object and save it
 	sc = SettingCollection(title=input_dict['title'])
-	return_pk = sc.save()
+	sc.save()
 
+	# Add new setting objects into newly saved collection
 	for settingJson in input_dict['settings']:
-		newSetting = Setting(settingJson['settingText'])
-		newSetting.save()
-		addOptionsToSetting(newSetting, settingJson['settingsOptions'])
-		sc.setting_set.add(newSetting)
-	return return_pk
+		newSetting = Setting(settingText=settingJson['settingText'])
+		sc.setting_set.add(newSetting, bulk=False)
 
-
+		addOptionsToSetting(newSetting, settingJson['settingOptions'])
 	
+	# primary key can be accessed through this
+	return sc
+
 
 class SettingCollection(models.Model):
 
     # title of the collection
-    title = models.CharField(max_length=100)
+	title = models.CharField(max_length=100)
+
+	def __str__(self):
+		return self.title
+
+	# Converts a setting collection to Json string and returns it
+	def toJson(self):
+		r = {}
+		r['title'] = self.title
+
+		def helper(settingObj):
+			return {
+				'settingText': str(settingObj),
+				'settingOptions': [str(option) for option in settingObj.settingoption_set.all()]
+			}
+
+		r['settings'] = [helper(setting) for setting in self.setting_set.all()]
+
+		return json.dumps(r)
+
 
 # Generic model for a setting that the user could add to a settings collection
 class Setting(models.Model):
@@ -139,19 +170,22 @@ class Setting(models.Model):
     settingText = models.CharField(max_length=300)
 
     # The generic rule set that this setting is a part of
-    genericRules = models.ForeignKey(SettingCollection, on_delete=models.CASCADE)
-    
+    genericRules = models.ForeignKey(
+    	SettingCollection, on_delete=models.CASCADE, default=0)
+
     def __str__(self):
         return self.settingText
 
 # Option that belongs to a particular Setting
+
+
 class SettingOption(models.Model):
 
     # Text defining choosing the option
     optionText = models.CharField(max_length=200)
 
     # The Setting that this option is a part of
-    optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE)
+    optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE, default=0)
 
     def __str__(self):
         return self.optionText
