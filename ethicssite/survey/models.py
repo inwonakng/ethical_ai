@@ -39,11 +39,7 @@ class DummyModel(models.Model):
 		return obj
 """
 
-
-# Model for user settings
-
-# Model for scenario
-# contains 'person_set'
+# Model for a Scenario (e.g. Choose an individual to give a life jacket to.)
 class Scenario(models.Model):
     # textfield for scenario details
 	prompt = models.CharField(max_length=300)
@@ -54,26 +50,29 @@ class Scenario(models.Model):
 	def __str__(self):
 		return self.prompt
 
-# Model for a generic field for a choice (e.g. Person's age or health)
-class Field(models.Model):
-    # field name
+# Model for a generic attribute for some choice (e.g. age or health)
+class Attribute(models.Model):
+    # attribute name (e.g. age/health)
     name = models.CharField(max_length=30)
 
     # field value
     value = models.CharField(max_length=30)
 
-    # consider having a set of allwoed values?
+    # consider having a set of allowed values?
     # allowed = models.??
-
     # or specifying the type of value? (int, bool, etc)
+	# type = models.??
 
 # Model for a generic choice in a Scenario (e.g. Person)
 class Choice(models.Model):
+	# name of the current choice (e.g. Person)
+	name = models.CharField(max_length=30)
+	
     # link to given scenario
     scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 
-    # many-to-many relation to given fields (allows generic number of fields for a choice)
-    fields = models.ManyToManyField(Field, related_name='choice_details')
+    # many-to-many relation to given attributes (e.h. Person <-> age, health, occupation)
+    attributes = models.ManyToManyField(Attribute, related_name='choice_attributes')
 
 class GenericRules(models.Model):
     title = models.CharField(max_length=100)
