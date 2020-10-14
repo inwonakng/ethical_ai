@@ -6,7 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Question model
 @python_2_unicode_compatible
-class Question(models.Model):
+class Survey(models.Model):
 	# Question field (text field shown to user)
 	question_txt = models.CharField(max_length=200, null=False)
 

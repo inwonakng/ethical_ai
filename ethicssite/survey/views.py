@@ -22,6 +22,11 @@ def random_survey(request):
 
 # stores everything into the Question model
 def generatePoll(request):
+
+    # Question & Model should be taken in, no request
+    # Look @ writing in constructors for model objects & save point ScenarClass.createOneScenario()
+    # RETURN A MODEL (Question & Scenario essentially)
+
     context = RequestContext(request)
     if request.method == 'POST':
         questionString = request.POST['questionTitle']
