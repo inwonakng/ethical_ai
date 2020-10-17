@@ -38,15 +38,15 @@
         },
         "survival without": {
             "range": [
-                20,
-                50
+                20.0,
+                50.0
             ],
             "unit": "%"
         },
         "survival difference": {
             "range": [
-                50,
-                80
+                50.0,
+                80.1
             ],
             "unit": "%"
         }

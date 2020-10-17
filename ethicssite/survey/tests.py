@@ -1,7 +1,8 @@
 from django.test import TestCase
 import json
 import os
-from survey.models import RuleSet, ChoiceCategory, Choice, RangeCategory
+from survey.models import RuleSet, ChoiceCategory, Choice, RangeCategory,\
+    create_rule_set_from_json_string
 
 # from survey.models import SettingCollection, Setting,\
 #     SettingOption, createNewSettingsCollection
@@ -12,18 +13,25 @@ script_dir = os.path.dirname(__file__)
 
 
 class UserSettingTestCase(TestCase):
+    
+    def test_to_string(self):
+        with open(os.path.join(script_dir, 'rule_test.json')) as f:
+            data = json.load(f)
 
-    # def test_to_string(self):
-    #     with open(os.path.join(script_dir, 'rule_test.json')) as f:
-    #         data = json.load(f)
+        orig_json_string = json.dumps(data, indent=4)
+        new_rule_set = create_rule_set_from_json_string(orig_json_string)
+        
+        self.assertEqual(json.dumps(new_rule_set.object_form(), indent=4), orig_json_string)
+        
+        loaded_rule_set = RuleSet.objects.get(pk=new_rule_set.id)
 
-    #     orig_json_string = json.dumps(data)
-    #     newSettingCollection = createNewSettingsCollection(orig_json_string)
-    #     self.assertEqual(newSettingCollection.toJson(), orig_json_string)
+        self.assertEqual(json.dumps(loaded_rule_set.object_form(), indent=4), orig_json_string)
+        self.assertEqual(json.dumps(loaded_rule_set.object_form(), indent=4), json.dumps(new_rule_set.object_form(), indent=4))
+
 
     def test_object_form(self):
 
-        rule_set = RuleSet(title="title")
+        rule_set = RuleSet()
         rule_set.save()
 
         choice_age = ChoiceCategory(name="age")
@@ -48,8 +56,8 @@ class UserSettingTestCase(TestCase):
             unit="%")
         rule_set.rangecategory_set.add(range_survival_without, bulk=False)
 
-        print(json.dumps(rule_set.object_form(), indent=4))
 
+        # print(json.dumps(rule_set.object_form(), indent=4))
 
 
 
