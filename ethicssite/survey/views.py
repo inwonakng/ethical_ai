@@ -4,7 +4,7 @@ from .generation.Generator import Generator
 from django.shortcuts import render
 import json
 
-def random_survey(request):
+def get_survey(request):
     # grab the story here
     # content = story_generator().get_story()
     # When creating a survey, the model for the survey
@@ -60,7 +60,7 @@ def generate_survey(Survey):
     # function to grab new scenario
 
 
-def get_survey(request):
+def recieve_survey(request):
     # grabbing the sample json
     rule = json.load(open('ethicssite/survey/generation/rule/rule.json','r'))
     story_gen = Generator(rule=rule)
@@ -74,7 +74,7 @@ def get_survey(request):
     # For frontend, check the html to
     # see how the object is grabbed.
     return render(request,
-                  'survey/surveysample.html', context={"sample": sample})
+                  'survey/surveysample.html', context={"survey_information": survey_information})
 
     # once you navigate to http://127.0.0.1:8000/survey/getsurvey
     # and press ctrl+shift+i and switch to console tab,

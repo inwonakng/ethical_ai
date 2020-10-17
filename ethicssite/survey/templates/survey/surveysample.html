@@ -1,6 +1,4 @@
-{% comment %} loading vars here {% endcomment %}
-<script>
-var sample = {{ sample|safe }};
-</script>
-{% load static %}
-<script src="{% static 'scripts/compiled_js/samplescript.js' %}"></script> 
+{% comment %} this is how you grab the object {% endcomment %}
+{{ suvery_information|json_script:"survey_information" }}
+
+{% comment %} source javascript files are imported like this {% endcomment %}
