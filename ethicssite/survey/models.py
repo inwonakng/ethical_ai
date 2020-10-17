@@ -107,90 +107,164 @@ class Question(models.Model):
 """
 
 
-def addOptionsToSetting(settingObject, optionTextsList):
-	# settingsObject is assumed to be already saved with a primary key (i.e. added to a SettingsCollection)
-	# optionsList is a list of strings
+# def addOptionsToSetting(settingObject, optionTextsList):
+# 	# settingsObject is assumed to be already saved with a primary key (i.e. added to a SettingsCollection)
+# 	# optionsList is a list of strings
 
-	# create an option for every string in optionTextsList
-	for option in optionTextsList:
-		settingObject.settingoption_set.create(optionText=option)
+# 	# create an option for every string in optionTextsList
+# 	for option in optionTextsList:
+# 		settingObject.settingoption_set.create(optionText=option)
 
 
-def createNewSettingsCollection(input_json_string):
-	# creates and saves a new SettingsCollection object
-	# parsed from a json string
-	# see format in 'rule_test.json'
+# def createNewSettingsCollection(input_json_string):
+# 	# creates and saves a new SettingsCollection object
+# 	# parsed from a json string
+# 	# see format in 'rule_test.json'
 
-	# parse string into python dictionaries
-	input_dict = json.loads(input_json_string)
+# 	# parse string into python dictionaries
+# 	input_dict = json.loads(input_json_string)
 
-	# create a new sc object and save it
-	sc = SettingCollection(title=input_dict['title'])
-	sc.save()
+# 	# create a new sc object and save it
+# 	sc = SettingCollection(title=input_dict['title'])
+# 	sc.save()
 
-	# Add new setting objects into newly saved collection
-	for settingJson in input_dict['settings']:
-		newSetting = Setting(settingText=settingJson['settingText'])
-		sc.setting_set.add(newSetting, bulk=False)
+# 	# Add new setting objects into newly saved collection
+# 	for settingJson in input_dict['settings']:
+# 		newSetting = Setting(settingText=settingJson['settingText'])
+# 		sc.setting_set.add(newSetting, bulk=False)
 
-		addOptionsToSetting(newSetting, settingJson['settingOptions'])
+# 		addOptionsToSetting(newSetting, settingJson['settingOptions'])
 	
-	# primary key can be accessed through this
-	return sc
+# 	# primary key can be accessed through this
+# 	return sc
 
 
-class SettingCollection(models.Model):
+# class SettingCollection(models.Model):
 
-    # title of the collection
-	title = models.CharField(max_length=100)
+#     # title of the collection
+# 	title = models.CharField(max_length=100)
 
-	def __str__(self):
-		return self.title
+# 	def __str__(self):
+# 		return self.title
 
-	# Converts a setting collection to Json string and returns it
-	def toJson(self):
-		r = {}
-		r['title'] = self.title
+# 	# Converts a setting collection to Json string and returns it
+# 	def toJson(self):
+# 		r = {}
+# 		r['title'] = self.title
 
-		def helper(settingObj):
-			return {
-				'settingText': str(settingObj),
-				'settingOptions': [str(option) for option in settingObj.settingoption_set.all()]
-			}
+# 		def helper(settingObj):
+# 			return {
+# 				'settingText': str(settingObj),
+# 				'settingOptions': [str(option) for option in settingObj.settingoption_set.all()]
+# 			}
 
-		r['settings'] = [helper(setting) for setting in self.setting_set.all()]
+# 		r['settings'] = [helper(setting) for setting in self.setting_set.all()]
 
-		return json.dumps(r)
+# 		return json.dumps(r)
 
 
-# Generic model for a setting that the user could add to a settings collection
-class Setting(models.Model):
+# # Generic model for a setting that the user could add to a settings collection
+# class Setting(models.Model):
 
-    # Text describing the setting
-    settingText = models.CharField(max_length=300, default="---")
+#     # Text describing the setting
+#     settingText = models.CharField(max_length=300, default="---")
 
-    # The generic rule set that this setting is a part of
-    genericRules = models.ForeignKey(
-    	SettingCollection, on_delete=models.CASCADE, default=1)
+#     # The generic rule set that this setting is a part of
+#     genericRules = models.ForeignKey(
+#     	SettingCollection, on_delete=models.CASCADE, default=1)
+
+#     def __str__(self):
+#         return self.settingText
+
+# # Option that belongs to a particular Setting
+
+
+# class SettingOption(models.Model):
+
+#     # Text defining choosing the option
+#     optionText = models.CharField(max_length=200, default="---")
+
+#     # The Setting that this option is a part of
+#     optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE, default=1)
+
+#     def __str__(self):
+#         return self.optionText
+
+class RuleSet(models.Model):
+    title = models.CharField(max_length=100)
+
+    def object_form(self):
+        r = {}
+
+        r['categories'] = {}
+        for choice_category in self.choicecategory_set.all():
+            obj = choice_category.object_form()
+            r['categories'][obj[0]] = obj[1]
+
+        for range_category in self.rangecategory_set.all():
+            obj = range_category.object_form()
+            r['categories'][obj[0]] = obj[1]
+
+        return r
+        
 
     def __str__(self):
-        return self.settingText
-
-# Option that belongs to a particular Setting
+        return self.title
 
 
-class SettingOption(models.Model):
+class ChoiceCategory(models.Model):
+    name = models.CharField(max_length=100)
+    ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
+    
+    def object_form(self):
+        r = {}
+        for choice in self.choice_set.all():
+            r[choice.object_form()[0]] = choice.object_form()[1]
 
-    # Text defining choosing the option
-    optionText = models.CharField(max_length=200, default="---")
-
-    # The Setting that this option is a part of
-    optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE, default=1)
+        return (self.name, r)
 
     def __str__(self):
-        return self.optionText
+        return self.name
+
+
+class Choice(models.Model):
+    index = models.IntegerField()
+    description = models.CharField(max_length=500)
+    choiceCategory = models.ForeignKey(
+        ChoiceCategory, on_delete=models.CASCADE, default=1)
+
+    def object_form(self):
+        return (str(self.index), self.description)
+
+    def __str__(self):
+        return json.dumps({str(self.index): self.description})
+
+
+class RangeCategory(models.Model):
+    name = models.CharField(max_length=100)
+    minVal = models.FloatField()
+    maxVal = models.FloatField()
+    unit = models.CharField(max_length=50)
+
+    ruleSet = models.ForeignKey(
+        RuleSet, on_delete=models.CASCADE, default=1)
+
+    def object_form(self):
+
+        return (self.name, {
+            "range": [self.minVal, self.maxVal],
+            "unit": self.unit
+        })
+
+    def __str__(self):
+
+        return json.dumps({self.name: {
+            "range": [self.minVal, self.maxVal],
+            "unit": self.unit
+        }})
 
 # } End Model for user setting
+
 
 
 
