@@ -16,7 +16,7 @@ def get_survey(request):
     return render(request, 'survey/takesurvey.html', context)
 
 # stores everything into the Question model
-def generate_survey(Survey):
+def recieve_survey(Survey, rules):
 
     rule = json.load(open('ethicssite/survey/generation/rule/rule.json', 'r'))
 
@@ -24,7 +24,7 @@ def generate_survey(Survey):
     # Survey.question_desc = question description
     # Survey.scenario = scenario set
 
-
+    # generate X scenarios and .save() them
 
     question = Question(question_txt=questionString, question_desc=questionDesc)
 
@@ -34,12 +34,6 @@ def generate_survey(Survey):
     # Scenario consists of a set of 'people' 
     scenario = Scenario()
     scenario.save()
-
-    """
-    OPRA Code
-        return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
-    return render(request,'polls/add_step1.html', {})
-    """
 
     # eventually return something
     return(None)
@@ -60,7 +54,7 @@ def generate_survey(Survey):
     # function to grab new scenario
 
 
-def recieve_survey(request):
+def load_survey(request):
     # grabbing the sample json
     rule = json.load(open('ethicssite/survey/generation/rule/rule.json','r'))
     story_gen = Generator(rule=rule)

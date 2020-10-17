@@ -21,6 +21,7 @@ class DummyModel(models.Model):
 # Question model
 @python_2_unicode_compatible
 class Survey(models.Model):
+	
 	# Question field (text field shown to user)
 	question_txt = models.CharField(max_length=200, null=False)
 
@@ -109,6 +110,7 @@ class SettingOption(models.Model):
 class Scenario(models.Model):
 
 	prompt = models.CharField(max_length=300)
+	question = models.ForeignKey(Survey, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return self.prompt
