@@ -27,8 +27,6 @@ class Survey(models.Model):
 	# Question description (text field shown to user)
 	question_desc = models.TextField(null=False, blank=False)
 
-	# Can always add more fields for the question object if needed
-
 	# Date when question was submitted (auto done in backend)
 	date = models.DateTimeField(default=datetime.date.today)
 
@@ -102,8 +100,6 @@ class SettingOption(models.Model):
 
     def __str__(self):
         return self.optionText
-
-
 
 
 # Model for user settings

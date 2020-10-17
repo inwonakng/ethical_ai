@@ -16,26 +16,24 @@ def random_survey(request):
     return render(request, 'survey/takesurvey.html', context)
 
 # stores everything into the Question model
-def generate_survey(request):
+def generate_survey(Survey):
 
-    # Question & Model should be taken in, no request
-    # Look @ writing in constructors for model objects & save point ScenarClass.createOneScenario()
-    # RETURN A MODEL (Question & Scenario essentially)
+    rule = json.load(open('ethicssite/survey/generation/rule/rule.json', 'r'))
 
-    context = RequestContext(request)
-    if request.method == 'POST':
-        questionString = request.POST['questionTitle']
-        questionDesc = request.POST['desc']
+    # Survey.question_txt = question string
+    # Survey.question_desc = question description
+    # Survey.scenario = scenario set
 
-        # create question object
-        question = Question(question_txt=questionString, question_desc=questionDesc)
 
-        # save question object to db
-        question.save()
 
-        # Scenario consists of a set of 'people' 
-        scenario = Scenario()
-        scenario.save()
+    question = Question(question_txt=questionString, question_desc=questionDesc)
+
+    # save question object to db
+    question.save()
+
+    # Scenario consists of a set of 'people' 
+    scenario = Scenario()
+    scenario.save()
 
     """
     OPRA Code
