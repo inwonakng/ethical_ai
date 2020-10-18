@@ -41,10 +41,13 @@ def load_survey(request):
     return render(request,'survey/surveysample.html',{'survey_info',survey_info})
 
 def get_scenario(request):
+
+    combos = 10
+
     # grabbing the sample json
     rule = json.load(open('ethicssite/survey/generation/rule/rule.json','r'))
     story_gen = Generator(rule=rule)
-    ss = story_gen.get_scenario()
+    ss = story_gen.get_scenario(combos)
     survey_information = json.dumps(ss)
     # For frontend, check the html to
     # see how the object is grabbed.

@@ -85,7 +85,6 @@ def create_rule_set_from_json_string(rule_set_json_string):
 
     return rule_set
 
-
 class RuleSet(models.Model):
 
     def object_form(self):
@@ -108,7 +107,6 @@ class RuleSet(models.Model):
     def __str__(self):
         return self.id
 
-
 class BadCombination(models.Model):
     category_name = models.CharField(max_length=100)
     ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
@@ -118,7 +116,6 @@ class BadCombination(models.Model):
 
     def __str__(self):
         return self.category_name
-
 
 class BadSubCombination(models.Model):
     category_value = models.CharField(max_length=500)
@@ -132,7 +129,6 @@ class BadSubCombination(models.Model):
 
     def __str__(self):
         return self.category_value
-
 
 class BadSubCombinationElement(models.Model):
     category_name = models.CharField(max_length=100)
@@ -153,8 +149,6 @@ class ElementChoice(models.Model):
     def __str__(self):
         return str(self.category_index)
 
-
-
 class ChoiceCategory(models.Model):
     name = models.CharField(max_length=100)
     ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
@@ -169,7 +163,6 @@ class ChoiceCategory(models.Model):
     def __str__(self):
         return self.name
 
-
 class Choice(models.Model):
     index = models.IntegerField()
     description = models.CharField(max_length=500)
@@ -181,7 +174,6 @@ class Choice(models.Model):
 
     def __str__(self):
         return json.dumps({str(self.index): self.description})
-
 
 class RangeCategory(models.Model):
     name = models.CharField(max_length=100)
@@ -207,9 +199,6 @@ class RangeCategory(models.Model):
         }})
 
 # } End Model for user setting
-
-
-
 
 # Model for scenario
 # contains 'person_set'
