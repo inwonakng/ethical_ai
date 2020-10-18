@@ -37,7 +37,8 @@ def receive_survey(request):
     # get user defined rules back
     # function to grab new scenario
 def load_survey(request):
-    return render(request,'',{})
+    survey_info = {}
+    return render(request,'survey/surveysample.html',{'survey_info',survey_info})
 
 def get_scenario(request):
     # grabbing the sample json
@@ -47,8 +48,7 @@ def get_scenario(request):
     survey_information = json.dumps(ss)
     # For frontend, check the html to
     # see how the object is grabbed.
-    return render(request,
-                  'survey/surveysample.html', context={"survey_information": survey_information})
+    return HttpResponse(content=survey_information)
 
     # once you navigate to http://127.0.0.1:8000/survey/loadsurvey
     # and press ctrl+shift+i and switch to console tab,
