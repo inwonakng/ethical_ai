@@ -1,195 +1,275 @@
 import datetime
+import json
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 """
 class DummyModel(models.Model):
-	question_text = models.CharField(max_length=200)
-	pub_date = models.DateTimeField('date published')
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
 
-	@classmethod
-	def create(cls,text=None):
-		obj = cls(question_text = text)
-		return obj
+    @classmethod
+    def create(cls,text=None):
+        obj = cls(question_text = text)
+        return obj
 """
-
-
-
 
 
 # Question model
 @python_2_unicode_compatible
 class Question(models.Model):
-	# Question field (text field shown to user)
-	question_txt = models.CharField(max_length=200, null=False)
+    # Question field (text field shown to user)
+    question_txt = models.CharField(max_length=200, null=False)
 
-	# Question description (text field shown to user)
-	question_desc = models.TextField(null=False, blank=False)
+    # Question description (text field shown to user)
+    question_desc = models.TextField(null=False, blank=False)
 
-	# Can always add more fields for the question object if needed
+    # Can always add more fields for the question object if needed
 
-	# Date when question was submitted (auto done in backend)
-	date = models.DateTimeField(default=datetime.date.today)
+    # Date when question was submitted (auto done in backend)
+    date = models.DateTimeField(default=datetime.date.today)
 
-	# Return question text
-	def __str__(self):
-		return self.question_txt
+    # Return question text
+    def __str__(self):
+        return self.question_txt
 
-	# Alternative to overriding __init__ (initial)
-	@classmethod
-	def create(cls, questionTXT, questionDESC):
-	    questionObject = cls(question_txt=questionTXT, question_desc=questionDESC)
-	    return(questionObject)
-		
-"""
-    Structure: 
+    # Alternative to overriding __init__ (initial)
+    @classmethod
+    def create(cls, questionTXT, questionDESC):
+        questionObject = cls(question_txt=questionTXT, question_desc=questionDESC)
+        return(questionObject)
 
-        SettingsCollection 1 : <title>
-            - Setting 1: Closest Age
-                - SettingOption 1: 10
-                - SettingOption 2: 15
-                - SettingOption 3: 20
-                - SettingOption 4: 25
-            - Setting 2: Gender
-                - SettingOption 1: Male
-                - SettingOption 2: Female
 
-        ...
+# Model for user settings {
 
-    Usage:
 
-        # Creating a Settings Collection
-        sc = SettingsCollection(title="This is a title")
-        sc.save()
+def create_rule_set_from_json_string(rule_set_json_string):
+    rule_set = RuleSet()
+    rule_set.save()
+    d = json.loads(rule_set_json_string)
+    for category in d['categories'].keys():
+        obj = d['categories'][category]
+        if 'range' in obj.keys():
 
-        # Create a new setting
-        newSetting = Setting(settingText="Age")
+            new_range_category = RangeCategory(
+                name=category,
+                minVal=float(obj['range'][0]),
+                maxVal=float(obj['range'][1]),
+                unit=obj['unit'])
 
-        # Add options to the setting
-        newSetting.settingoption_set.create(optionText="20")
-        newSetting.settingoption_set.create(optionText="25")
+            rule_set.rangecategory_set.add(new_range_category, bulk=False)
+        else:
+            new_choice_category = ChoiceCategory(name=category)
+            rule_set.choicecategory_set.add(new_choice_category, bulk=False)
 
-        # Add the setting to the original settings collection
-        sc.setting_set.add(newSetting)
+            for index in range(len(obj.keys())):
+                new_choice_category.choice_set.create(
+                    index=index, description=obj[str(index)])
+
+    for category_name in d['bad combo'].keys():
+        obj = d['bad combo'][category_name]
+        new_bad_combination = BadCombination(category_name=category_name)
+        rule_set.badcombination_set.add(new_bad_combination, bulk=False)
+        for category_value in obj.keys():
+            sub_obj = obj[category_value]
+            new_bad_sub_combination = BadSubCombination(category_value=category_value)
+            new_bad_combination.badsubcombination_set.add(
+                new_bad_sub_combination, bulk=False)
+
+            for category_name_in in sub_obj.keys():
+                new_bad_sub_combination_element = BadSubCombinationElement(category_name=category_name_in)
+                new_bad_sub_combination.badsubcombinationelement_set.add(new_bad_sub_combination_element, bulk=False)
+
+                for category_index in sub_obj[category_name_in]:
+                    new_bad_sub_combination_element.elementchoice_set.create(
+                        category_index=category_index)
+
+    return rule_set
+
+
+class RuleSet(models.Model):
+
+    def object_form(self):
+        return_dict = {}
+        return_dict['categories'] = {}
+        for choice_category in self.choicecategory_set.all():
+            obj = choice_category.object_form()
+            return_dict['categories'][obj[0]] = obj[1]
+
+        for range_category in self.rangecategory_set.all():
+            obj = range_category.object_form()
+            return_dict['categories'][obj[0]] = obj[1]
+
+
+        return_dict['bad combo'] = {key: value for (key, value) in [obj.object_form() for obj in self.badcombination_set.all()]}
+
+
+        return return_dict
+
+    def __str__(self):
+        return self.id
+
+
+class BadCombination(models.Model):
+    category_name = models.CharField(max_length=100)
+    ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
+
+    def object_form(self):
+        return (self.category_name, {key: value for (key, value) in [obj.object_form() for obj in self.badsubcombination_set.all()]})
+
+    def __str__(self):
+        return self.category_name
+
+
+class BadSubCombination(models.Model):
+    category_value = models.CharField(max_length=500)
+    badCombination = models.ForeignKey(
+        BadCombination, on_delete=models.CASCADE, default=1)
+
+    def object_form(self):
+        return (self.category_value, {key: value for (key, value) in [obj.object_form() for obj in self.badsubcombinationelement_set.all()]})
         
-"""
-class SettingsCollection(models.Model):
 
-    # title of the collection
-    title = models.CharField(max_length=100)
-
-# Generic model for a setting that the user could add to a settings collection
-class Setting(models.Model):
-
-    # Text describing the setting
-    settingText = models.CharField(max_length=300)
-
-    # The generic rule set that this setting is a part of
-    genericRules = models.ForeignKey(SettingsCollection, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.settingText
-
-# Option that belongs to a particular Setting
-class SettingOption(models.Model):
-
-    # Text defining choosing the option
-    optionText = models.CharField(max_length=200)
-
-    # The Setting that this option is a part of
-    optionSetting = models.ForeignKey(Setting, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.optionText
+        return self.category_value
+
+
+class BadSubCombinationElement(models.Model):
+    category_name = models.CharField(max_length=100)
+    badSubCombination = models.ForeignKey(
+        BadSubCombination, on_delete=models.CASCADE, default=1)
+
+    def object_form(self):
+        return (self.category_name, [str(elem_choice) for elem_choice in self.elementchoice_set.all()])
+
+    def __str__(self):
+        return self.category_name
+
+class ElementChoice(models.Model):
+    category_index = models.IntegerField()
+    badSubCombinationElement = models.ForeignKey(
+        BadSubCombinationElement, on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return str(self.category_index)
 
 
 
+class ChoiceCategory(models.Model):
+    name = models.CharField(max_length=100)
+    ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
 
-# Model for user settings
+    def object_form(self):
+        r = {}
+        for choice in self.choice_set.all():
+            r[choice.object_form()[0]] = choice.object_form()[1]
+
+        return (self.name, r)
+
+    def __str__(self):
+        return self.name
+
+
+class Choice(models.Model):
+    index = models.IntegerField()
+    description = models.CharField(max_length=500)
+    choiceCategory = models.ForeignKey(
+        ChoiceCategory, on_delete=models.CASCADE, default=1)
+
+    def object_form(self):
+        return (str(self.index), self.description)
+
+    def __str__(self):
+        return json.dumps({str(self.index): self.description})
+
+
+class RangeCategory(models.Model):
+    name = models.CharField(max_length=100)
+    minVal = models.FloatField()
+    maxVal = models.FloatField()
+    unit = models.CharField(max_length=50)
+
+    ruleSet = models.ForeignKey(
+        RuleSet, on_delete=models.CASCADE, default=1)
+
+    def object_form(self):
+
+        return (self.name, {
+            "range": [self.minVal, self.maxVal],
+            "unit": self.unit
+        })
+
+    def __str__(self):
+
+        return json.dumps({self.name: {
+            "range": [self.minVal, self.maxVal],
+            "unit": self.unit
+        }})
+
+# } End Model for user setting
+
+
+
 
 # Model for scenario
 # contains 'person_set'
 class Scenario(models.Model):
 
-	prompt = models.CharField(max_length=300)
+    prompt = models.CharField(max_length=300, default="---")
 
-	def __str__(self):
-		return self.prompt
+    def __str__(self):
+        return self.prompt
 
 # Model for person
 # dependency of scenario
 class Person(models.Model):
 
-	# links back to scenario
-	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+    # links back to scenario
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 
-	age = models.IntegerField(
-		validators=[
-			MaxValueValidator(120),
-			MinValueValidator(0)
-		]
-	)
-	# spectrum?
-	health = models.CharField(max_length=50)
-	# true = make
-	# false = female
-	gender = models.BooleanField()
-	# 0 = low
-	# 1 = mid
-	# 2 = high
-	income = models.IntegerField(
-		validators=[
-			MaxValueValidator(2),
-			MinValueValidator(0)
-		]
-	)
-	number_of_dependants = models.IntegerField(
-		validators=[
-			MaxValueValidator(20),
-			MinValueValidator(0)
-		]
-	)
-	survival_with_jacket = models.IntegerField(
-		validators=[
-			MaxValueValidator(100),
-			MinValueValidator(0)
-		]
-	)
-	survival_without_jacket = models.IntegerField(
-		validators=[
-			MaxValueValidator(100),
-			MinValueValidator(0)
-		]
-	)
+    age = models.IntegerField(
+        validators=[
+            MaxValueValidator(120),
+            MinValueValidator(0)
+        ]
+    )
+    # spectrum?
+    health = models.CharField(max_length=50)
+    # true = make
+    # false = female
+    gender = models.BooleanField()
+    # 0 = low
+    # 1 = mid
+    # 2 = high
+    income = models.IntegerField(
+        validators=[
+            MaxValueValidator(2),
+            MinValueValidator(0)
+        ]
+    )
+    number_of_dependants = models.IntegerField(
+        validators=[
+            MaxValueValidator(20),
+            MinValueValidator(0)
+        ]
+    )
+    survival_with_jacket = models.IntegerField(
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0)
+        ]
+    )
+    survival_without_jacket = models.IntegerField(
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0)
+        ]
+    )
 
-	def __str__(self):
-		return "Person"
-
-# class GenericRules(models.Model):
-#     title = models.CharField(max_length=100)
-
-
-
-# class OptionSetting(models.Model):
-#     optionSettingText = models.CharField(max_length=300)
-#     isRadio = models.BooleanField(default=False)
-#     genericRules = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
-    
-#     def __str__(self):
-#         return self.optionSettingText
-
-
-# class Option(models.Model):
-#     optionText = models.CharField(max_length=200)
-#     optionSetting = models.ForeignKey(OptionSetting, on_delete=models.CASCADE)
-
-#     def __str__(self):
-#         return self.optionText
-    
-
-# class GenericResponse(models.Model):
-#     ruleSet = models.ForeignKey(GenericRules, on_delete=models.CASCADE)
+    def __str__(self):
+        return "Person"
 
 
 # generator for a set of scenarios (likned to the user settings)
