@@ -3,7 +3,7 @@
 import os
 import sys
 import subprocess
-
+from django.conf import settings
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ethicssite.settings')
@@ -11,7 +11,7 @@ def main():
     try:
         print('compiling typescript...')
         subprocess.run(
-            ['tsc', '-p', 'ethicssite/survey/static/scripts/tsconfig.json']
+            ['tsc', '-p', settings.BASE_DIR+'/survey/static/scripts/tsconfig.json']
             )
         print('compilation successful!')
     except:
