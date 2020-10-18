@@ -41,9 +41,7 @@ class Question(models.Model):
         return(questionObject)
 
 
-# Model for user settings {
-
-
+# { <<< Model for user settings 
 def create_rule_set_from_json_string(rule_set_json_string):
     rule_set = RuleSet()
     rule_set.save()
@@ -208,7 +206,7 @@ class RangeCategory(models.Model):
             "unit": self.unit
         }})
 
-# } End Model for user setting
+# } <<< End Model for user setting
 
 
 
