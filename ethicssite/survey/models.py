@@ -62,7 +62,7 @@ def create_rule_set_from_json_string(rule_set_json_string):
             rule_set.choicecategory_set.add(new_choice_category, bulk=False)
 
             for index in range(len(obj.keys())):
-                new_choice_category.choice_set.create(
+                new_choice_category.rulesetchoice_set.create(
                     index=index, description=obj[str(index)])
 
     for category_name in d['bad combo'].keys():
@@ -161,7 +161,7 @@ class ChoiceCategory(models.Model):
 
     def object_form(self):
         r = {}
-        for choice in self.choice_set.all():
+        for choice in self.rulesetchoice_set.all():
             r[choice.object_form()[0]] = choice.object_form()[1]
 
         return (self.name, r)
@@ -170,7 +170,7 @@ class ChoiceCategory(models.Model):
         return self.name
 
 
-class Choice(models.Model):
+class RuleSetChoice(models.Model):
     index = models.IntegerField()
     description = models.CharField(max_length=500)
     choiceCategory = models.ForeignKey(
