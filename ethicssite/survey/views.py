@@ -15,10 +15,24 @@ def receive_survey(request):
         survey = Survey(question_txt=questionString, question_desc=questionDesc)
         survey.save()
 
-        data = request.post['scenario_data']
+        # load the body as a json
+        data = json.loads(request.body)
 
-        # set scenarios
-        scenario = Scenario(prompt=data, question=survey)
+        # {0: info: {age: stuff, health: stuff, etc}, 1: info: {age: stuff, health: stuff, etc}}
+        scenario_dict = {}
+
+        # loop through json
+        person_counter = 0
+        for index in data:
+            for key in index:
+                # print(index[key]) # value
+                if counter == 0:
+                    scenario_dict[person_counter] = {"info": {key: index[key]}}
+                else:
+                    scenario_dict[person_counter]["info"][key] = index[key]
+            person_counter += 1
+
+        scenario = Scenario(prompt=scenario_dict, question=survey)
         scenario.save()
 
     pass

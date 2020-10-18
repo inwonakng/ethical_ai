@@ -214,20 +214,20 @@ class Scenario(models.Model):
 # dependency of scenario
 class Person(models.Model):
 
-    # links back to scenario
-    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
-
     age = models.IntegerField(
         validators=[
             MaxValueValidator(120),
             MinValueValidator(0)
         ]
     )
+
     # spectrum?
     health = models.CharField(max_length=50)
+
     # true = make
     # false = female
     gender = models.BooleanField()
+
     # 0 = low
     # 1 = mid
     # 2 = high
@@ -237,24 +237,30 @@ class Person(models.Model):
             MinValueValidator(0)
         ]
     )
+    
     number_of_dependants = models.IntegerField(
         validators=[
             MaxValueValidator(20),
             MinValueValidator(0)
         ]
     )
+    
     survival_with_jacket = models.IntegerField(
         validators=[
             MaxValueValidator(100),
             MinValueValidator(0)
         ]
     )
+    
     survival_without_jacket = models.IntegerField(
         validators=[
             MaxValueValidator(100),
             MinValueValidator(0)
         ]
     )
+
+    # links back to Scenario
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 
     def __str__(self):
         return "Person"
