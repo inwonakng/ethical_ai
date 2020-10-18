@@ -20,10 +20,10 @@ class DummyModel(models.Model):
 @python_2_unicode_compatible
 class Question(models.Model):
     # Question field (text field shown to user)
-    question_txt = models.CharField(max_length=200, null=False)
+    question_txt = models.CharField(max_length=200, null=False,default='')
 
     # Question description (text field shown to user)
-    question_desc = models.TextField(null=False, blank=False)
+    question_desc = models.TextField(null=False, blank=False,default='')
 
     # Can always add more fields for the question object if needed
 
