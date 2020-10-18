@@ -5,8 +5,6 @@ from django.shortcuts import render
 import json
 
 # stores everything into the Question model
-
-
 def receive_survey(request):
     if request.method == "POST":
         questionString = request.POST['questionTitle']
