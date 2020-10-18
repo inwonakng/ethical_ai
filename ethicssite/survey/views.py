@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpRequest
 from .generation.Generator import Generator
 from django.shortcuts import render
 import json
+from django.conf import settings
 
 # stores everything into the Question model
 def generatePoll(request):
@@ -50,7 +51,7 @@ def load_survey(request):
 
 def get_scenario(request):
     # grabbing the sample json
-    rule = json.load(open('ethicssite/survey/generation/rule/rule.json','r'))
+    rule = json.load(open(settings.BASE_DIR+'/survey/generation/rule/rule.json','r'))
     story_gen = Generator(rule=rule)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
