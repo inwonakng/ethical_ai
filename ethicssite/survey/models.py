@@ -3,25 +3,10 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-"""
-class DummyModel(models.Model):
-	question_text = models.CharField(max_length=200)
-	pub_date = models.DateTimeField('date published')
-
-	@classmethod
-	def create(cls,text=None):
-		obj = cls(question_text = text)
-		return obj
-"""
-
-
-
-
-
 # Question model
 @python_2_unicode_compatible
 class Survey(models.Model):
-	
+
 	# Question field (text field shown to user)
 	question_txt = models.CharField(max_length=200, null=False)
 

@@ -16,27 +16,24 @@ def get_survey(request):
     return render(request, 'survey/takesurvey.html', context)
 
 # stores everything into the Question model
-def recieve_survey(Survey, rules):
 
-    rule = json.load(open('ethicssite/survey/generation/rule/rule.json', 'r'))
 
-    # Survey.question_txt = question string
-    # Survey.question_desc = question description
-    # Survey.scenario = scenario set
+def receive_survey(request):
+    if request.method == "POST":
+        questionString = request.POST['questionTitle']
+        questionDesc = request.POST['desc']
 
-    # generate X scenarios and .save() them
+        # set question string & description
+        survey = Survey(question_txt=questionString, question_desc=questionDesc)
+        survey.save()
 
-    question = Question(question_txt=questionString, question_desc=questionDesc)
+        data = request.post['scenario_data']
 
-    # save question object to db
-    question.save()
+        # set scenarios
+        scenario = Scenario(prompt=data, question=survey)
+        scenario.save()
 
-    # Scenario consists of a set of 'people' 
-    scenario = Scenario()
-    scenario.save()
-
-    # eventually return something
-    return(None)
+    pass
 
 # Start survey
 
@@ -61,7 +58,7 @@ def load_survey(request):
     ss = story_gen.get_scenario()
     print(ss)
     sample = json.dumps(ss)
-    # sample = json.dumps({'a':1,'b':2})
+    sample = json.dumps({'a':1,'b':2})
 
     # print(sample)
 
