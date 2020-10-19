@@ -214,13 +214,38 @@ class RangeCategory(models.Model):
 
 
 # Model for scenario
-# contains 'person_set'
 class Scenario(models.Model):
 
     prompt = models.CharField(max_length=300, default="---")
 
     def __str__(self):
         return self.prompt
+
+# Model for a generic attribute for some combination (e.g. age or health)
+class Attribute(models.Model):
+    # attribute name (e.g. age or health)
+    name = models.CharField(max_length=50, null=False, default='')
+
+    # value for the attribute
+    value = models.CharField(max_length=50, null=False, default='')
+
+    def __str__(self):
+        return '{:} {:}'.format(self.name, self.value)
+
+# Model for a set of attributes under some scenario (e.g. Person)
+class Combo(models.Model):
+    # name of current Combo (e.g. Person A)
+    name = models.CharField(max_length=50, null=False, default='')
+
+    # link to given scenario
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE, default=1)
+
+    # attributes under the current Combo
+    attributes = models.ManyToManyField(Attribute, related_name='combo_attributes')
+
+    def __str__(self):
+        return self.name
+
 
 # Model for person
 # dependency of scenario
