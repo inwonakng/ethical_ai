@@ -1,6 +1,6 @@
-from .Category import Category
-from .Rule import Rule
-from .Combo import Combo
+from Category import Category
+from Rule import Rule
+from Combo import Combo
 from itertools import combinations as comb
 
 class Generator():
