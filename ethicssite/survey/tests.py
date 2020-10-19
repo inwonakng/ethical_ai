@@ -1,7 +1,7 @@
 from django.test import TestCase
 import json
 import os
-from survey.models import RuleSet, ChoiceCategory, Choice, RangeCategory,\
+from survey.models import RuleSet, ChoiceCategory, RuleSetChoice, RangeCategory,\
     create_rule_set_from_json_string
 
 # from survey.models import SettingCollection, Setting,\
@@ -37,17 +37,17 @@ class UserSettingTestCase(TestCase):
         choice_age = ChoiceCategory(name="age")
         rule_set.choicecategory_set.add(choice_age, bulk=False)
 
-        choice_age.choice_set.create(index=0, description="5")
-        choice_age.choice_set.create(index=1, description="8")
-        choice_age.choice_set.create(index=2, description="12")
-        choice_age.choice_set.create(index=3, description="18")
+        choice_age.rulesetchoice_set.create(index=0, description="5")
+        choice_age.rulesetchoice_set.create(index=1, description="8")
+        choice_age.rulesetchoice_set.create(index=2, description="12")
+        choice_age.rulesetchoice_set.create(index=3, description="18")
 
         choice_gender = ChoiceCategory(name="gender")
         rule_set.choicecategory_set.add(choice_gender, bulk=False)
-        choice_gender.choice_set.create(index=0, description="in great health")
-        choice_gender.choice_set.create(index=1, description="small health problems")
-        choice_gender.choice_set.create(index=2, description="moderate health problems")
-        choice_gender.choice_set.create(index=3, description="terminally ill(less than 3 years left)")
+        choice_gender.rulesetchoice_set.create(index=0, description="in great health")
+        choice_gender.rulesetchoice_set.create(index=1, description="small health problems")
+        choice_gender.rulesetchoice_set.create(index=2, description="moderate health problems")
+        choice_gender.rulesetchoice_set.create(index=3, description="terminally ill(less than 3 years left)")
 
         range_survival_without = RangeCategory(
             name="survival without",
