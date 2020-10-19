@@ -1,8 +1,14 @@
 {
     "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
+      "target": "es6",
+      "module": "es6",
       "sourceMap": true,
-      "outDir": "compiled_js"
+      // "strict": true,
+      "outDir": "compiled_js",
+      "lib": [
+        "es6",
+        "dom",
+        // "es5"
+      ]
     }
   }

@@ -47,7 +47,7 @@ def generatePoll(request):
     # function to grab new scenario
 def load_survey(request):
     survey_info = {}
-    return render(request,'survey/surveysample.html',{'survey_info',survey_info})
+    return render(request,'survey/surveysample.html',survey_info)
 
 def get_scenario(request):
     # grabbing the sample json
