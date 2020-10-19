@@ -40,8 +40,6 @@ class Survey(models.Model):
 
 
 # Model for user settings {
-
-
 def create_rule_set_from_json_string(rule_set_json_string):
     rule_set = RuleSet()
     rule_set.save()
@@ -203,7 +201,7 @@ class RangeCategory(models.Model):
 # Model for scenario
 # contains 'person_set'
 class Scenario(models.Model):
-
+    number = models.IntegerField(default=3)
     prompt = models.CharField(max_length=300, default="---")
     question = models.ForeignKey(Survey, on_delete=models.CASCADE)
 

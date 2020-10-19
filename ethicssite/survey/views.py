@@ -25,14 +25,14 @@ def receive_survey(request):
         person_counter = 0
         for index in data:
             for key in index:
-                # print(index[key]) # value
+                value = index[key]
                 if counter == 0:
-                    scenario_dict[person_counter] = {"info": {key: index[key]}}
+                    scenario_dict[person_counter] = {"info": {key: value}}
                 else:
-                    scenario_dict[person_counter]["info"][key] = index[key]
+                    scenario_dict[person_counter]["info"][key] = value
             person_counter += 1
 
-        scenario = Scenario(prompt=scenario_dict, question=survey)
+        scenario = Scenario(number=person_counter, prompt=scenario_dict, question=survey)
         scenario.save()
 
     pass
@@ -56,8 +56,6 @@ def load_survey(request):
     return render(request,'survey/surveysample.html',{'survey_info',survey_info})
 
 def get_scenario(request):
-
-    combos = 10
 
     # grabbing the sample json
     rule = json.load(open(settings.BASE_DIR+'/survey/generation/rule/rule.json','r'))
