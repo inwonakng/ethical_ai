@@ -281,3 +281,13 @@ class Combo(models.Model):
         return json.dumps(self.object_form())
 
 # Model for storing user input scores
+class Response(models.Model):
+    # consider including some fields for identifying the user?
+    # userid = ?
+
+    # which combo the current score is for
+    combo = models.ForeignKey(Combo, on_delete=models.CASCADE, default=1)
+
+    # user input score
+    # todo: consider changing this to be IntegerChoices / Range?
+    score = models.IntegerField()
