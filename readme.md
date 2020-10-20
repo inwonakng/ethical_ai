@@ -115,6 +115,10 @@ if you do not have npm downloaded already, use `sudo apt install npm` to install
 
 use this command to then install typescript `sudo npm install -g typescript`
 
+### Install library for typescript
+
+use this command to make the node.js library to be available to typescript `npm install -D @types/node`
+
 ## Migration & Start Server
 
 ```bash

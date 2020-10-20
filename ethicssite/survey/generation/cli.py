@@ -2,7 +2,7 @@ from Generator import Generator
 import yaml
 import json
 from pathlib import Path
-
+from django.conf import settings
 import argparse
 
 # parser = argparse.ArgumentParser(description='Generate scene from rule')
@@ -11,7 +11,7 @@ import argparse
 
 # args = parser.parse_args()
 # file_path = Path(args.file[0])
-fp = './rule/rule.json'
+fp = 'ethicssite/survey/generation/rule/rule.json'
 file_path = Path(fp)
 yaml_path = str(file_path.resolve())
 yaml_filename = file_path.name
