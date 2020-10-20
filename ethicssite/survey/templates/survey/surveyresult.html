@@ -4,13 +4,41 @@
 <head>
   <link rel="stylesheet" href="{% static 'css/surveyresult.css' %}">
   <meta charset="utf-8">
-  <title>Survey Results</title>
+  <title>Result Page</title>
 </head>
 
 <body>
   <div class = 'head_div'>
-    <h1 class = 'head'>Survey Result</h1>
+    <h1 class = 'head'>Your Answers</h1>
     <hr class = "head_hr"></hr>
   </div>
+  <div class="result">
+    {% for result in results %}
+      <div class = 'answers'>
+        <table class = 'table' border = "5" cellspacing = 0 cellpadding = '20px'>
+          <tr>
+            <td></td>
+            {% for feature in features %}
+              <td>{{ feature }}</td>
+            {% endfor %}
+          </tr>
+          {% for option in options %}
+            <tr>
+              <td>{{ option }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% for option in options %}
+          <div class="slidecontainer">
+            <p>{{ option }}</p>
+            <input type="range" min="1" max="100" value= 50>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    </div>
+    <div class = 'button_div'>
+      <button class="submit_button">Submit</button>
+    </div>
 </body>
 </html>
