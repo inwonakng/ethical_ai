@@ -211,15 +211,39 @@ class RangeCategory(models.Model):
 # } End Model for user setting
 
 
-
+def create_scenario_from_json(json_string):
+    # currently json as scenario is list of combos e.g. '[{}, {}, {}]'
+    # todo: scenario should have some prompt, should this be included in json?
+    scenario = Scenario()
+    scenario.save()
+    
+    data = json.loads(json_string)
+    for json_combo in data:
+        combo = Combo(scenario=scenario)
+        combo.save()
+        for json_attr in json_combo.keys():
+            attribute = Attribute(name=json_attr, value=json_combo[json_attr])
+            attribute.save()
+            combo.attributes.add(attribute)
+    
+    return scenario
 
 # Model for scenario
 class Scenario(models.Model):
 
     prompt = models.CharField(max_length=300, default="---")
 
+    def object_form(self):
+        # returns a list of combos that makes up the scenario e.g. [{}, {}, {}]
+        # todo: object_form currently doesn't include prompt, consider this
+        res = []
+        for combo in self.combo_set.all():
+            res.append(combo.object_form())
+        
+        return res
+
     def __str__(self):
-        return self.prompt
+        return str(self.prompt)
 
 # Model for a generic attribute for some combination (e.g. age or health)
 class Attribute(models.Model):
@@ -229,8 +253,12 @@ class Attribute(models.Model):
     # value for the attribute
     value = models.CharField(max_length=50, null=False, default='')
 
+    def object_form(self):
+        # return a tuple with a (name, value)
+        return (self.name, self.value)
+
     def __str__(self):
-        return '{:} {:}'.format(self.name, self.value)
+        return json.dumps(self.object_form())
 
 # Model for a set of attributes under some scenario (e.g. Person)
 class Combo(models.Model):
@@ -243,8 +271,17 @@ class Combo(models.Model):
     # attributes under the current Combo
     attributes = models.ManyToManyField(Attribute, related_name='combo_attributes')
 
+    def object_form(self):
+        # return a dict of all attribute and values e.g. {'age': '52'}
+        res = {}
+        for attr in self.attributes.all():
+            key, val = attr.object_form()
+            res[key] = val
+        
+        return res
+
     def __str__(self):
-        return self.name
+        return json.dumps(self.object_form())
 
 
 # Model for person
