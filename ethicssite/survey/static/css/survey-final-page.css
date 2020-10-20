@@ -1,23 +1,5 @@
 html{
-    font-family: sans-serif;
-}
-
-#prompt{
-    margin-left: 3%;
-    margin-right: 3%;
-    background-color: #3E8AD6;
-    color: #ffffff;
-    padding: 3%;
-}
-
-table, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
-table{
-    width:80%;
-    margin:auto;
+  font-family: sans-serif;
 }
 
 div{
@@ -26,17 +8,13 @@ div{
     margin-left: 3%;
 }
 
-#scorecontainer{
-    margin-left: 10%;
-    margin-bottom: 5%;
-}
-
-.option-score{
+.feature{
     width:10%;
     margin:0;
     display:inline-block;
     font-weight: 500;
 }
+
 .slidecontainer {
     width: 30%;
     display:inline-block;
@@ -77,17 +55,4 @@ div{
   border-radius: 50%;
   background: #000000;
   cursor: pointer;
-}
-
-button{
-    height:50px;
-    width:15%;
-    background-color: #FFFFFF;
-    cursor: pointer;
-    border-color: #3E8AD6;
-    border-radius:4px;
-}
-
-button:hover{
-    background-color: #DDDDDD
 }

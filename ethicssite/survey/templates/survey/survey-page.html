@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Ethical Voting Platform</title>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../../static/css/survey-page.css">
   </head>
   <body>
-    <p>Prompt</p>
+    <p id="prompt">Prompt</p>
     <table>
       <tr>
         <td></td>
@@ -52,23 +52,25 @@
         <td></td>
       </tr>
     </table>
-    <p>Scores: </p>
-    <div>
-      <p>Option A</p>
-      <div class="slidecontainer">
-        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+    <div id="scorecontainer">
+      <p>Scores: </p>
+      <div>
+        <p class="option-score">Option A</p>
+        <div class="slidecontainer">
+          <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
       </div>
-    </div>
-    <div>
-      <p>Option B</p>
-      <div class="slidecontainer">
-        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      <div>
+        <p class="option-score">Option B</p>
+        <div class="slidecontainer">
+          <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
       </div>
-    </div>
-    <div>
-      <p>Option C</p>
-      <div class="slidecontainer">
-        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      <div>
+        <p class="option-score">Option C</p>
+        <div class="slidecontainer">
+          <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
       </div>
     </div>
     <button>Prev</button>
