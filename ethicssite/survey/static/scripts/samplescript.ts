@@ -1,8 +1,15 @@
-import {helper} from './helper'
+// this is the function that will be passed along with the request. 
+// Every function that goes through the 'http' function should expect one data object.
+function writetopage(data:Array<JSON>){
+    let question = make('div','q0')
+    for(let i=0;i<data.length;i++){
+        let oneq = make('a','scenario'+i) 
+        //right now i'm just printing the json, so could use the conversion functaion to table here
+        oneq.innerHTML = JSON.stringify(data[i]) + '<br><br>' //for viewing pleasure
+        question.appendChild(oneq)
+    }
+    addtopage(question)
+}
 
-// var fn = new helper()
-alert('im here!')
-
-// const raw = helper.byid('survey_info').innerHTML!
-// const mydata = JSON.parse(raw)
-console.log(helper.byid('hihi').innerHTML)
+// testing grabbing generated survey scenario
+http('getscenario',writetopage)
