@@ -41,9 +41,7 @@ class Question(models.Model):
         return(questionObject)
 
 
-# Model for user settings {
-
-
+# { <<< Model for user settings 
 def create_rule_set_from_json_string(rule_set_json_string):
     rule_set = RuleSet()
     rule_set.save()
@@ -64,7 +62,7 @@ def create_rule_set_from_json_string(rule_set_json_string):
             rule_set.choicecategory_set.add(new_choice_category, bulk=False)
 
             for index in range(len(obj.keys())):
-                new_choice_category.choice_set.create(
+                new_choice_category.rulesetchoice_set.create(
                     index=index, description=obj[str(index)])
 
     for category_name in d['bad combo'].keys():
@@ -163,7 +161,7 @@ class ChoiceCategory(models.Model):
 
     def object_form(self):
         r = {}
-        for choice in self.choice_set.all():
+        for choice in self.rulesetchoice_set.all():
             r[choice.object_form()[0]] = choice.object_form()[1]
 
         return (self.name, r)
@@ -172,7 +170,7 @@ class ChoiceCategory(models.Model):
         return self.name
 
 
-class Choice(models.Model):
+class RuleSetChoice(models.Model):
     index = models.IntegerField()
     description = models.CharField(max_length=500)
     choiceCategory = models.ForeignKey(
@@ -208,8 +206,7 @@ class RangeCategory(models.Model):
             "unit": self.unit
         }})
 
-# } End Model for user setting
-
+# } <<< End Model for user setting
 
 def create_scenario_from_json(json_string):
     # currently json as scenario is list of combos e.g. '[{}, {}, {}]'
@@ -282,7 +279,6 @@ class Combo(models.Model):
 
     def __str__(self):
         return json.dumps(self.object_form())
-
 
 # Model for person
 # dependency of scenario
