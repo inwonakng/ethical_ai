@@ -4,6 +4,7 @@ from .generation.Generator import Generator
 from django.shortcuts import render
 import json
 from django.conf import settings
+from .models import *
 
 # stores everything into the Question model
 def receive_survey(request):
@@ -18,7 +19,7 @@ def receive_survey(request):
         # load the body as a json
         data = json.loads(request.body)
 
-        # {0: info: {age: stuff, health: stuff, etc}, 1: info: {age: stuff, health: stuff, etc}}
+        # {0: info: {key: value, key: value, etc}, 1: info: {key: value, key: value, etc}}
         scenario_dict = {}
 
         # loop through json
@@ -56,6 +57,11 @@ def load_survey(request):
     return render(request,'survey/surveysample.html',survey_info)
 
 def get_scenario(request):
+    combos = 3
+
+    if request.method == "POST":
+        combos = request.POST['combo_count']
+
 
     # grabbing the sample json
     rule = json.load(open(settings.BASE_DIR+'/survey/generation/rule/rule.json','r'))
