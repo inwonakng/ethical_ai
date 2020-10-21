@@ -18,14 +18,12 @@ class DummyModel(models.Model):
 
 # Question model
 @python_2_unicode_compatible
-class Question(models.Model):
+class Survey(models.Model):
     # Question field (text field shown to user)
-    question_txt = models.CharField(max_length=200, null=False,default='')
+    question_txt = models.CharField(max_length=200, null=False)
 
     # Question description (text field shown to user)
-    question_desc = models.TextField(null=False, blank=False,default='')
-
-    # Can always add more fields for the question object if needed
+    question_desc = models.TextField(null=False, blank=False)
 
     # Date when question was submitted (auto done in backend)
     date = models.DateTimeField(default=datetime.date.today)
@@ -41,7 +39,7 @@ class Question(models.Model):
         return(questionObject)
 
 
-# { <<< Model for user settings 
+# Model for user settings {
 def create_rule_set_from_json_string(rule_set_json_string):
     rule_set = RuleSet()
     rule_set.save()
@@ -85,7 +83,6 @@ def create_rule_set_from_json_string(rule_set_json_string):
 
     return rule_set
 
-
 class RuleSet(models.Model):
 
     def object_form(self):
@@ -108,7 +105,6 @@ class RuleSet(models.Model):
     def __str__(self):
         return self.id
 
-
 class BadCombination(models.Model):
     category_name = models.CharField(max_length=100)
     ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
@@ -118,7 +114,6 @@ class BadCombination(models.Model):
 
     def __str__(self):
         return self.category_name
-
 
 class BadSubCombination(models.Model):
     category_value = models.CharField(max_length=500)
@@ -132,7 +127,6 @@ class BadSubCombination(models.Model):
 
     def __str__(self):
         return self.category_value
-
 
 class BadSubCombinationElement(models.Model):
     category_name = models.CharField(max_length=100)
@@ -153,8 +147,6 @@ class ElementChoice(models.Model):
     def __str__(self):
         return str(self.category_index)
 
-
-
 class ChoiceCategory(models.Model):
     name = models.CharField(max_length=100)
     ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
@@ -169,7 +161,6 @@ class ChoiceCategory(models.Model):
     def __str__(self):
         return self.name
 
-
 class RuleSetChoice(models.Model):
     index = models.IntegerField()
     description = models.CharField(max_length=500)
@@ -181,7 +172,6 @@ class RuleSetChoice(models.Model):
 
     def __str__(self):
         return json.dumps({str(self.index): self.description})
-
 
 class RangeCategory(models.Model):
     name = models.CharField(max_length=100)
@@ -206,16 +196,14 @@ class RangeCategory(models.Model):
             "unit": self.unit
         }})
 
-# } <<< End Model for user setting
-
-
-
+# } End Model for user setting
 
 # Model for scenario
 # contains 'person_set'
 class Scenario(models.Model):
-
+    number = models.IntegerField(default=3)
     prompt = models.CharField(max_length=300, default="---")
+    question = models.ForeignKey(Survey, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.prompt
@@ -224,20 +212,20 @@ class Scenario(models.Model):
 # dependency of scenario
 class Person(models.Model):
 
-    # links back to scenario
-    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
-
     age = models.IntegerField(
         validators=[
             MaxValueValidator(120),
             MinValueValidator(0)
         ]
     )
+
     # spectrum?
     health = models.CharField(max_length=50)
+
     # true = make
     # false = female
     gender = models.BooleanField()
+
     # 0 = low
     # 1 = mid
     # 2 = high
@@ -247,24 +235,30 @@ class Person(models.Model):
             MinValueValidator(0)
         ]
     )
+    
     number_of_dependants = models.IntegerField(
         validators=[
             MaxValueValidator(20),
             MinValueValidator(0)
         ]
     )
+    
     survival_with_jacket = models.IntegerField(
         validators=[
             MaxValueValidator(100),
             MinValueValidator(0)
         ]
     )
+    
     survival_without_jacket = models.IntegerField(
         validators=[
             MaxValueValidator(100),
             MinValueValidator(0)
         ]
     )
+
+    # links back to Scenario
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 
     def __str__(self):
         return "Person"
