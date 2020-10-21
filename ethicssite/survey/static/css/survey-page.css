@@ -20,6 +20,10 @@ table{
     margin:auto;
 }
 
+tr{
+    height:60px;
+}
+
 div{
     margin-top:8px;
     margin-bottom: 8px;
