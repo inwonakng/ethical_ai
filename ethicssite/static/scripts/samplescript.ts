@@ -19,10 +19,10 @@ function maketable(data:Array<JSON>,index:number){
     // table headers
     let row = table.createTHead().insertRow()
     row.appendChild(make('th'))
-    for (let i=0;i<data.length;i++){
+    for (let i=1;i<=data.length;i++){
         let th = make('th')
         th.innerHTML = 'Option' + i
-        row.appendChild(th);
+        row.appendChild(th)
     }
     // table body
     for (let key in data[0]){
@@ -37,3 +37,4 @@ function maketable(data:Array<JSON>,index:number){
 
 // testing grabbing generated survey scenario
 http('getscenario',writetopage,0)
+http('getscenario',writetopage,1)
