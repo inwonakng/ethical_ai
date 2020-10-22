@@ -16,6 +16,7 @@ class Generator():
         self.adaptive = adaptive
         self.categories = {}
         self.bad_combos = []
+        self.config = {}
         
         # if rule dictionary (passed in) is empty
         if len(rule) == 0:
@@ -28,19 +29,12 @@ class Generator():
             else:
                 # DEFAULT to the rules.json file
                 rule = {}
-                with open("ethicssite/survey/generation/rule/rule.json", "r") as stream:
+                with open(str(Path("ethicssite/survey/generation/rule/rule.yaml").resolve()), "r") as stream:
                     try:
                         rule = yaml.safe_load(stream)
                     except yaml.YAMLError as exc:
                         print(exc)
 
-        for key, value in rule['categories'].items():
-            self.categories.append(Category(name=key, options=value))
-        for attr, vals in rule['bad combo'].items():
-            self.bad_combos.append(Rule(category=attr, value=vals))
-
-
-        self.config = {}
         self.config['same_categories'] = rule['config'].get(
             'same_categories', -1)
         self.config['scenerio_size'] = rule['config'].get('scenerio_size', 2)

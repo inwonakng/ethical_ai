@@ -11,8 +11,11 @@ parser.add_argument('file', metavar='FILE', type=str, nargs=1,
 
 args = parser.parse_args()
 file_path = Path(args.file[0])
+
 yaml_path = str(file_path.resolve())
+
 yaml_filename = file_path.name
+
 with open(yaml_path, 'r') as stream:
     try:
         rule = yaml.safe_load(stream)
