@@ -1,5 +1,6 @@
 {% comment %} this is how you grab the object {% endcomment %}
-{{ sample|json_script:"sample" }}
+{{ survey_information|json_script:"survey_information" }}
 
 {% comment %} source javascript files are imported like this {% endcomment %}
-<script src ='../../scripts/samplescript.json'></script>
+{% load static %}
+<script src="{% static '/scripts/compiled_js/samplescript.js' %}"></script> 

@@ -1,0 +1,107 @@
+{
+    "categories": {
+        "age": {
+            "0": "5",
+            "1": "8",
+            "2": "12",
+            "3": "18",
+            "4": "21",
+            "5": "23",
+            "6": "27",
+            "7": "32",
+            "8": "52",
+            "9": "61",
+            "10": "72"
+        },
+        "health": {
+            "0": "in great health",
+            "1": "small health problems",
+            "2": "moderate health problems",
+            "3": "terminally ill(less than 3 years left)"
+        },
+        "gender": {
+            "0": "male",
+            "1": "female"
+        },
+        "income level": {
+            "0": "low",
+            "1": "mid",
+            "2": "high"
+        },
+        "number of dependents": {
+            "0": "0",
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5"
+        },
+        "survival without": {
+            "range": [
+                20.0,
+                50.0
+            ],
+            "unit": "%"
+        },
+        "survival difference": {
+            "range": [
+                50.0,
+                80.1
+            ],
+            "unit": "%"
+        }
+    },
+    "bad combo": {
+        "age": {
+            "8": {
+                "number of dependents": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ]
+            },
+            "12": {
+                "income level": [
+                    "2"
+                ],
+                "number of dependents": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ]
+            },
+            "18": {
+                "income level": [
+                    "2"
+                ],
+                "number of dependents": [
+                    "4",
+                    "5"
+                ]
+            },
+            "23": {
+                "number of dependents": [
+                    "4",
+                    "5"
+                ]
+            },
+            "61": {
+                "number of dependents": [
+                    "4",
+                    "5"
+                ]
+            },
+            "72": {
+                "number of dependents": [
+                    "3",
+                    "4",
+                    "5"
+                ]
+            }
+        }
+    }
+}

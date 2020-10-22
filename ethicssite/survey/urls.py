@@ -3,8 +3,8 @@ from . import views
 
 urlpatterns = [
     # this path is for mturk, where the random survey would be
-    path('', views.random_survey, name='mturk'),
-    path('getsurvey', views.get_survey, name='getsurvey'),
-    path('result', views.survey_result, name="surveyresult"),
+    path('loadsurvey', views.load_survey, name='loadsurvey'),
+    path('getscenario', views.get_scenario, name='getscenario'),
+    path('survey/result', views.survey_result, name="surveyresult"),
     path('<random>', views.unknown_path)
 ]

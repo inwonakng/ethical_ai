@@ -15,14 +15,24 @@ class Combo():
     def getExtended(self, listOfCategories):
         opt = {}
         for key, value in self.combo.items():
-            opt[key] = listOfCategories[key][value]
+            opt[key] = listOfCategories[key].getValue(value)
         return opt
 
+    # Count same number of same Keys between two combo
+    def sameKey(self, other):
+        i = 0
+        for k in self.combo:
+            if self.combo[k] == other.combo[k]:
+                i += 1
+
+        return i
+
     # returns lists of duplicate key and value in tuples.
-    def compare(self,othercombo):
+    def compare(self, othercombo):
         duplicates = []
-        for k,c in self.combo.items():
-            if othercombo.combo[k] == c: duplicates.append((k,c))
+        for k, c in self.combo.items():
+            if othercombo.combo[k] == c:
+                duplicates.append((k, c))
         return duplicates
 
     def __repr__(self):
