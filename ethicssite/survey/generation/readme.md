@@ -70,7 +70,7 @@ The category may have a special operator key instead of regular indexes. Current
 
 ## Rule
 
-Rule is used to shape generation with custom rules. A rules object may looks like this:
+Rule is used to shape generation with custom rules (also referred to as bad combos in the json file). A rules object may looks like this:
 
 ```yaml
 bad_combos:
