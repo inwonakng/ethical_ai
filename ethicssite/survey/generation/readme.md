@@ -70,7 +70,7 @@ The key should always be integer. However, the sqeuence of the number could be r
 The category may have a special operator key instead of regular indexes. Currently implemented is ```[range]```, which generates all the numbers between the first and second index of the following list.
 ## Rule
 
-Rule is used to shape generation with custom rules. A rules object for the 'age' field looks like this:
+Rule(also referred to as 'bad combinations') is used to shape generation with custom rules. A rules object for the 'age' field looks like this:
 
 ```json
 {

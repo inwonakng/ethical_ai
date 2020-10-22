@@ -26,6 +26,7 @@ class Generator():
         self.permutate_options(numcombos)
         return [c.getCombo() for c in self.combinations]
 
+    # this function calls the recursive routine for generation one scenario
     def permutate_options(self,numcombos):
         self.combinations = []
         for _ in range(numcombos): self.__recursive_permutation()
@@ -33,6 +34,7 @@ class Generator():
         if not self.check_duplicates(): self.permutate_options(numcombos)
         return True
 
+    # checking the values of the combination before returning
     def check_duplicates(self):
         # get all possible pairs to compare duplicates
         tocheck = list(comb(self.combinations,2))
@@ -45,7 +47,7 @@ class Generator():
         numfound = list(found.values())
         return max(numfound) < 3 and numfound.count(2) < len(self.combinations)-1
 
-    # modified to compute just one combination.
+    # Recurses through the 'categories' and picks valus from them
     def __recursive_permutation(self, stack = [], categoryIndex = 0):
         if categoryIndex >= len(self.categories):
             # The end of recursion
