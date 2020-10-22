@@ -22,11 +22,11 @@ class Generator():
         # Cache result
         self.combinations = []
         
-    def get_scenario(self,numcombos = 3):
+    def get_scenario(self, numcombos=3):
         self.permutate_options(numcombos)
         return [c.getCombo() for c in self.combinations]
 
-    def permutate_options(self,numcombos):
+    def permutate_options(self, numcombos):
         self.combinations = []
         for _ in range(numcombos): self.__recursive_permutation()
         # check for duplicates. let's allow 2 values to be repeated up to numcombos -1 times

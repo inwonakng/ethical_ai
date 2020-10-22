@@ -85,7 +85,6 @@ def create_rule_set_from_json_string(rule_set_json_string):
 
     return rule_set
 
-
 class RuleSet(models.Model):
 
     def object_form(self):
@@ -108,7 +107,6 @@ class RuleSet(models.Model):
     def __str__(self):
         return self.id
 
-
 class BadCombination(models.Model):
     category_name = models.CharField(max_length=100)
     ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
@@ -118,7 +116,6 @@ class BadCombination(models.Model):
 
     def __str__(self):
         return self.category_name
-
 
 class BadSubCombination(models.Model):
     category_value = models.CharField(max_length=500)
@@ -132,7 +129,6 @@ class BadSubCombination(models.Model):
 
     def __str__(self):
         return self.category_value
-
 
 class BadSubCombinationElement(models.Model):
     category_name = models.CharField(max_length=100)
@@ -169,7 +165,6 @@ class ChoiceCategory(models.Model):
     def __str__(self):
         return self.name
 
-
 class RuleSetChoice(models.Model):
     index = models.IntegerField()
     description = models.CharField(max_length=500)
@@ -181,7 +176,6 @@ class RuleSetChoice(models.Model):
 
     def __str__(self):
         return json.dumps({str(self.index): self.description})
-
 
 class RangeCategory(models.Model):
     name = models.CharField(max_length=100)
@@ -208,68 +202,86 @@ class RangeCategory(models.Model):
 
 # } <<< End Model for user setting
 
-
-
+def create_scenario_from_json(json_string):
+    # currently json as scenario is list of combos e.g. '[{}, {}, {}]'
+    # todo: scenario should have some prompt, should this be included in json?
+    scenario = Scenario()
+    scenario.save()
+    
+    data = json.loads(json_string)
+    for json_combo in data:
+        combo = Combo(scenario=scenario)
+        combo.save()
+        for json_attr in json_combo.keys():
+            attribute = Attribute(name=json_attr, value=json_combo[json_attr])
+            attribute.save()
+            combo.attributes.add(attribute)
+    
+    return scenario
 
 # Model for scenario
-# contains 'person_set'
 class Scenario(models.Model):
 
     prompt = models.CharField(max_length=300, default="---")
 
-    def __str__(self):
-        return self.prompt
-
-# Model for person
-# dependency of scenario
-class Person(models.Model):
-
-    # links back to scenario
-    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
-
-    age = models.IntegerField(
-        validators=[
-            MaxValueValidator(120),
-            MinValueValidator(0)
-        ]
-    )
-    # spectrum?
-    health = models.CharField(max_length=50)
-    # true = make
-    # false = female
-    gender = models.BooleanField()
-    # 0 = low
-    # 1 = mid
-    # 2 = high
-    income = models.IntegerField(
-        validators=[
-            MaxValueValidator(2),
-            MinValueValidator(0)
-        ]
-    )
-    number_of_dependants = models.IntegerField(
-        validators=[
-            MaxValueValidator(20),
-            MinValueValidator(0)
-        ]
-    )
-    survival_with_jacket = models.IntegerField(
-        validators=[
-            MaxValueValidator(100),
-            MinValueValidator(0)
-        ]
-    )
-    survival_without_jacket = models.IntegerField(
-        validators=[
-            MaxValueValidator(100),
-            MinValueValidator(0)
-        ]
-    )
+    def object_form(self):
+        # returns a list of combos that makes up the scenario e.g. [{}, {}, {}]
+        # todo: object_form currently doesn't include prompt, consider this
+        res = []
+        for combo in self.combo_set.all():
+            res.append(combo.object_form())
+        
+        return res
 
     def __str__(self):
-        return "Person"
+        return str(self.prompt)
 
+# Model for a generic attribute for some combination (e.g. age or health)
+class Attribute(models.Model):
+    # attribute name (e.g. age or health)
+    name = models.CharField(max_length=50, null=False, default='')
 
-# generator for a set of scenarios (likned to the user settings)
+    # value for the attribute
+    value = models.CharField(max_length=50, null=False, default='')
+
+    def object_form(self):
+        # return a tuple with a (name, value)
+        return (self.name, self.value)
+
+    def __str__(self):
+        return json.dumps(self.object_form())
+
+# Model for a set of attributes under some scenario (e.g. Person)
+class Combo(models.Model):
+    # name of current Combo (e.g. Person A)
+    name = models.CharField(max_length=50, null=False, default='')
+
+    # link to given scenario
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE, default=1)
+
+    # attributes under the current Combo
+    attributes = models.ManyToManyField(Attribute, related_name='combo_attributes')
+
+    def object_form(self):
+        # return a dict of all attribute and values e.g. {'age': '52'}
+        res = {}
+        for attr in self.attributes.all():
+            key, val = attr.object_form()
+            res[key] = val
+        
+        return res
+
+    def __str__(self):
+        return json.dumps(self.object_form())
 
 # Model for storing user input scores
+class Response(models.Model):
+    # consider including some fields for identifying the user?
+    # userid = ?
+
+    # which combo the current score is for
+    combo = models.ForeignKey(Combo, on_delete=models.CASCADE, default=1)
+
+    # user input score
+    # todo: consider changing this to be IntegerChoices / Range?
+    score = models.IntegerField()
