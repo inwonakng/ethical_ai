@@ -2,7 +2,7 @@ from django.test import TestCase
 import json
 import os
 from survey.models import RuleSet, ChoiceCategory, RuleSetChoice, RangeCategory,\
-    create_rule_set_from_json_string
+    parse_json
 
 # from survey.models import SettingCollection, Setting,\
 #     SettingOption, createNewSettingsCollection
@@ -19,7 +19,7 @@ class UserSettingTestCase(TestCase):
             data = json.load(f)
 
         orig_json_string = json.dumps(data, indent=4)
-        new_rule_set = create_rule_set_from_json_string(orig_json_string)
+        new_rule_set = parse_json(orig_json_string)
         
         self.assertEqual(json.dumps(new_rule_set.object_form(), indent=4), orig_json_string)
         
