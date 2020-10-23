@@ -132,3 +132,10 @@ and start server by
 ```bash
 python3 manage.py runserver
 ```
+
+
+## Compiling the typescript files 
+**make sure the change the relative path if you are not executing from the root directory
+```bash
+tsc -p ethicssite/static/scripts/tsconfig.json
+```

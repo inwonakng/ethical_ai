@@ -17,7 +17,7 @@ function maketable(data, index) {
     // table headers
     let row = table.createTHead().insertRow();
     row.appendChild(make('th'));
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 1; i <= data.length; i++) {
         let th = make('th');
         th.innerHTML = 'Option' + i;
         row.appendChild(th);
@@ -34,4 +34,5 @@ function maketable(data, index) {
 }
 // testing grabbing generated survey scenario
 http('getscenario', writetopage, 0);
+http('getscenario', writetopage, 1);
 //# sourceMappingURL=samplescript.js.map
