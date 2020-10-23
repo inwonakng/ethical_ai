@@ -8,6 +8,7 @@
   </head>
   <body>
     <p id="prompt">Prompt</p>
+    <!--
     <table>
       <tr>
         <td></td>
@@ -52,6 +53,9 @@
         <td></td>
       </tr>
     </table>
+  -->
+    <div id="survey"></div>
+    
     <div id="scorecontainer">
       <p>Scores: </p>
       <div>
@@ -77,9 +81,8 @@
     <button>Next</button>
     <div id='showData'></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script type="text/javascript" src="../../generation/rule/result.json"></script> 
-    <script>
-      console.log(JSON.parse(result.json))
-    </script>
+    {% load static %}
+    <script type="text/javascript" src="{% static '/scripts/compiled_js/helper.js' %}"></script> 
+    <script type="text/javascript" src="{% static '/scripts/compiled_js/samplescript.js' %}"></script> 
   </body>
 </html>

@@ -54,7 +54,7 @@ def receive_survey(request):
     # function to grab new scenario
 def load_survey(request):
     survey_info = {}
-    return render(request,'survey/surveysample.html',survey_info)
+    return render(request,'survey/survey-page.html',survey_info)
 
 def get_scenario(request):
     combos = 3
