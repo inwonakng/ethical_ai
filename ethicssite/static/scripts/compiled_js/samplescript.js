@@ -34,5 +34,5 @@ function maketable(data, index) {
 }
 // testing grabbing generated survey scenario
 http('getscenario', writetopage, 0);
-http('getscenario', writetopage, 1);
+//http('getscenario',writetopage,1)
 //# sourceMappingURL=samplescript.js.map
