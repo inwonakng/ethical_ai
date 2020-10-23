@@ -1,6 +1,6 @@
-from Category import Category
-from Rule import Rule
-from Combo import Combo
+from .Category import Category
+from .Rule import Rule
+from .Combo import Combo
 from random import sample
 
 from itertools import combinations as comb
@@ -36,6 +36,7 @@ class Generator():
         self.permutate_combos()
         # self.extend_combos()
 
+    # should return a dictionary
     def get_scenario(self):
         '''
             random pick
@@ -49,7 +50,7 @@ class Generator():
                 selected = s
                 break
 
-        return s
+        return [s.getCombo() for s in selected]
 
     def permutate_combos(self):
         self.combos = []
