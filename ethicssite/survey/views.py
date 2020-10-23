@@ -64,7 +64,7 @@ def get_scenario(request):
 
 
     # grabbing the sample json
-    rule = json.load(open(settings.BASE_DIR+'/survey/generation/rule/rule.json','r'))
+    rule = json.load(open(os.path.join(settings.BASE_DIR, 'survey/generation/rule/rule.json'),'r'))
     story_gen = Generator(rule=rule)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)

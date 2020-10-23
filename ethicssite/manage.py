@@ -7,15 +7,6 @@ from django.conf import settings
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ethicssite.settings')
-    # compiling typescript here
-    try:
-        print('compiling typescript...')
-        subprocess.run(
-            ['tsc', '-p', settings.BASE_DIR+'/static/scripts/tsconfig.json']
-            )
-        print('compilation successful!')
-    except:
-        print('typescript compile failed!')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
