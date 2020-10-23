@@ -36,6 +36,13 @@ function maketable(data:Array<JSON>,index:number){
     return table
 }
 
+function makeslider(index:number){
+    let scorecontainer = make('div', 'option-score-container');
+    let title = make('p','optionscore');
+    let slidercontainer = make('div', 'slidercontainer');
+    let slider = make()
+}
+
 // testing grabbing generated survey scenario
 http('getscenario',writetopage,0)
 //http('getscenario',writetopage,1)
