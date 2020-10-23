@@ -34,6 +34,11 @@ class RuleSet(models.Model):
 
     def object_form(self):
         return_dict = {}
+
+        return_dict['config'] = {}
+        return_dict['config']['same_categories'] = 3
+        return_dict['config']['scenario_size'] = 2
+
         return_dict['categories'] = {}
         for choice_category in self.choicecategory_set.all():
             obj = choice_category.object_form()
