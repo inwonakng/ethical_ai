@@ -1,8 +1,15 @@
 // This is the helper class for some functions that we will all have to use.
 // works the same as document.getElementById
 // I want to change this area here, so instead of appending it to the page, it will just add it to the page.
-function addtopage(element:any){
+function addsurveytopage(element:any){
     document.getElementById("survey").append(element)
+}
+
+function addsliderstopage(i){
+    for(let j in i){
+        document.getElementById("sliders").append();
+    }
+    
 }
 
 function make( tag:string, id?:string){

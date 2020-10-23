@@ -10,7 +10,7 @@ function writetopage(data, args) {
     //     oneq.innerHTML = JSON.stringify(data[i]) + '<br><br>' //for viewing pleasure
     //     question.appendChild(oneq)
     // }
-    addtopage(question);
+    addsurveytopage(question);
 }
 function maketable(data, index) {
     let table = make('table', 'table' + index);
@@ -29,6 +29,11 @@ function maketable(data, index) {
         for (let d of data) {
             row.insertCell().innerHTML = d[key];
         }
+    }
+    let count = 0;
+    for (let key in data) {
+        count++;
+        console.log(count);
     }
     return table;
 }

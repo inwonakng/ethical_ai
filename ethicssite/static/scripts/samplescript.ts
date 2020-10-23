@@ -11,7 +11,8 @@ function writetopage(data:Array<JSON>,args:any){
     //     oneq.innerHTML = JSON.stringify(data[i]) + '<br><br>' //for viewing pleasure
     //     question.appendChild(oneq)
     // }
-    addtopage(question)
+    addsurveytopage(question)
+    addsliderstopage(data.length)
 }
 
 function maketable(data:Array<JSON>,index:number){
