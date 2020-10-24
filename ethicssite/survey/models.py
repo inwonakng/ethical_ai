@@ -32,27 +32,37 @@ class Question(models.Model):
 # Rule model
 class RuleSet(models.Model):
 
+    def __init__(self, same_categories=None, scenerio_size=None):
+        self.return_dict = {}
+        self.return_dict['config'] = {}
+
+        if same_categories is None:
+            self.return_dict['config']['same_categories'] = 2
+        else:
+            self.return_dict['config']['same_categories'] = same_categories
+
+        if scenerio_size is None:
+            self.return_dict['config']['scenerio_size'] = 2
+        else:
+            self.return_dict['config']['scenerio_size'] = scenerio_size
+
+
     def object_form(self):
-        return_dict = {}
 
-        return_dict['config'] = {}
-        return_dict['config']['same_categories'] = 3
-        return_dict['config']['scenario_size'] = 2
-
-        return_dict['categories'] = {}
+        self.return_dict['categories'] = {}
         for choice_category in self.choicecategory_set.all():
             obj = choice_category.object_form()
-            return_dict['categories'][obj[0]] = obj[1]
+            self.return_dict['categories'][obj[0]] = obj[1]
 
         for range_category in self.rangecategory_set.all():
             obj = range_category.object_form()
-            return_dict['categories'][obj[0]] = obj[1]
+            self.return_dict['categories'][obj[0]] = obj[1]
 
 
-        return_dict['bad combo'] = {key: value for (key, value) in [obj.object_form() for obj in self.badcombination_set.all()]}
+        self.return_dict['bad combo'] = {key: value for (key, value) in [obj.object_form() for obj in self.badcombination_set.all()]}
 
 
-        return return_dict
+        return self.return_dict
 
     def __str__(self):
         return self.id
@@ -222,7 +232,6 @@ class Response(models.Model):
 
 def parse_json(rule_set_json_string):
     rule_set = RuleSet()
-    rule_set.save()
     d = json.loads(rule_set_json_string)
     for category in d['categories'].keys():
         obj = d['categories'][category]
@@ -263,7 +272,7 @@ def parse_json(rule_set_json_string):
                 for category_index in sub_obj[category_name_in]:
                     bad_sub_combination_element.elementchoice_set.create(
                         category_index=category_index)
-
+    rule_set.save()
     return rule_set
 
 def create_scenario(json_string):

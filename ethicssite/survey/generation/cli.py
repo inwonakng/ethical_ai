@@ -2,7 +2,7 @@ from Generator import Generator
 import yaml
 import json
 from pathlib import Path
-from django.conf import settings
+# from django.conf import settings
 import argparse
 
 parser = argparse.ArgumentParser(description='Generate scene from rule')

@@ -1,16 +1,16 @@
-from Category import Category
-from Rule import Rule
-from Combo import Combo
+from .Category import Category
+from .Rule import Rule
+from .Combo import Combo
 from random import sample
-
+from pathlib import Path
 from itertools import combinations as comb
-from survey.models import RuleSet
+from ..models import RuleSet
 import yaml
 
 
 
 class Generator():
-    def __init__(self, adaptive=False, rule={}, rule_model):
+    def __init__(self, adaptive=False, rule={}, rule_model=None):
 
         # assign attributes
         self.adaptive = adaptive
@@ -22,14 +22,14 @@ class Generator():
         if len(rule) == 0:
 
             # if rule_model is a RuleSet model AND the model is not empty
-            if (typeof(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
+            if (type(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
                 rule = rule_model.object_form()
 
             # if rule model is empty
             else:
                 # DEFAULT to the rules.json file
                 rule = {}
-                with open(str(Path("ethicssite/survey/generation/rule/rule.yaml").resolve()), "r") as stream:
+                with open(str(Path("survey/generation/rule/rule.yaml").resolve()), "r") as stream:
                     try:
                         rule = yaml.safe_load(stream)
                     except yaml.YAMLError as exc:
