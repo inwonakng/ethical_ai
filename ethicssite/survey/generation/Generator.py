@@ -54,6 +54,7 @@ class Generator():
         self.permutate_combos()
         # self.extend_combos()
 
+    # should return a dictionary
     def get_scenario(self):
         '''
             random pick
@@ -67,7 +68,7 @@ class Generator():
                 selected = s
                 break
 
-        return s
+        return [s.getCombo() for s in selected]
 
     def permutate_combos(self):
         self.combos = []

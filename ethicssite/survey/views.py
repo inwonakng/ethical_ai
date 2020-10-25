@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from .generation.Generator import Generator
 from django.shortcuts import render
-import json
+import yaml
 from django.conf import settings
 from .models import *
 
@@ -64,7 +64,7 @@ def get_scenario(request):
 
 
     # grabbing the sample json
-    rule = json.load(open(settings.BASE_DIR+'/survey/generation/rule/rule.json','r'))
+    rule = yaml.safe_load(open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml','r'))
     story_gen = Generator(rule=rule)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
