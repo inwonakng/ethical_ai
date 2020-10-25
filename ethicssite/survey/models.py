@@ -42,7 +42,7 @@ class RuleSet(models.Model):
             self.return_dict['config']['same_categories'] = same_categories
 
         if scenerio_size is None:
-            self.return_dict['config']['scenerio_size'] = 2
+            self.return_dict['config']['scenerio_size'] = 5
         else:
             self.return_dict['config']['scenerio_size'] = scenerio_size
 
