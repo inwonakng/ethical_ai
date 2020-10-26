@@ -13,27 +13,30 @@
     <hr class = "head_hr"></hr>
   </div>
   <div class="result">
-    {% for result in results %}
+    {% for result in results%}
+    <div class="scenario_div">Scenario: {{result.scenario}}</div>
       <div class = 'answers'>
-        <table class = 'table' border = "5" cellspacing = 0 cellpadding = '20px'>
+        <table class = 'table' border = "1px solid blue" cellspacing = 0 cellpadding = '20px' align="center">
           <tr>
             <td></td>
-            {% for feature in features %}
+            {% for feature in result.features %}
               <td>{{ feature }}</td>
             {% endfor %}
+            <td>Your Choice</td>
           </tr>
-          {% for option in options %}
+          {% for score in result.score %}
             <tr>
-              <td>{{ option }}</td>
+              <td>{{ score.0 }}</td>
+              {% for feature in result.features %}
+                <td>{{ score.0 }}'s {{ feature }}</td>
+              {% endfor %}
+              <td>{{ score.1 }}</td>
             </tr>
           {% endfor %}
         </table>
-        {% for option in options %}
-          <div class="slidecontainer">
-            <p>{{ option }}</p>
-            <input type="range" min="1" max="100" value= 50>
-          </div>
-        {% endfor %}
+      </div>
+      <div class = 'button_div'>
+        <button class="modify_button">Click to modify</button>
       </div>
     {% endfor %}
     </div>
