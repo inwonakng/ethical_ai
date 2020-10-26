@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 from .generation.Generator import Generator
 from django.shortcuts import render
 import yaml
 from django.conf import settings
 from .models import *
-
+import json
 # stores everything into the Question model
 def receive_survey(request):
     if request.method == "POST":
@@ -91,3 +91,19 @@ def survey_result(request):
 # Django view to handle unknown paths
 def unknown_path(request, random):
     return render(request, 'survey/unknownpath.html')
+
+
+def rules_save(request):
+    
+    if request.method != 'POST':
+        return HttpResponse(status=400)
+    json_data = json.loads(request.body)
+    json_rules_string = ''
+    try:
+        json_rules_string = json.dumps(json_data['rules'])
+    except KeyError:
+        HttpResponseServerError('`rules` field not found in request body.')
+    
+    create_rule_set_from_json_string(json_rules_string)
+    HttpResponse(statud=201)
+
