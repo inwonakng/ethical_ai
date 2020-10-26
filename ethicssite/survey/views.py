@@ -79,13 +79,11 @@ def get_scenario(request):
 # Django view to handle the survey results page.
 def survey_result(request):
     results = [
-                {'score': [0,3,7]},
-                {'score': [7,7,7]},
-                {'score': [6,6,6]}
-              ]
-    features = ['feature1', 'feature2','feature3']
-    options = ['optionA', 'optionB', 'optionC']
-    return render(request, 'survey/surveyresult.html', {'results':results, 'features':features, 'options': options})
+                {'scenario': "1", 'features': ['feature1', 'feature2', 'feature3'], 'score': [['A',1],['B',2],['C',3]]},
+                {'scenario': "2", 'features': ['feature1', 'feature2', 'feature3'], 'score': [['A',3],['B',4],['C',5]]},
+                {'scenario': "3", 'features': ['feature1', 'feature2', 'feature3'], 'score': [['A',1],['B',7],['C',4]]}
+            ]
+    return render(request, 'survey/surveyresult.html', {'results':results})
 
 
 # Django view to handle unknown paths
