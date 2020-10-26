@@ -92,7 +92,7 @@ def survey_result(request):
 def unknown_path(request, random):
     return render(request, 'survey/unknownpath.html')
 
-
+# Django endpoint to save rule to database from json post request body
 def rules_save(request):
     
     if request.method != 'POST':
