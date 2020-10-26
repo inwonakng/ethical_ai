@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../static/css/survey-page.css">
   </head>
-  <body>
+  <body onload="guicheck()">
     <p id="prompt">Prompt</p>
     <div id="survey"></div>
 
@@ -15,7 +15,7 @@
     </div>
 
     <button id="prev" onclick="prev()">Prev</button>
-    <button onclick="next()">Next</button>
+    <button id="next" onclick="next()">Next</button>
     <div id='showData'></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     {% load static %}

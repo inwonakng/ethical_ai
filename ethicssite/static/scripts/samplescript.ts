@@ -40,9 +40,9 @@ function makeslider(index:string){
     var slider = document.createElement('input')
     slider.type = "range"
     slider.id = 'range' + 1;
-    slider.min = "1"
+    slider.min = "0"
     slider.max="10"
-    slider.value="5"
+    slider.value="0"
     slider.className = "slider"
     slidercontainer.appendChild(slider)
     scorecontainer.appendChild(title)
@@ -50,11 +50,25 @@ function makeslider(index:string){
     return scorecontainer;
 }
 
+function guicheck(){
+    if(num == 0){
+        document.getElementById("prev").setAttribute("disabled", "true")
+    }
+    else{
+        document.getElementById("prev").removeAttribute("disabled")
+    }
+    if(num==10){
+        document.getElementById("next").setAttribute("disabled", "true")
+    }
+    else{
+        document.getElementById("next").removeAttribute("disabled")
+    }
+}
+
 function next(){
     document.getElementById("q"+num).style.display = "none"
     document.getElementById("slides" + num).style.display = "none"
     num++;
-
     // Did we already create this scenario?
     var element = document.getElementById(("q"+num))
     if(typeof(element) != "undefined" && element != null){
@@ -65,6 +79,7 @@ function next(){
     else{
         http('getscenario',writetopage,num)
     }
+    guicheck()
 }
 
 function prev(){
@@ -73,6 +88,7 @@ function prev(){
     num--;
     document.getElementById("q"+num).style.display = "block"
     document.getElementById("slides" + num).style.display = "block"
+    guicheck()
 }
 
 // testing grabbing generated survey scenario

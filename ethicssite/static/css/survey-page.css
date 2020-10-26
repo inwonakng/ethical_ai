@@ -16,7 +16,7 @@ table, td {
 }
 
 table{
-    width:80%;
+    width:50%;
     margin:auto;
 }
 
@@ -98,4 +98,14 @@ button{
 
 button:hover{
     background-color: #DDDDDD
+}
+
+button:disabled,
+button[disabled]{
+    height:50px;
+    width:15%;
+    background-color: #FFFFFF;
+    cursor: auto;
+    border-color: #3E8AD6;
+    border-radius:4px;
 }

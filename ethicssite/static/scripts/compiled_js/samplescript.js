@@ -37,14 +37,28 @@ function makeslider(index) {
     var slider = document.createElement('input');
     slider.type = "range";
     slider.id = 'range' + 1;
-    slider.min = "1";
+    slider.min = "0";
     slider.max = "10";
-    slider.value = "5";
+    slider.value = "0";
     slider.className = "slider";
     slidercontainer.appendChild(slider);
     scorecontainer.appendChild(title);
     scorecontainer.appendChild(slidercontainer);
     return scorecontainer;
+}
+function guicheck() {
+    if (num == 0) {
+        document.getElementById("prev").setAttribute("disabled", "true");
+    }
+    else {
+        document.getElementById("prev").removeAttribute("disabled");
+    }
+    if (num == 10) {
+        document.getElementById("next").setAttribute("disabled", "true");
+    }
+    else {
+        document.getElementById("next").removeAttribute("disabled");
+    }
 }
 function next() {
     document.getElementById("q" + num).style.display = "none";
@@ -60,6 +74,7 @@ function next() {
     else {
         http('getscenario', writetopage, num);
     }
+    guicheck();
 }
 function prev() {
     document.getElementById("q" + num).style.display = "none";
@@ -67,6 +82,7 @@ function prev() {
     num--;
     document.getElementById("q" + num).style.display = "block";
     document.getElementById("slides" + num).style.display = "block";
+    guicheck();
 }
 // testing grabbing generated survey scenario
 var num = 0;
