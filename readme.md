@@ -115,6 +115,10 @@ if you do not have npm downloaded already, use `sudo apt install npm` to install
 
 use this command to then install typescript `sudo npm install -g typescript`
 
+### Install library for typescript
+
+use this command to make the node.js library to be available to typescript `npm install -D @types/node`
+
 ## Migration & Start Server
 
 ```bash
@@ -127,4 +131,11 @@ and start server by
 
 ```bash
 python3 manage.py runserver
+```
+
+
+## Compiling the typescript files 
+**make sure the change the relative path if you are not executing from the root directory
+```bash
+tsc -p ethicssite/static/scripts/tsconfig.json
 ```

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "es6",
+      "sourceMap": true,
+      // "strict": true,
+      "outDir": "compiled_js",
+      "lib": [
+        "es6",
+        "dom",
+        "dom.iterable"
+        // "es5"
+      ],
+      "moduleResolution": "node"
+    }
+  }
