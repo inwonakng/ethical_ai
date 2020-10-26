@@ -47,17 +47,21 @@ function makeslider(index) {
     return scorecontainer;
 }
 function guicheck() {
+    var maxScenarios = 10;
     if (num == 0) {
         document.getElementById("prev").setAttribute("disabled", "true");
     }
     else {
         document.getElementById("prev").removeAttribute("disabled");
     }
-    if (num == 10) {
+    if (num == maxScenarios) {
         document.getElementById("next").setAttribute("disabled", "true");
     }
     else {
         document.getElementById("next").removeAttribute("disabled");
+    }
+    if (num == maxScenarios) {
+        document.getElementById("submit").style.display = "inline-block";
     }
 }
 function next() {
@@ -84,8 +88,10 @@ function prev() {
     document.getElementById("slides" + num).style.display = "block";
     guicheck();
 }
-// testing grabbing generated survey scenario
+function grabdata() {
+}
+// initial page
 var num = 0;
+var data = [];
 http('getscenario', writetopage, num);
-//http('getscenario',writetopage,1)
 //# sourceMappingURL=samplescript.js.map

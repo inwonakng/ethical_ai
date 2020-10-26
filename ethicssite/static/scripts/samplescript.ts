@@ -57,11 +57,14 @@ function guicheck(){
     else{
         document.getElementById("prev").removeAttribute("disabled")
     }
-    if(num==10){
+    if(num==maxScenarios){
         document.getElementById("next").setAttribute("disabled", "true")
     }
     else{
         document.getElementById("next").removeAttribute("disabled")
+    }
+    if(num==maxScenarios){
+        document.getElementById("submit").style.display = "inline-block"
     }
 }
 
@@ -91,8 +94,15 @@ function prev(){
     guicheck()
 }
 
-// testing grabbing generated survey scenario
+function grabdata(){
+    for(var i=0; i < maxScenarios; i++){
+        
+    }
+}
+
+// initial page
 var num = 0;
+var maxScenarios = 10;
+var data = [];
 http('getscenario',writetopage,num)
 
-//http('getscenario',writetopage,1)

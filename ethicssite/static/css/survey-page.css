@@ -109,3 +109,15 @@ button[disabled]{
     border-color: #3E8AD6;
     border-radius:4px;
 }
+#submit{
+    height:50px;
+    width:15%;
+    background-color: #3E8AD6;
+    cursor: pointer;
+    border-radius:4px;
+    color:#FFFFFF;
+    display: none;
+}
+#submit:hover{
+    background-color: #2d6eaf
+}
