@@ -54,7 +54,11 @@ function guicheck() {
         document.getElementById("prev").removeAttribute("disabled");
     }
     if (num == 10) {
-        document.getElementById("next").setAttribute("disabled", "true");
+        document.getElementById("next").removeAttribute("disabled");
+        document.getElementById("next").onclick = function () {
+            document.getElementById("final_page").style.display="block"
+            document.getElementById("question").style.display="none"
+        };
     }
     else {
         document.getElementById("next").removeAttribute("disabled");
