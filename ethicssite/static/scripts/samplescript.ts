@@ -57,8 +57,12 @@ function guicheck(){
     else{
         document.getElementById("prev").removeAttribute("disabled")
     }
-    if(num==maxScenarios){
-        document.getElementById("next").setAttribute("disabled", "true")
+    if(num==10){
+        document.getElementById("next").onclick = function () {
+            document.getElementById("next").removeAttribute("disabled");
+            document.getElementById("final_page").style.display="block"
+            document.getElementById("question").style.display="none"
+        };
     }
     else{
         document.getElementById("next").removeAttribute("disabled")
@@ -96,7 +100,7 @@ function prev(){
 
 function grabdata(){
     for(var i=0; i < maxScenarios; i++){
-        
+
     }
 }
 
