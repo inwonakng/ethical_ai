@@ -1,5 +1,5 @@
-import datetime
 import json
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -7,26 +7,26 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Question model
 @python_2_unicode_compatible
-class Question(models.Model):
+class Survey(models.Model):
     # Question field (text field shown to user)
-    question_txt = models.CharField(max_length=200, null=False,default='')
+    prompt = models.CharField(max_length=200, null=False,default='')
 
     # Question description (text field shown to user)
-    question_desc = models.TextField(null=False, blank=False,default='')
+    survey_desc = models.TextField(null=False, blank=False,default='')
 
     # Can always add more fields for the question object if needed
 
     # Date when question was submitted (auto done in backend)
-    date = models.DateTimeField(default=datetime.date.today)
+    date = models.DateTimeField(default=timezone.now)
 
     # Return question text
     def __str__(self):
-        return self.question_txt
+        return self.survey_desc
 
     # Alternative to overriding __init__ (initial)
     @classmethod
-    def create(cls, questionTXT, questionDESC):
-        questionObject = cls(question_txt=questionTXT, question_desc=questionDESC)
+    def create(cls, prompt, questionDESC):
+        questionObject = cls(prompt=prompt, question_desc=questionDESC)
         return(questionObject)
 
 # Rule model
@@ -167,6 +167,8 @@ class RangeCategory(models.Model):
 class Scenario(models.Model):
 
     prompt = models.CharField(max_length=300, default="---")
+    survey = models.ForeignKey(
+        Survey,on_delete=models.CASCADE, default=1)
 
     def object_form(self):
         # returns a list of combos that makes up the scenario e.g. [{}, {}, {}]
@@ -195,8 +197,9 @@ class Attribute(models.Model):
     def __str__(self):
         return json.dumps(self.object_form())
 
-# Model for a set of attributes under some scenario (e.g. Person)
-class Combo(models.Model):
+# Model for a set of attributes under some scenario (e.g. Person A)
+class Option(models.Model):
+    # Option model holds the combination of different attributes
     # name of current Combo (e.g. Person A)
     name = models.CharField(max_length=50, null=False, default='')
 
@@ -212,7 +215,6 @@ class Combo(models.Model):
         for attr in self.attributes.all():
             key, val = attr.object_form()
             res[key] = val
-        
         return res
 
     def __str__(self):
@@ -224,7 +226,7 @@ class Response(models.Model):
     # userid = ?
 
     # which combo the current score is for
-    combo = models.ForeignKey(Combo, on_delete=models.CASCADE, default=1)
+    combo = models.ForeignKey(Option, on_delete=models.CASCADE, default=1)
 
     # user input score
     # todo: consider changing this to be IntegerChoices / Range?
