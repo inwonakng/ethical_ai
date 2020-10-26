@@ -3,7 +3,7 @@ from django.conf import settings
 import json
 from .generation.Generator import Generator
 from survey.models import Scenario, Attribute, Combo, \
-    create_scenario_from_json
+    create_scenario
 
 class ScenarioTestCase(TestCase):
     def test_creation(self):
@@ -14,7 +14,7 @@ class ScenarioTestCase(TestCase):
         scenario_json = json.dumps(ss)
 
         # test creation of the model
-        scenario = create_scenario_from_json(scenario_json)
+        scenario = create_scenario(scenario_json)
 
         # check that the retrieved model matches the original scenario
         self.assertEqual(json.dumps(scenario.object_form()), scenario_json)

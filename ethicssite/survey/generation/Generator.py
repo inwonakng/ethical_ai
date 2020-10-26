@@ -2,21 +2,39 @@ from .Category import Category
 from .Rule import Rule
 from .Combo import Combo
 from random import sample
-
+from pathlib import Path
 from itertools import combinations as comb
+from ..models import RuleSet
+import yaml
+
 
 
 class Generator():
-    def __init__(self, adaptive=False, rule={}):
-        if len(rule) == 0:
-            raise "Rule is empty"
-        elif len(rule['categories']) == 0:
-            raise "Categories is empty"
+    def __init__(self, adaptive=False, rule={}, rule_model=None):
+
         # assign attributes
         self.adaptive = adaptive
         self.categories = {}
         self.bad_combos = []
         self.config = {}
+        
+        # if rule dictionary (passed in) is empty
+        if len(rule) == 0:
+
+            # if rule_model is a RuleSet model AND the model is not empty
+            if (type(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
+                rule = rule_model.object_form()
+
+            # if rule model is empty
+            else:
+                # DEFAULT to the rules.json file
+                rule = {}
+                with open(str(Path("survey/generation/rule/rule.yaml").resolve()), "r") as stream:
+                    try:
+                        rule = yaml.safe_load(stream)
+                    except yaml.YAMLError as exc:
+                        print(exc)
+
         self.config['same_categories'] = rule['config'].get(
             'same_categories', -1)
         self.config['scenerio_size'] = rule['config'].get('scenerio_size', 2)

@@ -2,7 +2,7 @@ from django.test import TestCase
 import json
 import os
 from survey.models import RuleSet, ChoiceCategory, RuleSetChoice, RangeCategory,\
-    create_rule_set_from_json_string
+    parse_json
 
 # from survey.models import SettingCollection, Setting,\
 #     SettingOption, createNewSettingsCollection
