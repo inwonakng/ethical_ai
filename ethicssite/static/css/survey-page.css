@@ -24,6 +24,10 @@ tr{
     height:60px;
 }
 
+td{
+    text-align:center;
+}
+
 div{
     margin-top:8px;
     margin-bottom: 8px;

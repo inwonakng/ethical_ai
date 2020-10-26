@@ -4,13 +4,7 @@ function writetopage(data, args) {
     let question = make('div', 'q' + args);
     let table = maketable(data, args);
     question.appendChild(table);
-    // for(let i=0;i<data.length;i++){
-    //     let oneq = make('a','scenario'+i)
-    //     //right now i'm just printing the json, so could use the conversion functaion to table here
-    //     oneq.innerHTML = JSON.stringify(data[i]) + '<br><br>' //for viewing pleasure
-    //     question.appendChild(oneq)
-    // }
-    addsurveytopage(question);
+    addsurveytopage(question, num);
     addsliderstopage(data.length);
 }
 function maketable(data, index) {
@@ -52,7 +46,30 @@ function makeslider(index) {
     scorecontainer.appendChild(slidercontainer);
     return scorecontainer;
 }
+function next() {
+    document.getElementById("q" + num).style.display = "none";
+    document.getElementById("slides" + num).style.display = "none";
+    num++;
+    // Did we already create this scenario?
+    var element = document.getElementById(("q" + num));
+    if (typeof (element) != "undefined" && element != null) {
+        // Then the scenario has already been created.
+        document.getElementById("q" + num).style.display = "block";
+        document.getElementById("slides" + num).style.display = "block";
+    }
+    else {
+        http('getscenario', writetopage, num);
+    }
+}
+function prev() {
+    document.getElementById("q" + num).style.display = "none";
+    document.getElementById("slides" + num).style.display = "none";
+    num--;
+    document.getElementById("q" + num).style.display = "block";
+    document.getElementById("slides" + num).style.display = "block";
+}
 // testing grabbing generated survey scenario
-http('getscenario', writetopage, 0);
+var num = 0;
+http('getscenario', writetopage, num);
 //http('getscenario',writetopage,1)
 //# sourceMappingURL=samplescript.js.map
