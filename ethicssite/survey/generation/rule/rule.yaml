@@ -38,16 +38,16 @@ categories:
     5: "5"
   # rules with the following will generate too much result
   # consider adding interval between
-  # survival without:
-  #   range:
-  #     - 20
-  #     - 50
-  #   unit: "%"
-  # survival difference:
-  #   range:
-  #     - 50
-  #     - 80
-  #   unit: "%"
+  survival without:
+    range:
+      - 20
+      - 50
+    unit: "%"
+  survival difference:
+    range:
+      - 50
+      - 80
+    unit: "%"
 bad_combos:
   age:
     1:

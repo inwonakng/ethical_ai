@@ -1,20 +1,20 @@
-from Generator import Generator
+from generation.Generator import Generator
 import yaml
 import json
 from pathlib import Path
 # from django.conf import settings
 import argparse
 
-parser = argparse.ArgumentParser(description='Generate scene from rule')
-parser.add_argument('file', metavar='FILE', type=str, nargs=1,
-                    help='Rule file, in yaml')
+# parser = argparse.ArgumentParser(description='Generate scene from rule')
+# parser.add_argument('file', metavar='FILE', type=str, nargs=1,
+#                     help='Rule file, in yaml')
 
-args = parser.parse_args()
-file_path = Path(args.file[0])
+# args = parser.parse_args()
+# file_path = Path(args.file[0])
 
-yaml_path = str(file_path.resolve())
+yaml_path = 'generation/rule/rule.yaml'
 
-yaml_filename = file_path.name
+# yaml_filename = file_path.name
 
 with open(yaml_path, 'r') as stream:
     try:
