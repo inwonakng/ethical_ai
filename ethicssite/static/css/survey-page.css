@@ -114,14 +114,11 @@ button[disabled]{
     margin-bottom:5%;
   }
 
-  final_page{
-      display: none;
-  }
-  
-  final_page.div{
+  #final_page{
       margin-top:8px;
       margin-bottom: 8px;
       margin-left: 3%;
+      display:none;
   }
   
   final_page.feature{

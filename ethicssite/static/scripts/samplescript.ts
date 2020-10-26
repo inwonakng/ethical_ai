@@ -57,41 +57,44 @@ function guicheck(){
     else{
         document.getElementById("prev").removeAttribute("disabled")
     }
-    if(num==10){
-        document.getElementById("next").onclick = function () {
-            document.getElementById("next").removeAttribute("disabled");
-            document.getElementById("final_page").style.display="block"
-            document.getElementById("question").style.display="none"
-        };
-    }
-    else{
-        document.getElementById("next").removeAttribute("disabled")
-    }
-    if(num==maxScenarios){
-        document.getElementById("submit").style.display = "inline-block"
-    }
 }
 
 function next(){
     document.getElementById("q"+num).style.display = "none"
     document.getElementById("slides" + num).style.display = "none"
     num++;
-    // Did we already create this scenario?
-    var element = document.getElementById(("q"+num))
-    if(typeof(element) != "undefined" && element != null){
-        // Then the scenario has already been created.
-        document.getElementById("q"+num).style.display = "block"
-        document.getElementById("slides" + num).style.display = "block"
+
+    if(num==maxScenarios){
+        document.getElementById("final_page").style.display="block"
+        document.getElementById("question").style.display="none"
+        document.getElementById("scorecontainer").style.display="none"
     }
     else{
-        http('getscenario',writetopage,num)
+        // Did we already create this scenario?
+        var element = document.getElementById(("q"+num))
+        if(typeof(element) != "undefined" && element != null){
+            // Then the scenario has already been created.
+            document.getElementById("q"+num).style.display = "block"
+            document.getElementById("slides" + num).style.display = "block"
+        }
+        else{
+            http('getscenario',writetopage,num)
+        }
     }
+    
     guicheck()
 }
 
 function prev(){
-    document.getElementById("q"+num).style.display = "none"
-    document.getElementById("slides" + num).style.display = "none"
+    if(num == maxScenarios){
+        document.getElementById("final_page").style.display="none"
+        document.getElementById("question").style.display="block"
+        document.getElementById("scorecontainer").style.display="block"
+    }
+    else{
+        document.getElementById("q"+num).style.display = "none"
+        document.getElementById("slides" + num).style.display = "none"
+    }
     num--;
     document.getElementById("q"+num).style.display = "block"
     document.getElementById("slides" + num).style.display = "block"
