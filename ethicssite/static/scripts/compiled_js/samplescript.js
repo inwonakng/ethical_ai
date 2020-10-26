@@ -11,6 +11,7 @@ function writetopage(data, args) {
     //     question.appendChild(oneq)
     // }
     addsurveytopage(question);
+    addsliderstopage(data.length);
 }
 function maketable(data, index) {
     let table = make('table', 'table' + index);
@@ -30,12 +31,26 @@ function maketable(data, index) {
             row.insertCell().innerHTML = d[key];
         }
     }
-    let count = 0;
-    for (let key in data) {
-        count++;
-        console.log(count);
-    }
     return table;
+}
+function makeslider(index) {
+    let scorecontainer = make('div', 'option-score-container');
+    let title = make('p');
+    title.className = "option-score";
+    title.innerHTML = "Option " + index;
+    let slidercontainer = make('div');
+    slidercontainer.className = "slidecontainer";
+    var slider = document.createElement('input');
+    slider.type = "range";
+    slider.id = 'range' + 1;
+    slider.min = "1";
+    slider.max = "10";
+    slider.value = "5";
+    slider.className = "slider";
+    slidercontainer.appendChild(slider);
+    scorecontainer.appendChild(title);
+    scorecontainer.appendChild(slidercontainer);
+    return scorecontainer;
 }
 // testing grabbing generated survey scenario
 http('getscenario', writetopage, 0);

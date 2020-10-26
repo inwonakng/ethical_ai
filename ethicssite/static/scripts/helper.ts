@@ -5,9 +5,9 @@ function addsurveytopage(element:any){
     document.getElementById("survey").append(element)
 }
 
-function addsliderstopage(i){
-    for(let j in i){
-        document.getElementById("sliders").append();
+function addsliderstopage(i:number){
+    for(var j=0; j < i; j++){
+        document.getElementById("scorecontainer").append(makeslider(String((j+1))));
     }
     
 }

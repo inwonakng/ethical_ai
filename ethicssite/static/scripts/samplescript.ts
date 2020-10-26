@@ -36,11 +36,24 @@ function maketable(data:Array<JSON>,index:number){
     return table
 }
 
-function makeslider(index:number){
+function makeslider(index:string){
     let scorecontainer = make('div', 'option-score-container');
-    let title = make('p','optionscore');
-    let slidercontainer = make('div', 'slidercontainer');
-    let slider = make()
+    let title = make('p');
+    title.className = "option-score";
+    title.innerHTML = "Option " + index;
+    let slidercontainer = make('div');
+    slidercontainer.className = "slidecontainer"
+    var slider = document.createElement('input')
+    slider.type = "range"
+    slider.id = 'range' + 1;
+    slider.min = "1"
+    slider.max="10"
+    slider.value="5"
+    slider.className = "slider"
+    slidercontainer.appendChild(slider)
+    scorecontainer.appendChild(title)
+    scorecontainer.appendChild(slidercontainer)
+    return scorecontainer;
 }
 
 // testing grabbing generated survey scenario

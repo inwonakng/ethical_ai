@@ -4,6 +4,11 @@
 function addsurveytopage(element) {
     document.getElementById("survey").append(element);
 }
+function addsliderstopage(i) {
+    for (var j = 0; j < i; j++) {
+        document.getElementById("scorecontainer").append(makeslider(String((j + 1))));
+    }
+}
 function make(tag, id) {
     let item = document.createElement(tag);
     item.id = id;
