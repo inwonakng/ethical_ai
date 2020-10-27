@@ -101,6 +101,11 @@ button{
 button:hover{
     background-color: #DDDDDD
 }
+button#go-to-review{
+  display: none;
+  position: absolute;
+  right: 0px;
+}
 
 button:disabled,
 button[disabled]{

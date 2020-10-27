@@ -30,8 +30,16 @@ function viewFinalSurveyPage() {
     document.getElementById("final_page").style.display = "block";
     document.getElementById("question").style.display = "none";
     document.getElementById("scorecontainer").style.display = "none";
-    document.getElementById("next").innerHTML = "Submit";
+    document.getElementById("next").style.display = "none";
+    document.getElementById("go-to-review").style.display = "inline";
 }
+
+function viewReviewPage() {
+    document.getElementById("final_page").style.display = "none";
+    document.getElementById("prev").style.display = "none";
+    document.getElementById("go-to-review").style.display = "none";
+}
+
 // Delete the scenario currently being displayed.
 function viewCurrentScenario() {
     document.getElementById("q" + scenarioNum).style.display = "block";
@@ -58,6 +66,8 @@ function navigateBackToSurvey() {
     document.getElementById("question").style.display = "block";
     document.getElementById("scorecontainer").style.display = "block";
     document.getElementById("next").innerHTML = "Next";
+    document.getElementById("next").style.display = "inline";
+    document.getElementById("go-to-review").style.display = "none";
 }
 // method for interacting with the python server.
 // args should look like this: (fill in as we go)

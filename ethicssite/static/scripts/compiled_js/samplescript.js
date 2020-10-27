@@ -12,6 +12,7 @@ function writetopage(data, args) {
 //        Makes data grabbing a bit easier (Plan on grabbing data
 //        once the user makes final submission)
 function maketable(data, index) {
+    console.log(data);
     let table = make('table', 'table' + index);
     // table headers
     let row = table.createTHead().insertRow();

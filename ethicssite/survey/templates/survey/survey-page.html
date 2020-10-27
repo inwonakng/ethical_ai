@@ -70,7 +70,12 @@
     
     <button id="prev" onclick="prev()">Prev</button>
     <button id="next" onclick="next()">Next</button>
-
+    <button id="go-to-review" onclick="viewReviewPage()" style = "display: none; position: absolute; right: 0px;">
+      Review Your Choices
+    </button>
+    <div id="review_page">
+      
+    </div>
 
     {% load static %}
     <script type="text/javascript" src="{% static '/scripts/compiled_js/helper.js' %}"></script> 
