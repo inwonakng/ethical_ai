@@ -1,5 +1,5 @@
 from random import randint as rint
-from generation.Combo import Combo
+from .Combo import Combo
 
 class Category():
     def __init__(self, name, options):
