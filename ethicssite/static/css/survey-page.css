@@ -7,7 +7,7 @@ html{
     margin-right: 3%;
     background-color: #3E8AD6;
     color: #ffffff;
-    padding: 3%;
+    padding: 1%;
 }
 
 table, td {
@@ -36,7 +36,7 @@ div{
 
 #scorecontainer{
     margin-left: 10%;
-    margin-bottom: 5%;
+    margin-bottom: 0%;
 }
 
 .option-score{
@@ -45,6 +45,8 @@ div{
     display:inline-block;
     font-weight: 500;
 }
+
+
 .slidecontainer {
     width: 30%;
     display:inline-block;

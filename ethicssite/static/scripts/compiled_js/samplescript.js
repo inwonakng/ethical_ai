@@ -4,9 +4,13 @@ function writetopage(data, args) {
     let question = make('div', 'q' + args);
     let table = maketable(data, args);
     question.appendChild(table);
-    addsurveytopage(question, num);
+    addsurveytopage(question, scenarioNum);
     addsliderstopage(data.length);
 }
+// Creates an HTML table to display the data in data.
+// index: the scenario we are currently on. Used to assign id.
+//        Makes data grabbing a bit easier (Plan on grabbing data
+//        once the user makes final submission)
 function maketable(data, index) {
     let table = make('table', 'table' + index);
     // table headers
@@ -27,13 +31,20 @@ function maketable(data, index) {
     }
     return table;
 }
+//  Creates a slider to represent a specific feature. 
+//  index:  the scenarioNumber of people in each scenario, since 
+//          we are rating on an option (person).
 function makeslider(index) {
+    // Contains everything involved in creating a score.
     let scorecontainer = make('div', 'option-score-container');
+    // Label for slider
     let title = make('p');
     title.className = "option-score";
     title.innerHTML = "Option " + index;
+    // Container for each slider. Used only in stylings
     let slidercontainer = make('div');
     slidercontainer.className = "slidecontainer";
+    // The slider itself
     var slider = document.createElement('input');
     slider.type = "range";
     slider.id = 'range' + 1;
@@ -41,64 +52,61 @@ function makeslider(index) {
     slider.max = "10";
     slider.value = "0";
     slider.className = "slider";
+    // Adding all of the elements within each other accordingly. 
     slidercontainer.appendChild(slider);
     scorecontainer.appendChild(title);
     scorecontainer.appendChild(slidercontainer);
     return scorecontainer;
 }
+// Monitors GUI-related changes based on given scenario.
 function guicheck() {
-    if (num == 0) {
+    // Users can't go to previous scenario if there is no scenario to display
+    if (scenarioNum == 0) {
         document.getElementById("prev").setAttribute("disabled", "true");
     }
     else {
         document.getElementById("prev").removeAttribute("disabled");
     }
 }
+// Handles how the user visits the "next page". Involves generating new 
+// surveys and displaying the survey-results page and the final-page.
 function next() {
-    document.getElementById("q" + num).style.display = "none";
-    document.getElementById("slides" + num).style.display = "none";
-    num++;
-    if (num == maxScenarios) {
-        document.getElementById("final_page").style.display = "block";
-        document.getElementById("question").style.display = "none";
-        document.getElementById("scorecontainer").style.display = "none";
+    clearCurrentScenario();
+    scenarioNum++;
+    // Has the user finished the first part of the survey?
+    if (scenarioNum == maxScenarios) {
+        viewFinalSurveyPage();
     }
     else {
+        // Assumes the person is still taking the first part of the scenario.
         // Did we already create this scenario?
-        var element = document.getElementById(("q" + num));
-        if (typeof (element) != "undefined" && element != null) {
-            // Then the scenario has already been created.
-            document.getElementById("q" + num).style.display = "block";
-            document.getElementById("slides" + num).style.display = "block";
-        }
-        else {
-            http('getscenario', writetopage, num);
-        }
+        callNextScenario();
     }
     guicheck();
 }
+// Handles how the user visits previous pages. Includes navigating to 
+// previous scenarios and previously visited pages IF ALLOWED TO.
 function prev() {
-    if (num == maxScenarios) {
-        document.getElementById("final_page").style.display = "none";
-        document.getElementById("question").style.display = "block";
-        document.getElementById("scorecontainer").style.display = "block";
+    // Is the user trying to navigate back to their survey?
+    if (scenarioNum == maxScenarios) {
+        navigateBackToSurvey();
     }
     else {
-        document.getElementById("q" + num).style.display = "none";
-        document.getElementById("slides" + num).style.display = "none";
+        // Assumes the person is
+        // not on the final page.
+        clearCurrentScenario();
     }
-    num--;
-    document.getElementById("q" + num).style.display = "block";
-    document.getElementById("slides" + num).style.display = "block";
+    scenarioNum--;
+    // Displays the previous survey. Assumes the person is not on the final page.
+    viewCurrentScenario();
     guicheck();
 }
+// TODO Megan: Store data from front-end to data structure.
 function grabdata() {
-    for (var i = 0; i < maxScenarios; i++) {
-    }
 }
 // initial page
-var num = 0;
+var scenarioNum = 0;
 var maxScenarios = 10;
 var data = [];
-http('getscenario', writetopage, num);
+http('getscenario', writetopage, scenarioNum);
 //# sourceMappingURL=samplescript.js.map
