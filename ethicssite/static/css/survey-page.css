@@ -176,7 +176,7 @@ button[disabled]{
     margin-top:5%;
   }
   
-  final_page.textarea{
+  textarea{
     width:90%;
     margin:auto;
     height:150px;

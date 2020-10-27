@@ -30,6 +30,7 @@ function viewFinalSurveyPage() {
     document.getElementById("final_page").style.display = "block";
     document.getElementById("question").style.display = "none";
     document.getElementById("scorecontainer").style.display = "none";
+    document.getElementById("next").innerHTML = "Submit";
 }
 // Delete the scenario currently being displayed.
 function viewCurrentScenario() {
@@ -56,6 +57,7 @@ function navigateBackToSurvey() {
     document.getElementById("final_page").style.display = "none";
     document.getElementById("question").style.display = "block";
     document.getElementById("scorecontainer").style.display = "block";
+    document.getElementById("next").innerHTML = "Next";
 }
 // method for interacting with the python server.
 // args should look like this: (fill in as we go)
