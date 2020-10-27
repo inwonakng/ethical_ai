@@ -69,8 +69,23 @@ class RuleSet(models.Model):
             c = cc.object_form()
             categ[c[0]] = c[1]
         return categ
+
+    def object_form(self):
+        # for cc in choice_categs.all():
+        cho = self.get_choicecategs()
+        ran = self.get_rangecategs()
+        cho.update(ran)
+        return {
+            'config':self.get_configs(),
+            'categories': cho,
+            'bad_combos': self.get_badcombos()
+        }
+
     def get_rangecategs(self):
-        return [str(cc) for cc in self.range_categs.all()]
+        bb = {}
+        for cc in self.range_categs.all():
+            bb.update(cc.object_form())
+        return bb
             
     def get_badcombos(self):
         return {bc.object_form()[0]:bc.object_form()[1] 

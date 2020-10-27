@@ -6,6 +6,7 @@ from pathlib import Path
 from itertools import combinations as comb
 # from ..models import RuleSet
 import yaml
+from ..models import *
 
 class Generator():
     def __init__(self, adaptive=False, rule={}, rule_model=None):
@@ -23,16 +24,17 @@ class Generator():
             # if rule_model is a RuleSet model AND the model is not empty
             if (type(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
                 rule = rule_model.object_form()
+                print('i am using model!!!')
 
             # if rule model is empty
-            else:
-                # DEFAULT to the rules.json file
-                rule = {}
-                with open(str(Path("survey/generation/rule/rule.yaml").resolve()), "r") as stream:
-                    try:
-                        rule = yaml.safe_load(stream)
-                    except yaml.YAMLError as exc:
-                        print(exc)
+            # else:
+            #     # DEFAULT to the rules.json file
+            #     rule = {}
+            #     with open(str(Path("survey/generation/rule/rule.yaml").resolve()), "r") as stream:
+            #         try:
+            #             rule = yaml.safe_load(stream)
+            #         except yaml.YAMLError as exc:
+            #             print(exc)
 
         self.config['same_categories'] = rule['config'].get(
             'same_categories', -1)

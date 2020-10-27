@@ -65,7 +65,12 @@ def get_scenario(request):
 
     # grabbing the sample json
     rule = yaml.safe_load(open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml','r'))
-    story_gen = Generator(rule=rule)
+    # Survey
+    if RuleSet.objects.all():
+        # using defulat model here
+        rr = RuleSet.objects.all()[0]
+        story_gen = Generator(rule_model=rr)
+    else: story_gen = Generator(rule=rule)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
     # For frontend, check the html to
