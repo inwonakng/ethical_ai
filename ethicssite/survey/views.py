@@ -5,6 +5,8 @@ from django.shortcuts import render
 import yaml
 from django.conf import settings
 from .models import *
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 
 # stores everything into the Question model
 def receive_survey(request):
@@ -65,12 +67,7 @@ def get_scenario(request):
 
     # grabbing the sample json
     rule = yaml.safe_load(open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml','r'))
-    # Survey
-    if RuleSet.objects.all():
-        # using defulat model here
-        rr = RuleSet.objects.all()[0]
-        story_gen = Generator(rule_model=rr)
-    else: story_gen = Generator(rule=rule)
+    story_gen = Generator(rule=rule)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
     # For frontend, check the html to
@@ -81,15 +78,14 @@ def get_scenario(request):
     # and press ctrl+shift+i and switch to console tab,
     # you can see the json object printed on the console
 
-# Django view to handle the survey results page.
-def survey_result(request):
-    results = [
-                {'scenario': "1", 'features': ['feature1', 'feature2', 'feature3'], 'score': [['A',1],['B',2],['C',3]]},
-                {'scenario': "2", 'features': ['feature1', 'feature2', 'feature3'], 'score': [['A',3],['B',4],['C',5]]},
-                {'scenario': "3", 'features': ['feature1', 'feature2', 'feature3'], 'score': [['A',1],['B',7],['C',4]]}
-            ]
-    return render(request, 'survey/surveyresult.html', {'results':results})
+@csrf_exempt
+def submit_result(request):
+    print(request.body)
+    return redirect("surveyresult")
 
+
+def survey_result(request):
+    return render(request, 'survey/surveyresult.html')
 
 # Django view to handle unknown paths
 def unknown_path(request, random):
