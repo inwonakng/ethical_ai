@@ -4,18 +4,26 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-
 '''Survey models sections start here'''
-# Question model
+
 @python_2_unicode_compatible
+
+
 # Model for a generic attribute for some combination (e.g. age or health)
+# Fields:
+#     name     : CharField
+#     value    : CharField
 class Attribute(models.Model):
     # attribute name (e.g. age or health)
     name = models.CharField(max_length=50, null=False, default='')
     # value for the attribute
     value = models.CharField(max_length=50, null=False, default='')
 
+
 # Model for a set of attributes under some scenario (e.g. Person A)
+# Fields:
+#     name     : CharField
+#     value    : CharField
 class Option(models.Model):
     # Option model holds the combination of different attributes
     # name of current Combo (e.g. Person A)
@@ -23,12 +31,23 @@ class Option(models.Model):
     # attributes under the current Combo
     attributes = models.ManyToManyField(Attribute, related_name='combo_attributes')
 
-# Model for scenario
+
+# Model for a scenario
+# Fields:
+#     options   : ManyToManyField of model Option
 class Scenario(models.Model):
     # prompt = models.CharField(max_length=300, default="---")
     options = models.ManyToManyField(Option)
 
-'''mother of all survey models'''
+
+
+# Model for a survey (mother of all models)
+
+# Fields: 
+#     prompt    : CharField
+#     desc      : TextField
+#     date      : DateTimeField (optional)
+#     scenarios : ManyToMany of model Scenario 
 class Survey(models.Model):
     # Survey field (text field shown to user)
     prompt = models.CharField(max_length=200, null=False,default='')
@@ -189,7 +208,7 @@ After this, ss will be the complete survey object
 '''
 
 def json_to_survey(survey_data,prompt='empty',desc='empty'):
-    survey = Survey(prmopt=prompt,desc=desc)
+    survey = Survey(prompt=prompt,desc=desc)
     survey.save()
     for scen in survey_data:
         ss = Scenario()
