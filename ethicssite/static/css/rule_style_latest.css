@@ -163,7 +163,7 @@ label {
 input[type=text] {
   margin:7px;
   padding:2px;
-  border-radius:10px;
+  border-radius:5px;
   border: 1px solid #eee;
   transition: .3s;
 }
