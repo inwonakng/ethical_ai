@@ -18,52 +18,52 @@
       <button id = "generate_rules" type="button">Generate options</button>
       <button id = "set_rules" type="button">Set my own options</button>
       <form id = "container1">
-        <!-- <label for="attribute_name">Attribute name:</label>
-        <input type="text" id="attribute_name">
-        <br>
-        <label for="attribute_value">Attribute value:</label>
-        <select name="values" id="values">
-          <option value="1">1. _______________</option>
-          <option value="2">2. _______________</option>
-          <option value="3">3. _______________</option>
-          <option value="4">4. _______________</option>
-        </select> -->
+
+        <!-- <div class = "rule_card card">
+          <label>Rule name:</label>
+          <input type="text" id="attribute_name" placeholder="Rule name">
+          <br>
+          <label>Rule type:</label>
+          <input type="text" id="attribute_type" placeholder="Rule type">
+        </div> -->
+
       </form>
       <form id = "container2">
-        <!-- <label for="your_option">Your option:</label>
-        <input type="text" id="your_option"> -->
+
+        <!-- <div class = "rule_card card">
+          <textarea id="custom_rule" placeholder="Custom rule"></textarea>
+        </div> -->
+
       </form>
-      <div class="add_rules"><p>Add a new one</p></div>
-      <div class="add_your_rules"><p>Set a new one</p></div>
+      <div class="add_rules_card card"><p class="p_card">Add more rules</p></div>
+      <div class="custom_rules_card card"><p class="p_card">Add more rules</p></div>
 
       <p id="bad_text">Forbidden Combinations</p>
       <form id = "container3">
-        <!-- <label for="bad_attribute">Bad attribute:</label>
-        <input type="text" id="bad_attribute">
-        <br>
-        <label for="bad_values">Bad values:</label>
-        <select name="values" id="values">
-          <option value="1">1. _______________</option>
-          <option value="2">2. _______________</option>
-          <option value="3">3. _______________</option>
-          <option value="4">4. _______________</option>
-        </select> -->
+
+        <!-- <div class = "card">
+          <label>Rule:</label>
+          <input type="text" id="attribute_name" placeholder="Rule name">
+          <br>
+          <label>Bad value:</label>
+          <input type="text" id="attribute_type" placeholder="Bad value">
+        </div> -->
+
       </form>
 
       <form id = "container4">
-        <!-- <label for="bad_attribute">Bad attribute:</label>
-        <input type="text" id="bad_attribute">
-        <br>
-        <label for="bad_values">Bad values:</label>
-        <select name="values" id="values">
-          <option value="1">1. _______________</option>
-          <option value="2">2. _______________</option>
-          <option value="3">3. _______________</option>
-          <option value="4">4. _______________</option>
-        </select> -->
+
+        <!-- <div class = "card">
+          <label>Rule:</label>
+          <input type="text" id="attribute_name" placeholder="Rule name">
+          <br>
+          <label>Bad value:</label>
+          <input type="text" id="attribute_type" placeholder="Bad value">
+        </div> -->
+
       </form>
-      <div class="add_bad1"><p>Set a new one</p></div>
-      <div class="add_bad2"><p>Set a new one</p></div>
+      <div class="bad_cob1 card"><p class="p_card">Set a new one</p></div>
+      <div class="bad_cob2 card"><p class="p_card">Set a new one</p></div>
       <br>
 
       <form action="loadsurvey">

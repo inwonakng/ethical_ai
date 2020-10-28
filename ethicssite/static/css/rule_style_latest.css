@@ -85,11 +85,11 @@ h1 {
 }
 
 #container1 {
-  margin:5px;
+
 }
 
 #container2 {
-  margin:5px;
+
 }
 
 
@@ -154,4 +154,61 @@ h1 {
   width:10px;
   height:10px;
   background-color: green;
+}
+
+label {
+  margin-left: 5px;
+}
+
+input[type=text] {
+  margin:7px;
+  padding:2px;
+  border-radius:10px;
+  border: 1px solid #eee;
+  transition: .3s;
+}
+
+input[type=text]:hover {
+  border: 1px solid #aaa;
+}
+
+#custom_rule {
+  margin-top: 1px;
+  width:340px;
+  height:60px;
+}
+
+.p_card {
+  margin-left: 10px;
+  margin-top: 25px;
+}
+
+.card {
+  width:350px;
+  height:80px;
+  padding:5px;
+  transition: 0.3s;
+  border:1px 2px;
+  border:2px solid #eee;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border:2px solid grey;
+}
+
+.add_rules_card {
+  display: none;
+}
+
+.custom_rules_card {
+  display: none;
+}
+
+.bad_cob1 {
+  display: none;
+}
+
+.bad_cob2 {
+  display: none;
 }
