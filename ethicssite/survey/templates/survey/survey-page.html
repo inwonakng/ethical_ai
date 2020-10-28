@@ -20,52 +20,7 @@
     </div>
 
     <div id='final_page'>
-      <p id="rate-followup">Please score each feature on how important they were to your decision making</p>
-      <div>
-        <p class="feature">Age</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Health</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="5" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Gender</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="5" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Income Level</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Number of Dependents</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Survival Without</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Survival Difference</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-    
-      <p id="explain-followup">Please write more than 20 words to explain how you made your choices</p>
-      <textarea></textarea>
+      <p id="rate-followup">Please score each feature on how important they were to your decision making</p>    
     </div>
     
     <button id="prev" onclick="prev()">Prev</button>
@@ -74,7 +29,10 @@
       Review Your Choices
     </button>
     <div id="review_page">
-      
+      <div class = 'review_head'>
+        <h1 class = 'head'>Your Answers</h1>
+        <hr class = "head_hr"></hr>
+      </div>
     </div>
 
     {% load static %}

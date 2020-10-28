@@ -34,12 +34,6 @@ function viewFinalSurveyPage() {
     document.getElementById("go-to-review").style.display = "inline";
 }
 
-function viewReviewPage() {
-    document.getElementById("final_page").style.display = "none";
-    document.getElementById("prev").style.display = "none";
-    document.getElementById("go-to-review").style.display = "none";
-}
-
 // Delete the scenario currently being displayed.
 function viewCurrentScenario() {
     document.getElementById("q" + scenarioNum).style.display = "block";

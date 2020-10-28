@@ -203,3 +203,17 @@ button[disabled]{
   final_page.button:hover{
     background-color: #DDDDDD
   }
+
+  #review_page{
+    display: none;
+  }
+  .review_head{
+    text-align: center;
+  }
+  .review_div{
+    padding-top: 30px;
+  }
+  .review_button{
+    padding-top: 10px;
+    text-align: center;
+  }
