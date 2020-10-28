@@ -8,7 +8,7 @@ from survey.models import Scenario, Attribute, Combo, \
 class ScenarioTestCase(TestCase):
     def test_creation(self):
         # create a sample scenario from the generator
-        rule = json.load(open(settings.BASE_DIR+'/survey/generation/rule/rule.json','r'))
+        rule = json.load(open(os.path.join(settings.BASE_DIR, 'survey/generation/rule/rule.json'),'r'))
         story_gen = Generator(rule=rule)
         ss = story_gen.get_scenario()
         scenario_json = json.dumps(ss)
