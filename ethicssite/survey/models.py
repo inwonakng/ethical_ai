@@ -6,9 +6,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 '''Survey models sections start here'''
 
-@python_2_unicode_compatible
-
-
 # Model for a generic attribute for some combination (e.g. age or health)
 # Fields:
 #     name     : CharField
@@ -205,23 +202,109 @@ ss.save()
 ss.create_survey([[{'alt1':2,'alt2':3}]])
 After this, ss will be the complete survey object 
 (does not carry user scores yet)
-'''
 
-def json_to_survey(survey_data,prompt='empty',desc='empty'):
-    survey = Survey(prompt=prompt,desc=desc)
-    survey.save()
-    for scen in survey_data:
-        ss = Scenario()
-        ss.save()
-        for ops in scen:
-            oo = Option()
-            oo.save()
-            for k,v in ops.items():
-                aa = Attribute(name=k,value=v)
-                aa.save()
-                oo.attributes.add(aa)
-            ss.options.add(oo)
-        survey.scenarios.add(ss)
+Test scenario example:
+[
+  [
+    {
+      "age": "61",
+      "health": "terminally ill(less than 3 years left)",
+      "gender": "male",
+      "income level": "low",
+      "number of dependents": "2",
+      "survival without": "42%",
+      "survival difference": "79%",
+    },
+    {
+      "age": "12",
+      "health": "small health problems",
+      "gender": "female",
+      "income level": "low",
+      "number of dependents": "0",
+      "survival without": "23%",
+      "survival difference": "66%",
+    },
+  ],
+  [
+    {
+      "age": "5",
+      "health": "small health problems",
+      "gender": "female",
+      "income level": "low",
+      "number of dependents": "3",
+      "survival without": "31%",
+      "survival difference": "59%",
+    },
+    {
+      "age": "23",
+      "health": "moderate health problems",
+      "gender": "male",
+      "income level": "high",
+      "number of dependents": "0",
+      "survival without": "30%",
+      "survival difference": "58%",
+    },
+  ],
+  [
+    {
+      "age": "5",
+      "health": "small health problems",
+      "gender": "female",
+      "income level": "low",
+      "number of dependents": "3",
+      "survival without": "31%",
+      "survival difference": "59%",
+    },
+    {
+      "age": "23",
+      "health": "moderate health problems",
+      "gender": "male",
+      "income level": "high",
+      "number of dependents": "0",
+      "survival without": "30%",
+      "survival difference": "58%",
+    },
+  ],
+]
+'''
+# This function will recieve a list of json scenarios and
+# load them into Django models.
+def json_to_survey(survey_data, prompt='empty', desc='empty'):
+    
+    curr_survey = Survey(prompt=prompt, desc=desc)
+    curr_survey.save()
+
+    for scenario in survey_data:
+
+        curr_scenario = Scenario()
+        curr_scenario.save()
+
+        person_count = 1
+
+        for option in scenario:
+
+            curr_option = Option(name="Person " + str(person_count))
+            curr_option.save()
+
+            person_count += 1
+
+            for attribute in option:
+                value = option[attribute]
+                
+                curr_attribute = Attribute(name=attribute, value=value)
+                curr_attribute.save()
+
+                curr_option.attributes.add(curr_attribute)
+                curr_option.save()
+
+            curr_scenario.options.add(curr_option)
+            curr_scenario.save()
+
+        curr_survey.scenarios.add(curr_scenario)
+        curr_survey.save()
+
+    return curr_survey
+    
 
 # type(d) must be dict()
 def json_to_ruleset(d):
