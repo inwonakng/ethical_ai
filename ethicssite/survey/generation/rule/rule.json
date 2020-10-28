@@ -1,4 +1,8 @@
 {
+  "config": {
+    "same_categories": 3,
+    "scenario_size": 2
+  },
   "categories": {
     "age": {
       "0": "5",
@@ -37,35 +41,70 @@
       "5": "5"
     },
     "survival without": {
-      "range":[20,50],
+      "range": [
+        20,
+        50
+      ],
       "unit": "%"
     },
     "survival difference": {
-      "range":[50,80],
+      "range": [
+        50,
+        80
+      ],
       "unit": "%"
     }
   },
-  "bad combo": {
+  "bad_combos": {
     "age": {
-      "8": {
-        "number of dependents": ["1", "2", "3", "4", "5"]
+      "1": {
+        "number of dependents": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
       },
-      "12": {
-        "income level": ["2"],
-        "number of dependents": ["1", "2", "3", "4", "5"]
+      "2": {
+        "income level": [
+          2
+        ],
+        "number of dependents": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
       },
-      "18": {
-        "income level": ["2"],
-        "number of dependents": ["4", "5"]
+      "3": {
+        "income level": [
+          2
+        ],
+        "number of dependents": [
+          4,
+          5
+        ]
       },
-      "23": {
-        "number of dependents": ["4", "5"]
+      "5": {
+        "number of dependents": [
+          4,
+          5
+        ]
       },
-      "61": {
-        "number of dependents": ["4", "5"]
+      "9": {
+        "number of dependents": [
+          4,
+          5
+        ]
       },
-      "72": {
-        "number of dependents": ["3", "4", "5"]
+      "10": {
+        "number of dependents": [
+          3,
+          4,
+          5
+        ]
       }
     }
   }
