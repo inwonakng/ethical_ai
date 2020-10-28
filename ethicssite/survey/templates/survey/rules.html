@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class = "col1">
+  <h1 >Side Bar</h1>
+</div>
+
+<vl></vl>
+
+<div class = "col2">
+  <div class = 'create_rules'>
+    <div class = "prompt">
+      <h1 id="prompt">Prompt</h1>
+    </div>
+
+    <div class = "options">
+      <p>Would you like to set your own options or generate them?</p>
+      <button id = "generate_rules" type="button">Generate options</button>
+      <button id = "set_rules" type="button">Set my own options</button>
+      <form id = "container1">
+        <!-- <label for="attribute_name">Attribute name:</label>
+        <input type="text" id="attribute_name">
+        <br>
+        <label for="attribute_value">Attribute value:</label>
+        <select name="values" id="values">
+          <option value="1">1. _______________</option>
+          <option value="2">2. _______________</option>
+          <option value="3">3. _______________</option>
+          <option value="4">4. _______________</option>
+        </select> -->
+      </form>
+      <form id = "container2">
+        <!-- <label for="your_option">Your option:</label>
+        <input type="text" id="your_option"> -->
+      </form>
+      <div class="add_rules"><p>Add a new one</p></div>
+      <div class="add_your_rules"><p>Set a new one</p></div>
+
+      <p id="bad_text">Forbidden Combinations</p>
+      <form id = "container3">
+        <!-- <label for="bad_attribute">Bad attribute:</label>
+        <input type="text" id="bad_attribute">
+        <br>
+        <label for="bad_values">Bad values:</label>
+        <select name="values" id="values">
+          <option value="1">1. _______________</option>
+          <option value="2">2. _______________</option>
+          <option value="3">3. _______________</option>
+          <option value="4">4. _______________</option>
+        </select> -->
+      </form>
+
+      <form id = "container4">
+        <!-- <label for="bad_attribute">Bad attribute:</label>
+        <input type="text" id="bad_attribute">
+        <br>
+        <label for="bad_values">Bad values:</label>
+        <select name="values" id="values">
+          <option value="1">1. _______________</option>
+          <option value="2">2. _______________</option>
+          <option value="3">3. _______________</option>
+          <option value="4">4. _______________</option>
+        </select> -->
+      </form>
+      <div class="add_bad1"><p>Set a new one</p></div>
+      <div class="add_bad2"><p>Set a new one</p></div>
+      <br>
+
+      <form action="loadsurvey">
+        <input type="submit" value="Save" />
+      </form>
+
+    </div>
+
+
+    <!-- <div class = "options">
+      <form action="." method='POST'>{% csrf_token %}
+        <div class="rule_form">
+          <input type="text" name="rule_name" placeholder="Your rules">
+          <input type="text" name="rule_type" placeholder="Type of your rule"><br>
+        </div>
+        <input type="submit" value="Save"><br>
+      </form>
+
+      <div class="add_one"><p>Set a new one</p></div>
+    </div> -->
+  </div>
+</div>
+
+
+{% endblock %}
