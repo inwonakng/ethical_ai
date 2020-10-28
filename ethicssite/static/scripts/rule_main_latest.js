@@ -16,7 +16,7 @@ $(document).ready(() => {
   });
 
   $('.add_rules_card').on('click', event => {
-    var structure = $('<div class = "rule_card card"><label>Rule name:</label><input type="text" id="attribute_name" placeholder="Rule name"><br><label>Rule type:</label><input type="text" id="attribute_type" placeholder="Rule type"></div>');
+    var structure = $('<div class = "rule_card card"><label>Rule name:</label><input type="text" name="rule_name" id="attribute_name" placeholder="Rule name"><br><label>Rule type:</label><input type="text" name="rule_type" id="attribute_type" placeholder="Rule type"></div>');
     $("#container1").append(structure);
   });
 
