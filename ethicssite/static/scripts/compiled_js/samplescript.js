@@ -96,12 +96,21 @@ function makeFinalPage(data) {
     element.appendChild(textarea);
 }
 
-function viewReviewPage() {
+function clearPage() {
     document.getElementById("final_page").style.display = "none";
     document.getElementById("prev").style.display = "none";
     document.getElementById("go-to-review").style.display = "none";
     document.getElementById("question").style.display = "none";
     document.getElementById("scorecontainer").style.display = "none";
+    document.getElementById("submit").style.display = "inline";
+    for (let i = 0; i < maxScenarios; i++) {
+        document.getElementById("q" + i).style.display = "none";
+        document.getElementById("slides" + i).style.display = "none";
+        document.getElementById("scorecontainer").style.display = "none";
+    }
+}
+function viewReviewPage() {
+    clearPage();
     let element = document.getElementById("review_page");
     element.style.display = 'block';
     if (isNaN(document.getElementById("review0"))) {
@@ -155,11 +164,11 @@ function viewReviewPage() {
         div.appendChild(button_div);
         element.appendChild(div);
     }
-    
 }
 
 function backToPage(pageNum) {
     document.getElementById("review_page").style.display = "none";
+    document.getElementById("submit").style.display = "none";
     document.getElementById("go-to-review").style.display = "inline";
     document.getElementById("question").style.display = "block";
     document.getElementById("q" + pageNum).style.display = "block";
@@ -223,7 +232,15 @@ function prev() {
     guicheck();
 }
 // TODO Megan: Store data from front-end to data structure.
-function grabdata() {
+function submitResult() {
+    for (let i = 0; i < totalData.length; i++) {
+        for (let j = 0; j < totalData[i].length; j++) {
+            let sliderIndex = j + 1;
+            totalData[i][j]["Choice"] = document.getElementById("q" + i + "range" + sliderIndex).value;
+        }
+    }
+    fetch("submit_result", {method: 'POST',
+    body: JSON.stringify(totalData)});
 }
 // initial page
 var scenarioNum = 0;
