@@ -2,27 +2,48 @@ from .Category import Category
 from .Rule import Rule
 from .Combo import Combo
 from random import sample
-
+from pathlib import Path
 from itertools import combinations as comb
-
+# from ..models import RuleSet
+import yaml
+from ..models import *
 
 class Generator():
-    def __init__(self, adaptive=False, rule={}):
-        if len(rule) == 0:
-            raise "Rule is empty"
-        elif len(rule['categories']) == 0:
-            raise "Categories is empty"
+    def __init__(self, adaptive=False, rule={}, rule_model=None):
+
         # assign attributes
         self.adaptive = adaptive
         self.categories = {}
+        self.range_categories = {}
         self.bad_combos = []
         self.config = {}
+        
+        # if rule dictionary (passed in) is empty
+        if len(rule) == 0:
+
+            # if rule_model is a RuleSet model AND the model is not empty
+            if (type(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
+                rule = rule_model.object_form()
+                print('i am using model!!!')
+
+            # if rule model is empty
+            # else:
+            #     # DEFAULT to the rules.json file
+            #     rule = {}
+            #     with open(str(Path("survey/generation/rule/rule.yaml").resolve()), "r") as stream:
+            #         try:
+            #             rule = yaml.safe_load(stream)
+            #         except yaml.YAMLError as exc:
+            #             print(exc)
+
         self.config['same_categories'] = rule['config'].get(
             'same_categories', -1)
         self.config['scenerio_size'] = rule['config'].get('scenerio_size', 2)
 
         for key, value in rule['categories'].items():
-            self.categories[key] = Category(name=key, options=value)
+            cc = Category(name=key, options=value)
+            if cc.is_range: self.range_categories[key] = cc
+            else: self.categories[key] = cc
 
         self.categoriesKeys = list(self.categories.keys())
         self.rule = Rule(rule['bad_combos'])
@@ -46,21 +67,24 @@ class Generator():
         selected = []
         while True:
             s = sample(self.combos, self.config['scenerio_size'])
+            for ss in s:
+                for k,v in self.range_categories.items():
+                    ss.attach(k,v.get_range())
             if self.check_duplicates(s):
                 selected = s
                 break
-
-        return [s.getCombo() for s in selected]
+        for c in self.categories.values():
+            selected = [c.translate(ss) for ss in selected]
+        
+        return [ss.getCombo() for ss in selected]
 
     def permutate_combos(self):
+        # initialize array to fill
         self.combos = []
-        # Calculate all keys for category
-        tempCategoryKeys = {}
-        for i in self.categories:
-            tempCategoryKeys[i] = list(self.categories[i].getKeys())
-
-        self.__recursive_permutation(tempCategoryKeys)
-
+        # Calculate all keys for category ONLY IF THEY ARE NOT RANGE!
+        temp_keys = dict([(k,c.getKeys()) 
+            for k,c in self.categories.items()])
+        self.__recursive_permutation(temp_keys)
     '''
         @TODO Need docs for this rule
     '''

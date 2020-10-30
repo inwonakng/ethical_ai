@@ -1,278 +1,46 @@
-import datetime
 import json
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-"""
-class DummyModel(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
 
-    @classmethod
-    def create(cls,text=None):
-        obj = cls(question_text = text)
-        return obj
-"""
-
-
+'''Survey models sections start here'''
 # Question model
 @python_2_unicode_compatible
-class Question(models.Model):
-    # Question field (text field shown to user)
-    question_txt = models.CharField(max_length=200, null=False,default='')
-
-    # Question description (text field shown to user)
-    question_desc = models.TextField(null=False, blank=False,default='')
-
-    # Can always add more fields for the question object if needed
-
-    # Date when question was submitted (auto done in backend)
-    date = models.DateTimeField(default=datetime.date.today)
-
-    # Return question text
-    def __str__(self):
-        return self.question_txt
-
-    # Alternative to overriding __init__ (initial)
-    @classmethod
-    def create(cls, questionTXT, questionDESC):
-        questionObject = cls(question_txt=questionTXT, question_desc=questionDESC)
-        return(questionObject)
-
-
-# { <<< Model for user settings 
-def create_rule_set_from_json_string(rule_set_json_string):
-    rule_set = RuleSet()
-    rule_set.save()
-    d = json.loads(rule_set_json_string)
-    for category in d['categories'].keys():
-        obj = d['categories'][category]
-        if 'range' in obj.keys():
-
-            new_range_category = RangeCategory(
-                name=category,
-                minVal=float(obj['range'][0]),
-                maxVal=float(obj['range'][1]),
-                unit=obj['unit'])
-
-            rule_set.rangecategory_set.add(new_range_category, bulk=False)
-        else:
-            new_choice_category = ChoiceCategory(name=category)
-            rule_set.choicecategory_set.add(new_choice_category, bulk=False)
-
-            for index in range(len(obj.keys())):
-                new_choice_category.rulesetchoice_set.create(
-                    index=index, description=obj[str(index)])
-
-    for category_name in d['bad combo'].keys():
-        obj = d['bad combo'][category_name]
-        new_bad_combination = BadCombination(category_name=category_name)
-        rule_set.badcombination_set.add(new_bad_combination, bulk=False)
-        for category_value in obj.keys():
-            sub_obj = obj[category_value]
-            new_bad_sub_combination = BadSubCombination(category_value=category_value)
-            new_bad_combination.badsubcombination_set.add(
-                new_bad_sub_combination, bulk=False)
-
-            for category_name_in in sub_obj.keys():
-                new_bad_sub_combination_element = BadSubCombinationElement(category_name=category_name_in)
-                new_bad_sub_combination.badsubcombinationelement_set.add(new_bad_sub_combination_element, bulk=False)
-
-                for category_index in sub_obj[category_name_in]:
-                    new_bad_sub_combination_element.elementchoice_set.create(
-                        category_index=category_index)
-
-    return rule_set
-
-class RuleSet(models.Model):
-
-    def object_form(self):
-        return_dict = {}
-        return_dict['categories'] = {}
-        for choice_category in self.choicecategory_set.all():
-            obj = choice_category.object_form()
-            return_dict['categories'][obj[0]] = obj[1]
-
-        for range_category in self.rangecategory_set.all():
-            obj = range_category.object_form()
-            return_dict['categories'][obj[0]] = obj[1]
-
-
-        return_dict['bad combo'] = {key: value for (key, value) in [obj.object_form() for obj in self.badcombination_set.all()]}
-
-
-        return return_dict
-
-    def __str__(self):
-        return self.id
-
-class BadCombination(models.Model):
-    category_name = models.CharField(max_length=100)
-    ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
-
-    def object_form(self):
-        return (self.category_name, {key: value for (key, value) in [obj.object_form() for obj in self.badsubcombination_set.all()]})
-
-    def __str__(self):
-        return self.category_name
-
-class BadSubCombination(models.Model):
-    category_value = models.CharField(max_length=500)
-    badCombination = models.ForeignKey(
-        BadCombination, on_delete=models.CASCADE, default=1)
-
-    def object_form(self):
-        return (self.category_value, {key: value for (key, value) in [obj.object_form() for obj in self.badsubcombinationelement_set.all()]})
-        
-
-
-    def __str__(self):
-        return self.category_value
-
-class BadSubCombinationElement(models.Model):
-    category_name = models.CharField(max_length=100)
-    badSubCombination = models.ForeignKey(
-        BadSubCombination, on_delete=models.CASCADE, default=1)
-
-    def object_form(self):
-        return (self.category_name, [str(elem_choice) for elem_choice in self.elementchoice_set.all()])
-
-    def __str__(self):
-        return self.category_name
-
-class ElementChoice(models.Model):
-    category_index = models.IntegerField()
-    badSubCombinationElement = models.ForeignKey(
-        BadSubCombinationElement, on_delete=models.CASCADE, default=1)
-
-    def __str__(self):
-        return str(self.category_index)
-
-
-
-class ChoiceCategory(models.Model):
-    name = models.CharField(max_length=100)
-    ruleSet = models.ForeignKey(RuleSet, on_delete=models.CASCADE, default=1)
-
-    def object_form(self):
-        r = {}
-        for choice in self.rulesetchoice_set.all():
-            r[choice.object_form()[0]] = choice.object_form()[1]
-
-        return (self.name, r)
-
-    def __str__(self):
-        return self.name
-
-class RuleSetChoice(models.Model):
-    index = models.IntegerField()
-    description = models.CharField(max_length=500)
-    choiceCategory = models.ForeignKey(
-        ChoiceCategory, on_delete=models.CASCADE, default=1)
-
-    def object_form(self):
-        return (str(self.index), self.description)
-
-    def __str__(self):
-        return json.dumps({str(self.index): self.description})
-
-class RangeCategory(models.Model):
-    name = models.CharField(max_length=100)
-    minVal = models.FloatField()
-    maxVal = models.FloatField()
-    unit = models.CharField(max_length=50)
-
-    ruleSet = models.ForeignKey(
-        RuleSet, on_delete=models.CASCADE, default=1)
-
-    def object_form(self):
-
-        return (self.name, {
-            "range": [self.minVal, self.maxVal],
-            "unit": self.unit
-        })
-
-    def __str__(self):
-
-        return json.dumps({self.name: {
-            "range": [self.minVal, self.maxVal],
-            "unit": self.unit
-        }})
-
-# } <<< End Model for user setting
-
-def create_scenario_from_json(json_string):
-    # currently json as scenario is list of combos e.g. '[{}, {}, {}]'
-    # todo: scenario should have some prompt, should this be included in json?
-    scenario = Scenario()
-    scenario.save()
-    
-    data = json.loads(json_string)
-    for json_combo in data:
-        combo = Combo(scenario=scenario)
-        combo.save()
-        for json_attr in json_combo.keys():
-            attribute = Attribute(name=json_attr, value=json_combo[json_attr])
-            attribute.save()
-            combo.attributes.add(attribute)
-    
-    return scenario
-
-# Model for scenario
-class Scenario(models.Model):
-
-    prompt = models.CharField(max_length=300, default="---")
-
-    def object_form(self):
-        # returns a list of combos that makes up the scenario e.g. [{}, {}, {}]
-        # todo: object_form currently doesn't include prompt, consider this
-        res = []
-        for combo in self.combo_set.all():
-            res.append(combo.object_form())
-        
-        return res
-
-    def __str__(self):
-        return str(self.prompt)
-
 # Model for a generic attribute for some combination (e.g. age or health)
 class Attribute(models.Model):
     # attribute name (e.g. age or health)
     name = models.CharField(max_length=50, null=False, default='')
-
     # value for the attribute
     value = models.CharField(max_length=50, null=False, default='')
 
-    def object_form(self):
-        # return a tuple with a (name, value)
-        return (self.name, self.value)
-
-    def __str__(self):
-        return json.dumps(self.object_form())
-
-# Model for a set of attributes under some scenario (e.g. Person)
-class Combo(models.Model):
+# Model for a set of attributes under some scenario (e.g. Person A)
+class Option(models.Model):
+    # Option model holds the combination of different attributes
     # name of current Combo (e.g. Person A)
     name = models.CharField(max_length=50, null=False, default='')
-
-    # link to given scenario
-    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE, default=1)
-
     # attributes under the current Combo
     attributes = models.ManyToManyField(Attribute, related_name='combo_attributes')
 
-    def object_form(self):
-        # return a dict of all attribute and values e.g. {'age': '52'}
-        res = {}
-        for attr in self.attributes.all():
-            key, val = attr.object_form()
-            res[key] = val
-        
-        return res
+# Model for scenario
+class Scenario(models.Model):
+    # prompt = models.CharField(max_length=300, default="---")
+    options = models.ManyToManyField(Option)
 
-    def __str__(self):
-        return json.dumps(self.object_form())
+'''mother of all survey models'''
+class Survey(models.Model):
+    # Survey field (text field shown to user)
+    prompt = models.CharField(max_length=200, null=False,default='')
+
+    # Survey description (text field shown to user)
+    desc = models.TextField(null=False, blank=False,default='')
+
+    # Date when question was submitted (auto done in backend)
+    date = models.DateTimeField(default=timezone.now)
+    scenarios = models.ManyToManyField(Scenario)
+
+'''Survey models sections end here'''
 
 # Model for storing user input scores
 class Response(models.Model):
@@ -280,8 +48,206 @@ class Response(models.Model):
     # userid = ?
 
     # which combo the current score is for
-    combo = models.ForeignKey(Combo, on_delete=models.CASCADE, default=1)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, default=1)
 
     # user input score
     # todo: consider changing this to be IntegerChoices / Range?
-    score = models.IntegerField()
+    # scores = [models.IntegerField() for o in survey..scenarios]
+
+# Rule model
+class RuleSet(models.Model):
+    choice_categs = models.ManyToManyField('ListCateg')
+    range_categs = models.ManyToManyField('RangeCateg')
+    badcombos = models.ManyToManyField('BadCombo')
+    same_categories = models.IntegerField(null=False,default=2)
+    scenario_size = models.IntegerField(null=False,default=2)
+    '''These accessor functions are for the generator to use'''
+    def get_choicecategs(self):
+        # for cc in self.choice_categs
+        categ = {}
+        for cc in self.choice_categs.all():
+            c = cc.object_form()
+            categ[c[0]] = c[1]
+        return categ
+
+    def object_form(self):
+        # for cc in choice_categs.all():
+        cho = self.get_choicecategs()
+        ran = self.get_rangecategs()
+        cho.update(ran)
+        return {
+            'config':self.get_configs(),
+            'categories': cho,
+            'bad_combos': self.get_badcombos()
+        }
+
+    def get_rangecategs(self):
+        bb = {}
+        for cc in self.range_categs.all():
+            bb.update(cc.object_form())
+        return bb
+            
+    def get_badcombos(self):
+        return {bc.object_form()[0]:bc.object_form()[1] 
+        for bc in self.badcombos.all()}
+        
+    def get_configs(self):
+        return {
+            'same_categories':self.same_categories,
+            'scenario_size': self.scenario_size
+        }
+
+# Bad combination model
+class BadCombo(models.Model):
+    category_name = models.CharField(max_length=100)
+    subcombos = models.ManyToManyField('BadSubCombo')
+    def object_form(self):
+        return (self.category_name, {key: value for (key, value) in [obj.object_form() for obj in self.subcombos.all()]})
+
+    def __str__(self):
+        return self.category_name
+
+# This level contains the bad combos for specified category
+class BadSubCombo(models.Model):
+    categ = models.CharField(max_length=500)
+    badcombo_elems = models.ManyToManyField('BadSubComboElement')
+    def object_form(self):
+        return (self.categ, 
+                {key: value 
+                for (key, value) in 
+                    [obj.object_form() for obj in self.badcombo_elems.all()]})
+        
+    def __str__(self):
+        return self.categ
+
+# Bad sub?? combination element model
+class BadSubComboElement(models.Model):
+    categ = models.CharField(max_length=100)
+    elems = models.ManyToManyField('ElementChoice')
+    def object_form(self):
+        return (self.categ, [str(elem_choice) for elem_choice in self.elems.all()])
+
+    def __str__(self):
+        return self.categ
+
+# Element choice model
+class ElementChoice(models.Model):
+    category_index = models.IntegerField()
+    def __str__(self):
+        return str(self.category_index)
+
+# Choice category model - choosing froma list of values
+class ListCateg(models.Model):
+    name = models.CharField(max_length=100)
+    choices = models.ManyToManyField('RuleSetChoice')
+    def object_form(self):
+        r = {c.object_form()[0]: c.object_form()[1]
+            for c in self.choices.all()}
+        return [self.name,r]
+
+    def __str__(self):
+        return json.dumps(self.object_form())
+
+# Rule set choice model
+class RuleSetChoice(models.Model):
+    index = models.IntegerField()
+    value = models.CharField(max_length=500)
+
+    def object_form(self):
+        return (str(self.index), self.value)
+
+    def __str__(self):
+        return json.dumps({str(self.index): self.value})
+
+# Range category model
+class RangeCateg(models.Model):
+    name = models.CharField(max_length=100)
+    minVal = models.FloatField()
+    maxVal = models.FloatField()
+    unit = models.CharField(max_length=50)
+
+    def object_form(self):
+        return {self.name: {
+                "range": [self.minVal, self.maxVal],
+                "unit": self.unit}
+                }
+
+    def __str__(self):
+        return json.dumps(self.object_form())
+
+'''
+Currently this function receives the survey data as in a format of [Scenario1,scenario2,...].
+Then it creates the all the submodels accordingly and links the foreign keys
+Before this function is called, the Survey model should be instantiated and saved beforehand
+
+ex)
+ss = Survey(prompt='test',desc='hi')
+ss.save()
+ss.create_survey([[{'alt1':2,'alt2':3}]])
+After this, ss will be the complete survey object 
+(does not carry user scores yet)
+'''
+
+def json_to_survey(survey_data,prompt='empty',desc='empty'):
+    survey = Survey(prmopt=prompt,desc=desc)
+    survey.save()
+    for scen in survey_data:
+        ss = Scenario()
+        ss.save()
+        for ops in scen:
+            oo = Option()
+            oo.save()
+            for k,v in ops.items():
+                aa = Attribute(name=k,value=v)
+                aa.save()
+                oo.attributes.add(aa)
+            ss.options.add(oo)
+        survey.scenarios.add(ss)
+
+# type(d) must be dict()
+def json_to_ruleset(d):
+    inp = {'same_categories': d['config']['same_categories'],
+    'scenario_size': d['config']['scenario_size']}
+    rule_set = RuleSet(**inp)
+    rule_set.save()
+    for categ,obj in d['categories'].items():
+        if 'range' in obj:
+            range_category = RangeCateg(
+                name=categ,
+                minVal=float(obj['range'][0]),
+                maxVal=float(obj['range'][1]),
+                unit=obj['unit'])
+            range_category.save()
+            rule_set.range_categs.add(range_category)
+        else:
+            list_categ = ListCateg(name=categ)
+            list_categ.save()
+            for k,v in obj.items():
+                list_categ.choices.create(
+                    index=k, value=v)
+            rule_set.choice_categs.add(list_categ)
+
+    for categ_name,obj in d['bad_combos'].items():
+        bad_combo = BadCombo(category_name=categ_name)
+        bad_combo.save()
+        for cval,sub_obj in obj.items():
+            subcombo = BadSubCombo(
+                categ=cval)
+            subcombo.save()
+
+            for category_name_in in sub_obj.keys():
+                bsubcom_elem = BadSubComboElement(
+                    categ=category_name_in)
+                bsubcom_elem.save()
+                for category_index in sub_obj[category_name_in]:
+                    bsubcom_elem.elems.create(
+                        category_index=category_index)
+                
+                subcombo.badcombo_elems.add(
+                    bsubcom_elem)
+        
+            bad_combo.subcombos.add(
+                subcombo)
+        rule_set.badcombos.add(bad_combo)
+    rule_set.save()
+    return rule_set

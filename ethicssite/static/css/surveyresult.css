@@ -1,3 +1,19 @@
+.head_div{
+    text-align: center;
+}
 .head{
     font-size: 24px;
+}
+.button_div{
+    padding-top: 30px;
+    text-align: center;
+}
+
+.scenario_div{
+    padding-top: 40px;
+    padding-bottom: 20px;
+    text-align: center;  
+}
+.table{
+    border: 1px solid blue;
 }

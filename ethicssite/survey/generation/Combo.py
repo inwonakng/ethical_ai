@@ -9,6 +9,9 @@ class Combo():
             opt[name] = key
         return cls(value=opt)
 
+    def attach(self,name,value):
+        self.combo[name] = value
+
     def getCombo(self):
         return self.combo
 
