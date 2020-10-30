@@ -1,0 +1,106 @@
+<h1 id="generation">Generation</h1>
+<p>Here we use json/yaml to show the inner data structure each Python class represent.</p>
+<h2 id="concepts">Concepts</h2>
+<h3 id="scenerio">Scenerio</h3>
+<p>Each scenario is composed of n number of combinations. Using <code>Generator.get_scenario(n)</code> will return a randomly generated scneario that follows the default rules</p>
+<h3 id="combo">Combo</h3>
+<p>Combo is a part of a scenerio. E.g.</p>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"combo"</span>: {
+    <span class="hljs-attr">"age"</span>: <span class="hljs-string">"27"</span>,
+    <span class="hljs-attr">"health"</span>: <span class="hljs-string">"moderate health problems"</span>,
+    <span class="hljs-attr">"gender"</span>: <span class="hljs-string">"female"</span>,
+    <span class="hljs-attr">"income level"</span>: <span class="hljs-string">"low"</span>,
+    <span class="hljs-attr">"education level"</span>: <span class="hljs-string">"Graduate degree"</span>,
+    <span class="hljs-attr">"number of dependents"</span>: <span class="hljs-string">"4"</span>,
+    <span class="hljs-attr">"survival without jacket"</span>: <span class="hljs-string">"27%"</span>,
+    <span class="hljs-attr">"survival with jacket"</span>: <span class="hljs-string">"77%"</span>
+  }
+}
+</code></pre>
+<p>However, it could be in partial mode where need to be expand to complete type. The number refer to the index of the catagories. The partial mode example:</p>
+<pre><code class="lang-json">{
+  <span class="hljs-attr">"combo"</span>: {
+    <span class="hljs-attr">"age"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"health"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"gender"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"income level"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"education level"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"number of dependents"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"survival without jacket"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"survival with jacket"</span>: <span class="hljs-number">0</span>
+  }
+}
+</code></pre>
+<h3 id="catagory">Catagory</h3>
+<p>Catagories stores index of each options, it might look like this:</p>
+<pre><code class="lang-yaml"><span class="hljs-symbol">categories:</span>
+<span class="hljs-symbol">  age:</span>
+    <span class="hljs-number">0</span>: <span class="hljs-string">"5"</span>
+    <span class="hljs-number">1</span>: <span class="hljs-string">"8"</span>
+    <span class="hljs-number">2</span>: <span class="hljs-string">"12"</span>
+    <span class="hljs-number">3</span>: <span class="hljs-string">"18"</span>
+    <span class="hljs-number">4</span>: <span class="hljs-string">"21"</span>
+    <span class="hljs-number">5</span>: <span class="hljs-string">"23"</span>
+    <span class="hljs-number">6</span>: <span class="hljs-string">"27"</span>
+    <span class="hljs-number">7</span>: <span class="hljs-string">"32"</span>
+    <span class="hljs-number">8</span>: <span class="hljs-string">"52"</span>
+    <span class="hljs-number">9</span>: <span class="hljs-string">"61"</span>
+    <span class="hljs-number">10</span>: <span class="hljs-string">"72"</span>
+</code></pre>
+<p>The key should always be integer. However, the sqeuence of the number could be random or even incontineous. Integers allow us to use set operation efficiently eliminate bad combos, etc.</p>
+<p>The category may have a special operator key instead of regular indexes. Currently implemented is <code>[range]</code>, which generates all the numbers between the first and second index of the following list.</p>
+<h2 id="rule">Rule</h2>
+<p>Rule is used to shape generation with custom rules (also referred to as bad combos in the json file). A rules object may looks like this:</p>
+<pre><code class="lang-yaml">bad_combos:
+  age:
+    1:
+      number of dependents:
+        -<span class="ruby"> <span class="hljs-number">1</span>
+</span>        -<span class="ruby"> <span class="hljs-number">2</span>
+</span>        -<span class="ruby"> <span class="hljs-number">3</span>
+</span>        -<span class="ruby"> <span class="hljs-number">4</span>
+</span>        -<span class="ruby"> <span class="hljs-number">5</span>
+</span>    2:
+      income level:
+        -<span class="ruby"> <span class="hljs-number">2</span>
+</span>      number of dependents:
+        -<span class="ruby"> <span class="hljs-number">1</span>
+</span>        -<span class="ruby"> <span class="hljs-number">2</span>
+</span>        -<span class="ruby"> <span class="hljs-number">3</span>
+</span>        -<span class="ruby"> <span class="hljs-number">4</span>
+</span>        -<span class="ruby"> <span class="hljs-number">5</span>
+</span>    3:
+      income level:
+        -<span class="ruby"> <span class="hljs-number">2</span>
+</span>      number of dependents:
+        -<span class="ruby"> <span class="hljs-number">4</span>
+</span>        -<span class="ruby"> <span class="hljs-number">5</span>
+</span>    5:
+      number of dependents:
+        -<span class="ruby"> <span class="hljs-number">4</span>
+</span>        -<span class="ruby"> <span class="hljs-number">5</span>
+</span>    9:
+      number of dependents:
+        -<span class="ruby"> <span class="hljs-number">4</span>
+</span>        -<span class="ruby"> <span class="hljs-number">5</span>
+</span>    10:
+      number of dependents:
+        -<span class="ruby"> <span class="hljs-number">3</span>
+</span>        -<span class="ruby"> <span class="hljs-number">4</span>
+</span>        -<span class="ruby"> <span class="hljs-number">5</span></span>
+</code></pre>
+<p><code>bad_combos</code> <strong>MUST</strong> follow the same squeuence where catalogies listed.</p>
+<blockquote>
+<p>For instance, the root node of this rule is <code>age</code>, which means the first feature in <code>categories</code> must be <code>age</code>. The inner sequence should also do the same, if necessary.</p>
+</blockquote>
+<h2 id="steps">Steps</h2>
+<ul>
+<li>After being initiated with the rules, the generator then can be called by using &#39;get_scenario()&#39;, one at the time</li>
+<li>Each combination is then generated separately. At each step, the Catgory object will return a value chosen only from the valid pool of values to choose from.</li>
+<li>Once all the options are generated, the generator once more checks them to ensure the number of duplicates. If the requirements are met, the scenario is returned.</li>
+</ul>
+<h2 id="demo">Demo</h2>
+<pre><code class="lang-bash">python3 cli.py <span class="hljs-keyword">rule</span>/<span class="hljs-keyword">rule</span>.yaml
+</code></pre>
+<p>it will generate <code>rule.json</code> at the directory</p>

@@ -106,6 +106,8 @@ def survey_result(request):
             ]
     return render(request, 'survey/surveyresult.html', {'results':results})
 
+def rules_explain(request):
+    return render(request,'survey/rules_explain.html')
 
 # Django view to handle unknown paths
 def unknown_path(request, random):
