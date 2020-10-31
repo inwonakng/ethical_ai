@@ -135,5 +135,5 @@ def rules_save(request):
     except KeyError:
         HttpResponseServerError('`rules` field not found in request body.')
 
-    create_rule_set_from_json_string(json_rules_string)
+    json_to_ruleset(json_rules_string)
     HttpResponse(statud=201)
