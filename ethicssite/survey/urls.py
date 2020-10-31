@@ -7,5 +7,6 @@ urlpatterns = [
     path('loadsurvey', views.load_survey, name='loadsurvey'),
     path('getscenario', views.get_scenario, name='getscenario'),
     path('survey/result', views.survey_result, name="surveyresult"),
+    path('rules/save', views.rules_save, name="rulessave"),
     path('<random>', views.unknown_path)
 ]
