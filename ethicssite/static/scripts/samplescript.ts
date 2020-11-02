@@ -9,6 +9,16 @@ function writetopage(data:Array<JSON>,args:any){
     addsliderstopage(data.length)
 }
 
+function displayFinalPage(data:Array<JSON>, args:any){
+    addSlidersToFinalPage(data);
+}
+
+function addSlidersToFinalPage(data:Array<JSON>){
+    for (let key in data[0]){
+        document.getElementById("features").append(makeslider(key));
+    }
+}
+
 // Creates an HTML table to display the data in data.
 // index: the scenario we are currently on. Used to assign id.
 //        Makes data grabbing a bit easier (Plan on grabbing data
@@ -33,8 +43,7 @@ function maketable(data:Array<JSON>,index:number){
     }
     return table
 }
-
-//  Creates a slider to represent a specific feature. 
+///  Creates a slider to represent a specific feature. 
 //  index:  the scenarioNumber of people in each scenario, since 
 //          we are rating on an option (person).
 function makeslider(index:string){
@@ -44,7 +53,12 @@ function makeslider(index:string){
     // Label for slider
     let title = make('p');
     title.className = "option-score";
-    title.innerHTML = "Option " + index;
+    if(Number.isInteger(Number(index))){
+        title.innerHTML = "Option " + index;
+    }
+    else{
+        title.innerHTML = index;
+    }
 
     // Container for each slider. Used only in stylings
     let slidercontainer = make('div');
@@ -53,7 +67,12 @@ function makeslider(index:string){
     // The slider itself
     var slider = document.createElement('input')
     slider.type = "range"
-    slider.id = 'range' + 1;
+    if(Number.isInteger(Number(index))){
+        slider.id = 'range' + index
+    }
+    else{
+        title.innerHTML = index;
+    }
     slider.min = "0"
     slider.max="10"
     slider.value="0"
@@ -85,7 +104,8 @@ function next(){
 
     // Has the user finished the first part of the survey?
     if(scenarioNum==maxScenarios){
-        viewFinalSurveyPage()
+        viewFinalSurveyPage();
+        http('getscenario',addSlidersToFinalPage,scenarioNum)
     }
     else{
         // Assumes the person is still taking the first part of the scenario.

@@ -36,6 +36,7 @@ function viewFinalSurveyPage(){
     document.getElementById("question").style.display="none"
     document.getElementById("scorecontainer").style.display="none"
     document.getElementById("next").innerHTML = "Submit"
+    
 }
 
 // Delete the scenario currently being displayed.
