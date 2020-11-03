@@ -4,11 +4,11 @@
 function addsurveytopage(element, index) {
     document.getElementById("survey").append(element);
 }
-function addsliderstopage(i) {
+function addsliderstopage(scen_idx, i) {
     var element = document.createElement('div');
     element.id = "slides" + scenarioNum;
     for (var j = 0; j < i; j++) {
-        element.append(makeslider(String((j + 1))));
+        element.append(makeslider(String(scen_idx), String((j))));
     }
     document.getElementById("scorecontainer").append(element);
 }
@@ -31,9 +31,8 @@ function viewFinalSurveyPage() {
     document.getElementById("question").style.display = "none";
     document.getElementById("scorecontainer").style.display = "none";
     document.getElementById("next").style.display = "none";
-    document.getElementById("go-to-review").style.display = "inline";
+    byid('go-to-review').style.display = 'inline';
 }
-
 // Delete the scenario currently being displayed.
 function viewCurrentScenario() {
     document.getElementById("q" + scenarioNum).style.display = "block";

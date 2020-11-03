@@ -5,11 +5,11 @@ function addsurveytopage(element:any, index:number){
     document.getElementById("survey").append(element)
 }
 
-function addsliderstopage(i:number){
+function addsliderstopage(scen_idx:number, i:number){
     var element = document.createElement('div')
     element.id="slides" + scenarioNum
     for(var j=0; j < i; j++){
-        element.append(makeslider(String((j+1))));
+        element.append(makeslider(String(scen_idx),String((j)) ));
     }
     document.getElementById("scorecontainer").append(element)
 }
@@ -35,7 +35,8 @@ function viewFinalSurveyPage(){
     document.getElementById("final_page").style.display="block"
     document.getElementById("question").style.display="none"
     document.getElementById("scorecontainer").style.display="none"
-    document.getElementById("next").innerHTML = "Submit"
+    document.getElementById("next").style.display = "none"
+    byid('go-to-review').style.display = 'inline'
 }
 
 // Delete the scenario currently being displayed.
@@ -66,6 +67,8 @@ function navigateBackToSurvey(){
     document.getElementById("question").style.display="block"
     document.getElementById("scorecontainer").style.display="block"
     document.getElementById("next").innerHTML = "Next"
+    document.getElementById("next").style.display = "inline";
+    document.getElementById("go-to-review").style.display = "none";
 }
 
 // method for interacting with the python server.

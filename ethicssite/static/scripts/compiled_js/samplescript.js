@@ -1,5 +1,4 @@
 // this is the function that will be passed along with the request. 
-
 // Every function that goes through the 'http' function should expect one data object and one packed object of arguments it can use.
 function writetopage(data, args) {
     totalData.push(data);
@@ -7,16 +6,15 @@ function writetopage(data, args) {
     let table = maketable(data, args);
     question.appendChild(table);
     addsurveytopage(question, scenarioNum);
-    addsliderstopage(data.length);
+    addsliderstopage(scenarioNum, data.length);
 }
 // Creates an HTML table to display the data in data.
 // index: the scenario we are currently on. Used to assign id.
 //        Makes data grabbing a bit easier (Plan on grabbing data
 //        once the user makes final submission)
 function maketable(data, index) {
-    // use the features to paint the sliders in the final page.
-    if (index == maxScenarios-1) {
-       makeFinalPage(data);
+    if (index == maxScenarios - 1) {
+        makeFinalPage(data);
     }
     console.log(data);
     let table = make('table', 'table' + index);
@@ -38,41 +36,13 @@ function maketable(data, index) {
     }
     return table;
 }
-//  Creates a slider to represent a specific feature. 
-//  index:  the scenarioNumber of people in each scenario, since 
-//          we are rating on an option (person).
-function makeslider(index) {
-    // Contains everything involved in creating a score.
-    let scorecontainer = make('div', 'option-score-container');
-    // Label for slider
-    let title = make('p');
-    title.className = "option-score";
-    title.innerHTML = "Option " + index;
-    // Container for each slider. Used only in stylings
-    let slidercontainer = make('div');
-    slidercontainer.className = "slidecontainer";
-    // The slider itself
-    var slider = document.createElement('input');
-    slider.type = "range";
-    slider.id = "q" + scenarioNum + 'range' + index;
-    slider.min = "0";
-    slider.max = "10";
-    slider.value = "0";
-    slider.className = "slider";
-    // Adding all of the elements within each other accordingly. 
-    slidercontainer.appendChild(slider);
-    scorecontainer.appendChild(title);
-    scorecontainer.appendChild(slidercontainer);
-    return scorecontainer;
-}
-
 function makeFinalPage(data) {
     var element = document.getElementById("final_page");
     for (let key in data[0]) {
-        dataFeatures.push({"key" : key, "value": 0});
+        dataFeatures.push({ "key": key, "value": 0 });
         let div = make('div');
         let p = make('p');
-        p.className = "feature"
+        p.className = "feature";
         p.innerHTML = key;
         let slidercontainer = make('div');
         slidercontainer.className = "slidecontainer";
@@ -95,7 +65,6 @@ function makeFinalPage(data) {
     element.appendChild(p2);
     element.appendChild(textarea);
 }
-
 function clearPage() {
     document.getElementById("final_page").style.display = "none";
     document.getElementById("prev").style.display = "none";
@@ -113,13 +82,13 @@ function viewReviewPage() {
     clearPage();
     let element = document.getElementById("review_page");
     element.style.display = 'block';
-    if (isNaN(document.getElementById("review0"))) {
-        for(let i = 0; i < maxScenarios; i++) {
-            element.removeChild(document.getElementById("review" + i));
-        }
-    }
+    // if (isNaN( document.getElementById("review0") )) {
+    //     for(let i = 0; i < maxScenarios; i++) {
+    //         element.removeChild(document.getElementById("review" + i));
+    //     }
+    // }
     sortFeatures();
-    for(let i = 0; i < maxScenarios; i++) {
+    for (let i = 0; i < maxScenarios; i++) {
         let currentQuestion = totalData[i];
         let div = make("div", "review" + i);
         div.className = "review_div";
@@ -137,6 +106,7 @@ function viewReviewPage() {
         }
         let th = make('th');
         th.innerHTML = "Your Choices";
+        console.log('current question: ', currentQuestion);
         row.appendChild(th);
         // table body
         for (let j = 0; j < currentQuestion.length; j++) {
@@ -146,26 +116,24 @@ function viewReviewPage() {
                 let currentFeauture = dataFeatures[k]["key"];
                 row.insertCell().innerHTML = currentQuestion[j][currentFeauture];
             }
-            let sliderIndex = j + 1;
-            let value = document.getElementById("q" + i + "range" + sliderIndex).value;
+            let sliderIndex = j;
+            console.log("q" + i + "range" + sliderIndex);
+            let value = byid("q" + i + "range" + sliderIndex).value;
             row.insertCell().innerHTML = value;
         }
         div.appendChild(table);
         let button_div = make("div");
         button_div.className = "review_button";
-
         let button = make("button", i + "review_button");
         button.innerHTML = "Modify Anwser";
-        button.onclick = function(i) {
+        button.onclick = function (i) {
             backToPage(parseInt(i.target.id));
-        }
-
+        };
         button_div.appendChild(button);
         div.appendChild(button_div);
         element.appendChild(div);
     }
 }
-
 function backToPage(pageNum) {
     document.getElementById("review_page").style.display = "none";
     document.getElementById("submit").style.display = "none";
@@ -175,18 +143,43 @@ function backToPage(pageNum) {
     document.getElementById("slides" + pageNum).style.display = "block";
     document.getElementById("scorecontainer").style.display = "block";
 }
-
 function sortFeatures() {
     for (let i in dataFeatures) {
         let scoreId = "score-" + dataFeatures[i]["key"];
-        dataFeatures[i]["value"] = Number(document.getElementById(scoreId).value);
+        dataFeatures[i]["value"] = Number(byid(scoreId).value);
     }
     dataFeatures = dataFeatures.sort(compare);
 }
-
-function compare(a,b){ 
+function compare(a, b) {
     return b["value"] - a["value"];
- }
+}
+//  Creates a slider to represent a specific feature. 
+//  index:  the scenarioNumber of people in each scenario, since 
+//          we are rating on an option (person).
+function makeslider(scen_idx, index) {
+    // Contains everything involved in creating a score.
+    let scorecontainer = make('div', 'option-score-container');
+    // Label for slider
+    let title = make('p');
+    title.className = "option-score";
+    title.innerHTML = "Option " + index;
+    // Container for each slider. Used only in stylings
+    let slidercontainer = make('div');
+    slidercontainer.className = "slidecontainer";
+    // The slider itself
+    var slider = document.createElement('input');
+    slider.type = "range";
+    slider.id = 'q' + scen_idx + 'range' + index;
+    slider.min = "0";
+    slider.max = "10";
+    slider.value = "0";
+    slider.className = "slider";
+    // Adding all of the elements within each other accordingly. 
+    slidercontainer.appendChild(slider);
+    scorecontainer.appendChild(title);
+    scorecontainer.appendChild(slidercontainer);
+    return scorecontainer;
+}
 // Monitors GUI-related changes based on given scenario.
 function guicheck() {
     // Users can't go to previous scenario if there is no scenario to display
@@ -200,7 +193,6 @@ function guicheck() {
 // Handles how the user visits the "next page". Involves generating new 
 // surveys and displaying the survey-results page and the final-page.
 function next() {
-    console.log(totalData);
     clearCurrentScenario();
     scenarioNum++;
     // Has the user finished the first part of the survey?
@@ -232,21 +224,19 @@ function prev() {
     guicheck();
 }
 // TODO Megan: Store data from front-end to data structure.
-function submitResult() {
-    for (let i = 0; i < totalData.length; i++) {
-        for (let j = 0; j < totalData[i].length; j++) {
-            let sliderIndex = j + 1;
-            totalData[i][j]["Choice"] = document.getElementById("q" + i + "range" + sliderIndex).value;
-        }
+function grabdata() {
+    for (let i of Array(maxScenarios).keys()) {
+        byid('q');
     }
-    fetch("submit_result", {method: 'POST',
-    body: JSON.stringify(totalData)});
+}
+function submitResult() {
+    alert('hey');
 }
 // initial page
 var scenarioNum = 0;
 var maxScenarios = 10;
 var data = [];
-var totalData = [];
 var dataFeatures = [];
+var totalData = [];
 http('getscenario', writetopage, scenarioNum);
 //# sourceMappingURL=samplescript.js.map
