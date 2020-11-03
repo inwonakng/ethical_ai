@@ -5,8 +5,10 @@ from django.shortcuts import render
 import yaml
 from django.conf import settings
 from .models import *
+from django import views
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 def rules_view(request):
     # if request.method == "POST":
@@ -23,6 +25,18 @@ def rules_view(request):
     context = {}
     return render(request,"survey/rules.html",context)
 
+class IndexView(views.generic.ListView):
+    """
+    Define homepage view, inheriting ListView class, which specifies a context variable.
+    
+    Note that login is required to view the items on the page.
+    """
+    
+    template_name = 'survey/index.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        """Override function in parent class and return all questions."""
+        return Survey.objects.all().order_by('-pub_date')
 
 # stores everything into the Question model
 def receive_survey(request):
