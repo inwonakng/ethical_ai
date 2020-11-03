@@ -71,7 +71,7 @@ function makeslider(index:string){
         slider.id = 'range' + index
     }
     else{
-        title.innerHTML = index;
+        slider.id = index;
     }
     slider.min = "0"
     slider.max="10"
@@ -131,6 +131,10 @@ function prev(){
     // Displays the previous survey. Assumes the person is not on the final page.
     viewCurrentScenario()
     guicheck()
+}
+
+function assembleStars(num:number){
+    
 }
 
 // TODO Megan: Store data from front-end to data structure.
