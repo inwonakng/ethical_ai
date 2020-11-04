@@ -3,7 +3,7 @@ from . import views
 app_name = 'survey'
 urlpatterns = [
     # this path is for mturk, where the random survey would be
-    path('',views.IndexView.as_view(),name='index'),
+    path('',views.index_view,name='index'),
     path('rules',views.rules_view,name='rules'),
     path('loadsurvey', views.load_survey, name='loadsurvey'),
     path('getscenario', views.get_scenario, name='getscenario'),

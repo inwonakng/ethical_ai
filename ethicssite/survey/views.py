@@ -56,18 +56,21 @@ def rules_view(request):
     context = {}
     return render(request, "survey/rules.html", context)
 
-class IndexView(views.generic.ListView):
-    """
-    Define homepage view, inheriting ListView class, which specifies a context variable.
+def index_view(request):
+    return render(request,"survey/index.html",{})
 
-    Note that login is required to view the items on the page.
-    """
-
-    template_name = 'survey/index.html'
-    context_object_name = 'question_list'
-    def get_queryset(self):
-        """Override function in parent class and return all questions."""
-        return Survey.objects.all().order_by('-pub_date')
+# class IndexView(views.generic.ListView):
+#     """
+#     Define homepage view, inheriting ListView class, which specifies a context variable.
+#
+#     Note that login is required to view the items on the page.
+#     """
+#
+#     template_name = 'survey/index.html'
+#     context_object_name = 'question_list'
+#     def get_queryset(self):
+#         """Override function in parent class and return all questions."""
+#         return Survey.objects.all().order_by('-pub_date')
 
 # Start survey
 
