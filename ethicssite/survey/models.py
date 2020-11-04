@@ -10,19 +10,19 @@ class Survey(models.Model):
     prompt = models.CharField(max_length=200, null=False, default='')
     desc = models.TextField(null=False, blank=False, default='')
     date = models.DateTimeField(default=timezone.now)
-    scenarios = models.ManyToManyField(Scenario)
-    attributes = models.ManyToManyField(Attribute)
+    scenarios = models.ManyToManyField('Scenario')
+    attributes = models.ManyToManyField('Attribute')
     ruleset_id = models.IntegerField(null=False, default=2)
 
 
 class Scenario(models.Model):
-    options = models.ManyToManyField(Option)
+    options = models.ManyToManyField('Option')
 
 
 class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
-    attributes = models.ManyToManyField(Attribute, related_name='combo_attributes')
-    text = models.CharField(max_length=50, null=False, deafult='')
+    attributes = models.ManyToManyField('Attribute', related_name='combo_attributes')
+    text = models.CharField(max_length=50, null=False, default='')
 
 
 class SingleResponse(models.Model):
