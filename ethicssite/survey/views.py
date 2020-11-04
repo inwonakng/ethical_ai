@@ -31,7 +31,6 @@ def rules_view(request):
         #
         # ls.choices.add(rsc)
         # rs.choice_categs.add(ls)
-        test test
         rs = RuleSet()
         rs.save()
         for i,rule_name in enumerate(rule_names):
