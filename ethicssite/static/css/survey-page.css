@@ -35,8 +35,11 @@ div{
 }
 
 #scorecontainer{
-    margin-left: 10%;
-    margin-bottom: 0%;
+    margin:auto;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    width:95%;
 }
 
 .option-score{
@@ -89,7 +92,37 @@ div{
   cursor: pointer;
 }
 
-button{
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  margin:auto;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+.action-btn{
     height:50px;
     width:15%;
     background-color: #FFFFFF;
@@ -98,7 +131,7 @@ button{
     border-radius:4px;
 }
 
-button:hover{
+.action-btn:hover{
     background-color: #DDDDDD
 }
 button#go-to-review{
@@ -107,8 +140,8 @@ button#go-to-review{
   right: 0px;
 }
 
-button:disabled,
-button[disabled]{
+.action-btn:disabled,
+.action-btn[disabled]{
     height:50px;
     width:15%;
     background-color: #FFFFFF;
@@ -202,4 +235,18 @@ button[disabled]{
   
   final_page.button:hover{
     background-color: #DDDDDD
+  }
+
+  #review_page{
+    display: none;
+  }
+  .review_head{
+    text-align: center;
+  }
+  .review_div{
+    padding-top: 30px;
+  }
+  .review_button{
+    padding-top: 10px;
+    text-align: center;
   }

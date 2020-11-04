@@ -1,19 +1,65 @@
 // this is the function that will be passed along with the request. 
 // Every function that goes through the 'http' function should expect one data object and one packed object of arguments it can use.
 function writetopage(data, args) {
+    totalData.push(data);
     let question = make('div', 'q' + args);
     let table = maketable(data, args);
     question.appendChild(table);
     addsurveytopage(question, scenarioNum);
     addsliderstopage(scenarioNum, data.length);
 }
-function displayFinalPage(data, args) {
-    addSlidersToFinalPage(data);
+function addsurveytopage(element, index) {
+    byid("survey").append(element);
 }
-function addSlidersToFinalPage(data) {
-    for (let key in data[0]) {
-        document.getElementById("features").append(makeslider(key));
+function addsliderstopage(scen_idx, i) {
+    var element = document.createElement('div');
+    element.id = "slides" + scenarioNum;
+    for (var j = 0; j < i; j++) {
+        element.append(makeslider(String(scen_idx), String((j))));
     }
+    byid("scorecontainer").append(element);
+}
+// Delete the scenario currently being displayed.
+function clearCurrentScenario() {
+    byid("q" + scenarioNum).style.display = "none";
+    byid("slides" + scenarioNum).style.display = "none";
+}
+// View the final page of the survey (the page before the survey results)
+function viewFinalSurveyPage() {
+    byid("final_page").style.display = "block";
+    byid("question").style.display = "none";
+    byid("scorecontainer").style.display = "none";
+    byid("next").style.display = "none";
+    byid('go-to-review').style.display = 'inline';
+}
+// Delete the scenario currently being displayed.
+function viewCurrentScenario() {
+    byid("q" + scenarioNum).style.display = "block";
+    byid("slides" + scenarioNum).style.display = "block";
+}
+// Reveals the scenario after the current one being displayed. Either
+// creates a new scenario or makes one visible if it has already been 
+// created. 
+function callNextScenario() {
+    var element = byid(("q" + scenarioNum));
+    if (typeof (element) != "undefined" && element != null) {
+        // Then the scenario has already been created.
+        viewCurrentScenario();
+    }
+    else {
+        // Create a new scenario if one is needed.
+        http_get('getscenario', writetopage, scenarioNum);
+    }
+}
+// Changes the page from the final survey page to the initial surveys
+// involving the different scenarios.
+function navigateBackToSurvey() {
+    byid("final_page").style.display = "none";
+    byid("question").style.display = "block";
+    byid("scorecontainer").style.display = "block";
+    byid("next").innerHTML = "Next";
+    byid("next").style.display = "inline";
+    byid("go-to-review").style.display = "none";
 }
 // Creates an HTML table to display the data in data.
 // index: the scenario we are currently on. Used to assign id.
@@ -44,7 +90,7 @@ function maketable(data, index) {
     return table;
 }
 function makeFinalPage(data) {
-    var element = document.getElementById("final_page");
+    var element = byid("final_page");
     for (let key in data[0]) {
         dataFeatures.push({ "key": key, "value": 0 });
         let div = make('div');
@@ -73,27 +119,27 @@ function makeFinalPage(data) {
     element.appendChild(textarea);
 }
 function clearPage() {
-    document.getElementById("final_page").style.display = "none";
-    document.getElementById("prev").style.display = "none";
-    document.getElementById("go-to-review").style.display = "none";
-    document.getElementById("question").style.display = "none";
-    document.getElementById("scorecontainer").style.display = "none";
-    document.getElementById("submit").style.display = "inline";
+    byid("final_page").style.display = "none";
+    byid("prev").style.display = "none";
+    byid("go-to-review").style.display = "none";
+    byid("question").style.display = "none";
+    byid("scorecontainer").style.display = "none";
+    byid("submit").style.display = "inline";
     for (let i = 0; i < maxScenarios; i++) {
-        document.getElementById("q" + i).style.display = "none";
-        document.getElementById("slides" + i).style.display = "none";
-        document.getElementById("scorecontainer").style.display = "none";
+        byid("q" + i).style.display = "none";
+        byid("slides" + i).style.display = "none";
+        byid("scorecontainer").style.display = "none";
     }
 }
 function viewReviewPage() {
     clearPage();
-    let element = document.getElementById("review_page");
+    let element = byid("review_page");
     element.style.display = 'block';
-    // if (isNaN( document.getElementById("review0") )) {
-    //     for(let i = 0; i < maxScenarios; i++) {
-    //         element.removeChild(document.getElementById("review" + i));
-    //     }
-    // }
+    if (byid("review0") != null) {
+        for (let i = 0; i < maxScenarios; i++) {
+            element.removeChild(byid("review" + i));
+        }
+    }
     sortFeatures();
     for (let i = 0; i < maxScenarios; i++) {
         let currentQuestion = totalData[i];
@@ -142,13 +188,13 @@ function viewReviewPage() {
     }
 }
 function backToPage(pageNum) {
-    document.getElementById("review_page").style.display = "none";
-    document.getElementById("submit").style.display = "none";
-    document.getElementById("go-to-review").style.display = "inline";
-    document.getElementById("question").style.display = "block";
-    document.getElementById("q" + pageNum).style.display = "block";
-    document.getElementById("slides" + pageNum).style.display = "block";
-    document.getElementById("scorecontainer").style.display = "block";
+    byid("review_page").style.display = "none";
+    byid("submit").style.display = "none";
+    byid("go-to-review").style.display = "inline";
+    byid("question").style.display = "block";
+    byid("q" + pageNum).style.display = "block";
+    byid("slides" + pageNum).style.display = "block";
+    byid("scorecontainer").style.display = "block";
 }
 function sortFeatures() {
     for (let i in dataFeatures) {
@@ -191,10 +237,10 @@ function makeslider(scen_idx, index) {
 function guicheck() {
     // Users can't go to previous scenario if there is no scenario to display
     if (scenarioNum == 0) {
-        document.getElementById("prev").setAttribute("disabled", "true");
+        byid("prev").setAttribute("disabled", "true");
     }
     else {
-        document.getElementById("prev").removeAttribute("disabled");
+        byid("prev").removeAttribute("disabled");
     }
 }
 // Handles how the user visits the "next page". Involves generating new 
@@ -205,7 +251,6 @@ function next() {
     // Has the user finished the first part of the survey?
     if (scenarioNum == maxScenarios) {
         viewFinalSurveyPage();
-        http('getscenario', addSlidersToFinalPage, scenarioNum);
     }
     else {
         // Assumes the person is still taking the first part of the scenario.
@@ -232,13 +277,25 @@ function prev() {
     guicheck();
 }
 // TODO Megan: Store data from front-end to data structure.
-function grabdata() {
-    for (let i of Array(maxScenarios).keys()) {
-        byid('q');
+function grabscores() {
+    let scores = [];
+    for (let s in totalData) {
+        let one_scen = [];
+        for (let j of totalData[s].keys()) {
+            var sco = byid('q' + s + 'range' + j).value;
+            // console.log(sco)
+            one_scen.push(sco);
+        }
+        scores.push(one_scen);
     }
+    return scores;
 }
 function submitResult() {
-    alert('hey');
+    var scores = grabscores();
+    http_post('submitsurvey', [totalData, scores], true);
+}
+function printstuff(dat, arg) {
+    console.log(dat);
 }
 // initial page
 var scenarioNum = 0;
@@ -246,5 +303,5 @@ var maxScenarios = 10;
 var data = [];
 var dataFeatures = [];
 var totalData = [];
-http('getscenario', writetopage, scenarioNum);
-//# sourceMappingURL=samplescript.js.map
+http_get('getscenario', writetopage, scenarioNum);
+//# sourceMappingURL=surveyscript.js.map

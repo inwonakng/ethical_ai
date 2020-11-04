@@ -5,80 +5,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../static/css/survey-page.css">
+    {% csrf_token %} 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body onload="guicheck()">
     <div id="question">
       <p id="prompt">Prompt</p>
       <div id="survey"></div>
 
-      <div id="scorecontainer">
-        <p>Scores: </p>  
+      <p>Scores: </p>
+      <div class="tab">
+        <button class="tablinks" onclick="">Sliders</button>
       </div>
+      <div id="scorecontainer"></div>
+
+
 
       <div id='showData'></div>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </div>
 
     <div id='final_page'>
-      <p id="rate-followup">Please score each feature on how important they were to your decision making</p>
-      <div>
-        <p class="feature">Age</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Health</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="5" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Gender</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="5" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Income Level</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Number of Dependents</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Survival Without</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-      <div>
-        <p class="feature">Survival Difference</p>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="10" value="0" class="slider" id="myRange">
-        </div>
-      </div>
-    
-      <p id="explain-followup">Please write more than 20 words to explain how you made your choices</p>
-      <textarea></textarea>
+      <p id="rate-followup">Please score each feature on how important they were to your decision making</p>  
+      <div id='features'></div>  
     </div>
     
-    <button id="prev" onclick="prev()">Prev</button>
-    <button id="next" onclick="next()">Next</button>
+    <button id="prev" class="action-btn" onclick="prev()">Prev</button>
+    <button id="next" class="action-btn" onclick="next()">Next</button>
     <button id="go-to-review" onclick="viewReviewPage()" style = "display: none; position: absolute; right: 0px;">
       Review Your Choices
     </button>
     <div id="review_page">
-      
+      <div class = 'review_head'>
+        <h1 class = 'head'>Your Answers</h1>
+        <hr class = "head_hr"></hr>
+      </div>
     </div>
-
+    {% comment %} <form action='/submitsurvey/' method="POST"> {% endcomment %}
+      <button id = "submit" onclick="submitResult()" style="display: none; position: absolute; right: 0px;">Submit</button>
+    {% comment %} </form> {% endcomment %}
     {% load static %}
     <script type="text/javascript" src="{% static '/scripts/compiled_js/helper.js' %}"></script> 
-    <script type="text/javascript" src="{% static '/scripts/compiled_js/samplescript.js' %}"></script> 
+    <script type="text/javascript" src="{% static '/scripts/compiled_js/surveyscript.js' %}"></script> 
   </body>
 </html>

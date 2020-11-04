@@ -9,39 +9,11 @@
 
 <body>
   <div class = 'head_div'>
-    <h1 class = 'head'>Your Answers</h1>
+    <h1 class = 'head'>Success</h1>
     <hr class = "head_hr"></hr>
   </div>
-  <div class="result">
-    {% for result in results%}
-    <div class="scenario_div">Scenario: {{result.scenario}}</div>
-      <div class = 'answers'>
-        <table class = 'table' border = "1px solid blue" cellspacing = 0 cellpadding = '20px' align="center">
-          <tr>
-            <td></td>
-            {% for feature in result.features %}
-              <td>{{ feature }}</td>
-            {% endfor %}
-            <td>Your Choice</td>
-          </tr>
-          {% for score in result.score %}
-            <tr>
-              <td>{{ score.0 }}</td>
-              {% for feature in result.features %}
-                <td>{{ score.0 }}'s {{ feature }}</td>
-              {% endfor %}
-              <td>{{ score.1 }}</td>
-            </tr>
-          {% endfor %}
-        </table>
-      </div>
-      <div class = 'button_div'>
-        <button class="modify_button">Click to modify</button>
-      </div>
-    {% endfor %}
-    </div>
-    <div class = 'button_div'>
-      <button class="submit_button">Submit</button>
-    </div>
+  <form action="/">
+    <input type="submit" value="Go back go home page" />
+</form>
 </body>
 </html>

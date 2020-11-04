@@ -5,6 +5,10 @@ from django.shortcuts import render
 import yaml
 from django.conf import settings
 from .models import *
+from django import views
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 
 def rules_view(request):
@@ -22,40 +26,18 @@ def rules_view(request):
     context = {}
     return render(request, "survey/rules.html", context)
 
-
-# stores everything into the Question model
-def receive_survey(request):
-    if request.method == "POST":
-        questionString = request.POST['questionTitle']
-        questionDesc = request.POST['desc']
-
-        # set question string & description
-        survey = Survey(question_txt=questionString,
-                        question_desc=questionDesc)
-        survey.save()
-
-        # load the body as a json
-        data = json.loads(request.body)
-
-        # {0: info: {key: value, key: value, etc}, 1: info: {key: value, key: value, etc}}
-        scenario_dict = {}
-
-        # loop through json
-        person_counter = 0
-        for index in data:
-            for key in index:
-                value = index[key]
-                if counter == 0:
-                    scenario_dict[person_counter] = {"info": {key: value}}
-                else:
-                    scenario_dict[person_counter]["info"][key] = value
-            person_counter += 1
-
-        scenario = Scenario(number=person_counter,
-                            prompt=scenario_dict, question=survey)
-        scenario.save()
-
-    pass
+class IndexView(views.generic.ListView):
+    """
+    Define homepage view, inheriting ListView class, which specifies a context variable.
+    
+    Note that login is required to view the items on the page.
+    """
+    
+    template_name = 'survey/index.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        """Override function in parent class and return all questions."""
+        return Survey.objects.all().order_by('-pub_date')
 
 # Start survey
 
@@ -72,9 +54,10 @@ def receive_survey(request):
     # get user defined rules back
     # function to grab new scenario
 def load_survey(request):
+    # empty for now
     survey_info = {}
-    return render(request, 'survey/survey-page.html', survey_info)
-
+    # survey_info.update(csrf(request))
+    return render(request,'survey/survey-page.html',survey_info)
 
 def get_scenario(request):
     combos = 3
@@ -102,20 +85,22 @@ def get_scenario(request):
     # and press ctrl+shift+i and switch to console tab,
     # you can see the json object printed on the console
 
-# Django view to handle the survey results page.
+# @csrf_exempt
+def submit_survey(request):
+    if request.method == 'POST':
+        # for now not storing scores
+        print('scenario:',request.body[0])
+        print('scores:',request.body[1])
+
+        # print(json.load(request.body))
+        return redirect("survey:surveyresult")
 
 
+def rules_explain(request):
+    return render(request,'survey/rules_explain.html')
+    
 def survey_result(request):
-    results = [
-        {'scenario': "1", 'features': ['feature1', 'feature2', 'feature3'], 'score': [
-            ['A', 1], ['B', 2], ['C', 3]]},
-        {'scenario': "2", 'features': ['feature1', 'feature2', 'feature3'], 'score': [
-            ['A', 3], ['B', 4], ['C', 5]]},
-        {'scenario': "3", 'features': ['feature1', 'feature2', 'feature3'], 'score': [
-            ['A', 1], ['B', 7], ['C', 4]]}
-    ]
-    return render(request, 'survey/surveyresult.html', {'results': results})
-
+    return render(request, 'survey/surveyresult.html')
 
 # Django view to handle unknown paths
 def unknown_path(request, random):
