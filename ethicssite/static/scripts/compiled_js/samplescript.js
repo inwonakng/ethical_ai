@@ -1,12 +1,19 @@
 // this is the function that will be passed along with the request. 
 // Every function that goes through the 'http' function should expect one data object and one packed object of arguments it can use.
 function writetopage(data, args) {
-    totalData.push(data);
     let question = make('div', 'q' + args);
     let table = maketable(data, args);
     question.appendChild(table);
     addsurveytopage(question, scenarioNum);
     addsliderstopage(scenarioNum, data.length);
+}
+function displayFinalPage(data, args) {
+    addSlidersToFinalPage(data);
+}
+function addSlidersToFinalPage(data) {
+    for (let key in data[0]) {
+        document.getElementById("features").append(makeslider(key));
+    }
 }
 // Creates an HTML table to display the data in data.
 // index: the scenario we are currently on. Used to assign id.
@@ -198,6 +205,7 @@ function next() {
     // Has the user finished the first part of the survey?
     if (scenarioNum == maxScenarios) {
         viewFinalSurveyPage();
+        http('getscenario', addSlidersToFinalPage, scenarioNum);
     }
     else {
         // Assumes the person is still taking the first part of the scenario.
