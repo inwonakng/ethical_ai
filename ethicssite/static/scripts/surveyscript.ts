@@ -146,11 +146,11 @@ function viewReviewPage() {
     clearPage();
     let element = byid("review_page");
     element.style.display = 'block';
-    // if (isNaN( byid("review0") )) {
-    //     for(let i = 0; i < maxScenarios; i++) {
-    //         element.removeChild(byid("review" + i));
-    //     }
-    // }
+    if (byid("review0") != null) {
+        for(let i = 0; i < maxScenarios; i++) {
+            element.removeChild(byid("review" + i));
+        }
+    }
     sortFeatures();
     for(let i = 0; i < maxScenarios; i++) {
         let currentQuestion = totalData[i];
