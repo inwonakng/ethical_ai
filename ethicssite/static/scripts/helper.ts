@@ -1,18 +1,6 @@
 // This is the helper class for some functions that we will all have to use.
-// works the same as document.getElementById
+// works the same as byid
 // I want to change this area here, so instead of appending it to the page, it will just add it to the page.
-function addsurveytopage(element:any, index:number){
-    document.getElementById("survey").append(element)
-}
-
-function addsliderstopage(scen_idx:number, i:number){
-    var element = document.createElement('div')
-    element.id="slides" + scenarioNum
-    for(var j=0; j < i; j++){
-        element.append(makeslider(String(scen_idx),String((j)) ));
-    }
-    document.getElementById("scorecontainer").append(element)
-}
 
 function make( tag:string, id?:string){
     let item = document.createElement(tag)
@@ -24,56 +12,9 @@ function byid( id:string ){
     return document.getElementById( id )
 }
 
-// Delete the scenario currently being displayed.
-function clearCurrentScenario(){
-    document.getElementById("q"+scenarioNum).style.display = "none"
-    document.getElementById("slides" + scenarioNum).style.display = "none"
-}
-
-// View the final page of the survey (the page before the survey results)
-function viewFinalSurveyPage(){
-    document.getElementById("final_page").style.display="block"
-    document.getElementById("question").style.display="none"
-    document.getElementById("scorecontainer").style.display="none"
-    document.getElementById("next").style.display = "none"
-    byid('go-to-review').style.display = 'inline'
-}
-
-// Delete the scenario currently being displayed.
-function viewCurrentScenario(){
-    document.getElementById("q"+scenarioNum).style.display = "block"
-    document.getElementById("slides" + scenarioNum).style.display = "block"
-}
-
-// Reveals the scenario after the current one being displayed. Either
-// creates a new scenario or makes one visible if it has already been 
-// created. 
-function callNextScenario(){
-    var element = document.getElementById(("q"+scenarioNum))
-    if(typeof(element) != "undefined" && element != null){
-        // Then the scenario has already been created.
-        viewCurrentScenario()
-    }
-    else{
-        // Create a new scenario if one is needed.
-        http('getscenario',writetopage,scenarioNum)
-    }
-}
-
-// Changes the page from the final survey page to the initial surveys
-// involving the different scenarios.
-function navigateBackToSurvey(){
-    document.getElementById("final_page").style.display="none"
-    document.getElementById("question").style.display="block"
-    document.getElementById("scorecontainer").style.display="block"
-    document.getElementById("next").innerHTML = "Next"
-    document.getElementById("next").style.display = "inline";
-    document.getElementById("go-to-review").style.display = "none";
-}
-
 // method for interacting with the python server.
 // args should look like this: (fill in as we go)
-function http(endpoint:string,func:any,args:any){
+function http_get(endpoint:string,func:any,args:any){
     let reply = []
     var resp =  fetch(endpoint)
                 .then(r => r.json())
@@ -81,4 +22,28 @@ function http(endpoint:string,func:any,args:any){
                 // .then(rr=> reply = rr)
     // console.log(reply)
     return reply
+}
+
+function http_post(endpoint:string,data:any,redirect:boolean){
+    let reply = []
+    let fn = function(r){}
+    if(redirect){
+        fn = function(r){
+            // just in case make sure there is an endpoint to redirect to
+            if(r.redirected){
+                window.location.href = r.url
+            }
+        }
+    }
+    var resp =  fetch(endpoint,{
+                    method:'POST',
+                    body:JSON.stringify(data),
+                    headers:{'Content-Type':'application/json',
+                    "X-CSRFToken": get_csrf()},
+                }).then(r => fn(r)
+            )
+}
+
+function get_csrf(){
+    return (document.getElementsByName('csrfmiddlewaretoken')[0] as HTMLInputElement).value
 }

@@ -38,37 +38,6 @@ class IndexView(views.generic.ListView):
         """Override function in parent class and return all questions."""
         return Survey.objects.all().order_by('-pub_date')
 
-# stores everything into the Question model
-def receive_survey(request):
-    if request.method == "POST":
-        questionString = request.POST['questionTitle']
-        questionDesc = request.POST['desc']
-
-        # set question string & description
-        survey = Survey(question_txt=questionString, question_desc=questionDesc)
-        survey.save()
-
-        # load the body as a json
-        data = json.loads(request.body)
-
-        # {0: info: {key: value, key: value, etc}, 1: info: {key: value, key: value, etc}}
-        scenario_dict = {}
-
-        # loop through json
-        person_counter = 0
-        for index in data:
-            for key in index:
-                value = index[key]
-                if counter == 0:
-                    scenario_dict[person_counter] = {"info": {key: value}}
-                else:
-                    scenario_dict[person_counter]["info"][key] = value
-            person_counter += 1
-
-        scenario = Scenario(number=person_counter, prompt=scenario_dict, question=survey)
-        scenario.save()
-
-    pass
 
 # Start survey
 
@@ -85,7 +54,9 @@ def receive_survey(request):
     # get user defined rules back
     # function to grab new scenario
 def load_survey(request):
+    # empty for now
     survey_info = {}
+    # survey_info.update(csrf(request))
     return render(request,'survey/survey-page.html',survey_info)
 
 def get_scenario(request):
@@ -108,10 +79,15 @@ def get_scenario(request):
     # and press ctrl+shift+i and switch to console tab,
     # you can see the json object printed on the console
 
-@csrf_exempt
-def submit_result(request):
-    print(request.body)
-    return redirect("surveyresult")
+# @csrf_exempt
+def submit_survey(request):
+    if request.method == 'POST':
+        # for now not storing scores
+        print('scenario:',request.body[0])
+        print('scores:',request.body[1])
+
+        # print(json.load(request.body))
+        return redirect("survey:surveyresult")
 
 
 def rules_explain(request):

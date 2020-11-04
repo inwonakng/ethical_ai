@@ -7,8 +7,8 @@ urlpatterns = [
     path('rules',views.rules_view,name='rules'),
     path('loadsurvey', views.load_survey, name='loadsurvey'),
     path('getscenario', views.get_scenario, name='getscenario'),
-    path('rules_sample',views.rules_explain,name='rules_sample'),
-    path('submit_result', views.submit_result, name="submitresult"),
-    path('survey_result', views.survey_result, name="surveyresult"),
+    path('rulessample',views.rules_explain,name='rulessample'),
+    path('submitsurvey', views.submit_survey, name="submitsurvey"),
+    path('surveyresult', views.survey_result, name="surveyresult"),
     path('<random>', views.unknown_path)
 ]

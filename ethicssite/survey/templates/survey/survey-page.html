@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../../static/css/survey-page.css">
+    {% csrf_token %} 
   </head>
   <body onload="guicheck()">
     <div id="question">
@@ -34,9 +35,11 @@
         <hr class = "head_hr"></hr>
       </div>
     </div>
-    <button id = "submit" onclick="submitResult()" style="display: none; position: absolute; right: 0px;">Submit</button>
+    {% comment %} <form action='/submitsurvey/' method="POST"> {% endcomment %}
+      <button id = "submit" onclick="submitResult()" style="display: none; position: absolute; right: 0px;">Submit</button>
+    {% comment %} </form> {% endcomment %}
     {% load static %}
     <script type="text/javascript" src="{% static '/scripts/compiled_js/helper.js' %}"></script> 
-    <script type="text/javascript" src="{% static '/scripts/compiled_js/samplescript.js' %}"></script> 
+    <script type="text/javascript" src="{% static '/scripts/compiled_js/surveyscript.js' %}"></script> 
   </body>
 </html>
