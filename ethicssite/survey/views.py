@@ -12,16 +12,20 @@ from django.contrib.auth.decorators import login_required
 
 
 def rules_view(request):
-    # if request.method == "POST":
-    #     print(request.POST.getlist('rule_name'))
-    #     print(request.POST.getlist('rule_type'))
-    #     rule_names = request.POST.getlist('rule_name')
-    #     rule_types = request.POST.getlist('rule_type')
-    #     for i,rule_name in enumerate(rule_names):
-    #         RuleForm.objects.create(rule=rule_name,type=rule_types[i])
-    #     # rule_name = request.POST.get('rule_name')
-    #     # rule_type = request.POST.get('rule_type')
-    #     # RuleForm.objects.create(rule=rule_name,type=rule_type)
+    if request.method == "POST":
+        print("i'm in post request")
+        print(request.POST);
+        print(request.POST.getlist('rule_name'))
+        print(request.POST.getlist('rule_type'))
+        # rule_names = request.POST.getlist('rule_name')
+        # rule_set = request.POST.getlist('rule_type')
+
+        # for i,rule_name in enumerate(rule_names):
+        #     RuleForm.objects.create(rule=rule_name,type=rule_types[i])
+
+        # rule_name = request.POST.get('rule_name')
+        # rule_type = request.POST.get('rule_type')
+        # RuleForm.objects.create(rule=rule_name,type=rule_type)
 
     context = {}
     return render(request, "survey/rules.html", context)
@@ -29,10 +33,10 @@ def rules_view(request):
 class IndexView(views.generic.ListView):
     """
     Define homepage view, inheriting ListView class, which specifies a context variable.
-    
+
     Note that login is required to view the items on the page.
     """
-    
+
     template_name = 'survey/index.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -98,7 +102,7 @@ def submit_survey(request):
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')
-    
+
 def survey_result(request):
     return render(request, 'survey/surveyresult.html')
 
