@@ -16,12 +16,39 @@ def rules_view(request):
         print("i'm in post request")
         print(request.POST);
         print(request.POST.getlist('rule_name'))
-        print(request.POST.getlist('rule_type'))
-        # rule_names = request.POST.getlist('rule_name')
-        # rule_set = request.POST.getlist('rule_type')
+        print(request.POST.getlist('rule_set'))
+        rule_names = request.POST.getlist('rule_name')
+        rule_sets = request.POST.getlist('rule_set')
 
-        # for i,rule_name in enumerate(rule_names):
-        #     RuleForm.objects.create(rule=rule_name,type=rule_types[i])
+        # rs = RuleSet()
+        # rs.save()
+        #
+        # ls = ListCateg(name="age")
+        # ls.save()
+        #
+        # rsc = RuleSetChoice(index=1,value="asdf")
+        # rsc.save()
+        #
+        # ls.choices.add(rsc)
+        # rs.choice_categs.add(ls)
+
+        rs = RuleSet()
+        rs.save()
+        for i,rule_name in enumerate(rule_names):
+            print(rule_name)
+            if rule_name:
+                ls = ListCateg(name=rule_name)
+                ls.save()
+                print(rule_sets[i].split(','))
+                rule_set = rule_sets[i].split(',')
+                for j,val in enumerate(rule_set):
+                    print(j,val)
+                    rsc = RuleSetChoice(index=j,value=val)
+                    rsc.save()
+                    ls.choices.add(rsc)
+                rs.choice_categs.add(ls)
+
+
 
         # rule_name = request.POST.get('rule_name')
         # rule_type = request.POST.get('rule_type')

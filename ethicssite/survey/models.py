@@ -86,11 +86,11 @@ class RuleSet(models.Model):
         for cc in self.range_categs.all():
             bb.update(cc.object_form())
         return bb
-            
+
     def get_badcombos(self):
-        return {bc.object_form()[0]:bc.object_form()[1] 
+        return {bc.object_form()[0]:bc.object_form()[1]
         for bc in self.badcombos.all()}
-        
+
     def get_configs(self):
         return {
             'same_categories':self.same_categories,
@@ -112,11 +112,11 @@ class BadSubCombo(models.Model):
     categ = models.CharField(max_length=500)
     badcombo_elems = models.ManyToManyField('BadSubComboElement')
     def object_form(self):
-        return (self.categ, 
-                {key: value 
-                for (key, value) in 
+        return (self.categ,
+                {key: value
+                for (key, value) in
                     [obj.object_form() for obj in self.badcombo_elems.all()]})
-        
+
     def __str__(self):
         return self.categ
 
@@ -184,7 +184,7 @@ ex)
 ss = Survey(prompt='test',desc='hi')
 ss.save()
 ss.create_survey([[{'alt1':2,'alt2':3}]])
-After this, ss will be the complete survey object 
+After this, ss will be the complete survey object
 (does not carry user scores yet)
 '''
 
@@ -242,10 +242,10 @@ def json_to_ruleset(d):
                 for category_index in sub_obj[category_name_in]:
                     bsubcom_elem.elems.create(
                         category_index=category_index)
-                
+
                 subcombo.badcombo_elems.add(
                     bsubcom_elem)
-        
+
             bad_combo.subcombos.add(
                 subcombo)
         rule_set.badcombos.add(bad_combo)
