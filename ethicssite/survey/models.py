@@ -6,75 +6,36 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 '''Survey models sections start here'''
 
-# Model for a generic attribute for some combination (e.g. age or health)
-# Fields:
-#     name     : CharField
-#     value    : CharField
-
-
-class Attribute(models.Model):
-    # attribute name (e.g. age or health)
-    name = models.CharField(max_length=50, null=False, default='')
-    # value for the attribute
-    value = models.CharField(max_length=50, null=False, default='')
-
-
-# Model for a set of attributes under some scenario (e.g. Person A)
-# Fields:
-#     name     : CharField
-#     value    : CharField
-class Option(models.Model):
-    # Option model holds the combination of different attributes
-    # name of current Combo (e.g. Person A)
-    name = models.CharField(max_length=50, null=False, default='')
-    # attributes under the current Combo
-    attributes = models.ManyToManyField(
-        Attribute, related_name='combo_attributes')
-
-
-# Model for a scenario
-# Fields:
-#     options   : ManyToManyField of model Option
-class Scenario(models.Model):
-    # prompt = models.CharField(max_length=300, default="---")
-    options = models.ManyToManyField(Option)
-
-
-# Model for a survey (mother of all models)
-
-# Fields:
-#     prompt    : CharField
-#     desc      : TextField
-#     date      : DateTimeField (optional)
-#     scenarios : ManyToMany of model Scenario
 class Survey(models.Model):
-    # Survey field (text field shown to user)
     prompt = models.CharField(max_length=200, null=False, default='')
-
-    # Survey description (text field shown to user)
     desc = models.TextField(null=False, blank=False, default='')
-
-    # Date when question was submitted (auto done in backend)
     date = models.DateTimeField(default=timezone.now)
     scenarios = models.ManyToManyField(Scenario)
     attributes = models.ManyToManyField(Attribute)
+    ruleset_id = models.IntegerField(null=False, default=2)
+
+
+class Scenario(models.Model):
+    options = models.ManyToManyField(Option)
+
+
+class Option(models.Model):
+    name = models.CharField(max_length=50, null=False, default='')
+    attributes = models.ManyToManyField(Attribute, related_name='combo_attributes')
+    text = models.CharField(max_length=50, null=False, deafult='')
+
+
+class SingleResponse(models.Model):
+    value = models.CharField(max_length=50, null=False, default='')
+    option = models.OneToOneField(Option, on_delete=models.CASCADE, default=1)
+
+
+class Attribute(models.Model):
+    name = models.CharField(max_length=50, null=False, default='')
+    value = models.CharField(max_length=50, null=False, default='')
 
 
 '''Survey models sections end here'''
-
-# Model for storing user input scores
-
-
-class Response(models.Model):
-    # consider including some fields for identifying the user?
-    # userid = ?
-
-    # which combo the current score is for
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, default=1)
-
-    # user input score
-    # todo: consider changing this to be IntegerChoices / Range?
-    # scores = [models.IntegerField() for o in survey..scenarios]
 
 # Rule model
 
@@ -123,8 +84,6 @@ class RuleSet(models.Model):
         }
 
 # Bad combination model
-
-
 class BadCombo(models.Model):
     category_name = models.CharField(max_length=100)
     subcombos = models.ManyToManyField('BadSubCombo')
@@ -136,8 +95,6 @@ class BadCombo(models.Model):
         return self.category_name
 
 # This level contains the bad combos for specified category
-
-
 class BadSubCombo(models.Model):
     categ = models.CharField(max_length=500)
     badcombo_elems = models.ManyToManyField('BadSubComboElement')
@@ -152,8 +109,6 @@ class BadSubCombo(models.Model):
         return self.categ
 
 # Bad sub?? combination element model
-
-
 class BadSubComboElement(models.Model):
     categ = models.CharField(max_length=100)
     elems = models.ManyToManyField('ElementChoice')
@@ -165,8 +120,6 @@ class BadSubComboElement(models.Model):
         return self.categ
 
 # Element choice model
-
-
 class ElementChoice(models.Model):
     category_index = models.IntegerField()
 
@@ -174,8 +127,6 @@ class ElementChoice(models.Model):
         return str(self.category_index)
 
 # Choice category model - choosing froma list of values
-
-
 class ListCateg(models.Model):
     name = models.CharField(max_length=100)
     choices = models.ManyToManyField('RuleSetChoice')
@@ -189,8 +140,6 @@ class ListCateg(models.Model):
         return json.dumps(self.object_form())
 
 # Rule set choice model
-
-
 class RuleSetChoice(models.Model):
     index = models.IntegerField()
     value = models.CharField(max_length=500)
@@ -202,8 +151,6 @@ class RuleSetChoice(models.Model):
         return json.dumps({str(self.index): self.value})
 
 # Range category model
-
-
 class RangeCateg(models.Model):
     name = models.CharField(max_length=100)
     minVal = models.FloatField()
