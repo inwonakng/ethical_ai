@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 from .generation.Generator import Generator
 from django.shortcuts import render
 import yaml
@@ -9,6 +9,7 @@ from django import views
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+
 
 def rules_view(request):
     # if request.method == "POST":
@@ -23,7 +24,7 @@ def rules_view(request):
     #     # RuleForm.objects.create(rule=rule_name,type=rule_type)
 
     context = {}
-    return render(request,"survey/rules.html",context)
+    return render(request, "survey/rules.html", context)
 
 class IndexView(views.generic.ListView):
     """
@@ -37,7 +38,6 @@ class IndexView(views.generic.ListView):
     def get_queryset(self):
         """Override function in parent class and return all questions."""
         return Survey.objects.all().order_by('-pub_date')
-
 
 # Start survey
 
@@ -65,10 +65,16 @@ def get_scenario(request):
     if request.method == "POST":
         combos = request.POST['combo_count']
 
-
     # grabbing the sample json
-    rule = yaml.safe_load(open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml','r'))
-    story_gen = Generator(rule=rule)
+    rule = yaml.safe_load(
+        open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml', 'r'))
+    # Survey
+    if RuleSet.objects.all():
+        # using defulat model here
+        rr = RuleSet.objects.all()[0]
+        story_gen = Generator(rule_model=rr)
+    else:
+        story_gen = Generator(rule=rule)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
     # For frontend, check the html to
@@ -99,3 +105,20 @@ def survey_result(request):
 # Django view to handle unknown paths
 def unknown_path(request, random):
     return render(request, 'survey/unknownpath.html')
+
+# Django endpoint to save rule to database from json post request body
+
+
+def rules_save(request):
+
+    if request.method != 'POST':
+        return HttpResponse(status=400)
+    json_data = json.loads(request.body)
+    json_rules_string = ''
+    try:
+        json_rules_string = json.dumps(json_data['rules'])
+    except KeyError:
+        HttpResponseServerError('`rules` field not found in request body.')
+
+    json_to_ruleset(json_rules_string)
+    HttpResponse(statud=201)
