@@ -46,6 +46,7 @@ class RuleSet(models.Model):
     badcombos = models.ManyToManyField('BadCombo')
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
+    generative = models.BooleanField(default=False)
     '''These accessor functions are for the generator to use'''
 
     def get_choicecategs(self):
