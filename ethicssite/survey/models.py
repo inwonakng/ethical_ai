@@ -23,7 +23,7 @@ class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute', related_name='combo_attributes')
     text = models.CharField(max_length=50, null=False, default='')
-    score = models.OneToOneField("SingleResponse")
+    score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE)
 
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
