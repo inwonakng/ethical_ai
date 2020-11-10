@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest, HttpResponseServerError
+from django.http import HttpResponse, HttpRequest, HttpResponseServerError, HttpResponseRedirect
 from .generation.Generator import Generator
 from django.shortcuts import render
 import yaml
@@ -8,8 +8,58 @@ from .models import *
 from django import views
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
+def register(request):
+    if request.method == "POST":
+        # TODO: stop using the default django form
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+
+            # currently no email authentication, just login the user and send to index
+            raw_pass = form.cleaned_data.get('password1')
+            user = authenticate(username=user.username, password=raw_pass)
+            login(request, user)
+
+            return redirect('/')
+        else:
+            print(form.errors)
+            # TODO: figure out these errors and make responses for them
+            # (some include password too common or similar to username)
+            return HttpResponse("An error occured with registration. (Check console for details)")
+    else:
+        return render(request, 'survey/register.html')
+
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user:
+            # TODO: check if user.is_active after setting up email confirmation
+            login(request, user)
+            
+            # redirect to previous page if sent from @login_required
+            # else redirect to index
+            print(request.GET.get('next'))
+            if request.GET.get('next', False):
+                # TODO: fix, this redirecting doesn't seem to ever work
+                redirect(request.GET.get('next'))
+            else:
+                return redirect('/')
+        else:
+            return HttpResponse("Invalid login details.")
+    else:
+        return render(request, 'survey/login.html')
+
+def user_logout(request):
+    logout(request)
+
+    return redirect('/')
 
 def rules_view(request):
     # if request.method == "POST":

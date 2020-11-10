@@ -1,0 +1,32 @@
+{% extends 'survey/base.html' %}
+
+{% block content %}
+
+<h2>Register</h2>
+<form method="POST" action="/register">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <label for="email">Email</label>
+        <input type="text" class="form-control" id="reg_email" name="email" placeholder="Enter Email" value="" size="50" autofocus />
+        <small class="text-muted">We will only use this to send notifications. We will never share your information with anyone else.</small>
+    </fieldset>
+    
+    <fieldset class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="reg_username" name="username" placeholder="Enter Username" value="" size="50" />  
+    </fieldset>
+    
+    <fieldset class="form-group">
+        <label for="password1">Password</label> 
+        <input type="password" class="form-control" id="reg_password" name="password1" placeholder="Password" value="" size="50" />
+    </fieldset>
+
+    <fieldset class="form-group">
+        <label for="password2">Confirm Password</label> 
+        <input type="password" class="form-control" id="reg_password" name="password2" placeholder="Password" value="" size="50" />
+    </fieldset>
+
+    <button type="submit">Register</button>
+</form>
+
+{% endblock %}

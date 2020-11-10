@@ -4,6 +4,9 @@ app_name = 'survey'
 urlpatterns = [
     # this path is for mturk, where the random survey would be
     path('',views.IndexView.as_view(),name='index'),
+    path('register', views.register, name='register'),
+    path('login', views.user_login, name='login'),
+    path('logout', views.user_logout, name='logout'),
     path('rules',views.rules_view,name='rules'),
     path('loadsurvey', views.load_survey, name='loadsurvey'),
     path('getscenario', views.get_scenario, name='getscenario'),
