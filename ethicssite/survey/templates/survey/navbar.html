@@ -1,4 +1,55 @@
-<nav>
+{% comment %} <nav>
   <li><a href="http://127.0.0.1:8000/">Ethical Voting Platform</a></li>
   <li><a href="http://127.0.0.1:8000/about">About</a></li>
+</nav> {% endcomment %}
+
+<!--nav bar for main page-->
+<nav class="navbar navbar-default navbar-fixed-top" style="border-color: transparent; opacity: 0.9;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <div class="pull-right">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+		</div>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse row" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li>
+          <a class="navbar-brand" href="/">
+            <img alt="O" src="/static/img/oprafulllogowhitenolink.png" style="width:60px;">
+          </a>
+        </li>
+        <li><a href="{% url 'index' %}"><span class="fa fa-object-ungroup"></span>Home</a></li>
+        <li><a href="{% url 'about' %}"><span class="fa fa-object-group"></span> About</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:black;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
+          <ul class="dropdown-menu" style="font-size:100%; ">
+            <li class="disabled">
+              <a href="#" >Signed in as {{ request.user.username }}</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li >
+              <a href="{% url 'appauth:settings' %}" align="center" style="{% if request.flavour == 'mobile' %} color:black; {% endif %}"><span >Settings</span></a>
+            </li>
+            <li>
+              <a href="/auth/logout/" align="center" style="{% if request.flavour == 'mobile' %} color:black; {% endif %}">Logout</a>
+            </li>
+          </ul>
+        </li> <!-- end of Dropdown setting icon-->
+      </ul>
+      <ul class="nav navbar-nav navbar-right pull-right">
+        <li>
+          <a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
+        </li>
+        <li>
+          <a data-toggle="modal" data-target="#loginmodal" style="color:black;"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
+        </li>
+      </ul>
+    </div> <!-- end of nav bar-->
+  </div><!--/.container-fluid -->
 </nav>
