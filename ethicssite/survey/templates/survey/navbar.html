@@ -22,10 +22,10 @@
             <img alt="O" src="/static/img/oprafulllogowhitenolink.png" style="width:60px;">
           </a>
         </li>
-        <li><a href="{% url 'index' %}"><span class="fa fa-object-ungroup"></span>Home</a></li>
-        <li><a href="{% url 'about' %}"><span class="fa fa-object-group"></span> About</a></li>
+        <li><a href="{% url 'survey:index' %}"><span class="fa fa-object-ungroup"></span>Home</a></li>
+        {% comment %} <li><a href="{% url 'survey:about' %}"><span class="fa fa-object-group"></span> About</a></li> {% endcomment %}
       </ul>
-      <ul class="nav navbar-nav navbar-right">
+      {% comment %} <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:black;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
           <ul class="dropdown-menu" style="font-size:100%; ">
@@ -49,7 +49,7 @@
         <li>
           <a data-toggle="modal" data-target="#loginmodal" style="color:black;"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
         </li>
-      </ul>
+      </ul> {% endcomment %}
     </div> <!-- end of nav bar-->
   </div><!--/.container-fluid -->
 </nav>
