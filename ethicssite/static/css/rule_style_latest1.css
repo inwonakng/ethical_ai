@@ -11,11 +11,12 @@ nav {
   padding: 0;
   overflow: hidden;
   background-color: white;
-  border-style: solid;
+  /* border-style: solid;
   border-width: 0px 0px 1px 0px;
-  border-color: black;
+  border-color: black; */
   height:50px;
   width:100vw;
+  box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.12), 0px 1px 0px 0px rgba(232,232,232,1);
 }
 
 li {
