@@ -3,6 +3,17 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
+
+'''User Profile models'''
+class UserProfile(models.Model):
+    # links the UserProfile to a User model
+    # User model is Django's authentication model: contains username, password, etc.
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    creation_time = models.DateTimeField()
+
+    # TODO: fill other useful fields here as needed
+    # current_survey = models.OneToOneField('Survey', default=1)
 
 '''Survey models sections start here'''
 

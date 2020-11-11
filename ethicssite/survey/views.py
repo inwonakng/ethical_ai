@@ -6,6 +6,7 @@ import yaml
 from django.conf import settings
 from .models import *
 from django import views
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
@@ -19,7 +20,10 @@ def register(request):
         if form.is_valid():
             user = form.save()
 
-            # currently no email authentication, just login the user and send to index
+            profile = UserProfile(user=user, creation_time=timezone.now())
+            profile.save()
+
+            # currently no email authentication, just login the user and redirect to index
             raw_pass = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_pass)
             login(request, user)
