@@ -41,14 +41,15 @@ class Attribute(models.Model):
 
 
 class RuleSet(models.Model):
+    generative_survey = models.ManyToManyField('Survey')
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
     badcombos = models.ManyToManyField('BadCombo')
+
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
-    
-    generative_survey = models.ManyToManyField('Survey')
     generative = models.BooleanField(null=False, blank=False, default=False)
+    ruleset_id = models.UUIDField(null=False, blank=False, unique=True, editable=False, default=uuid.uuid4)
     '''These accessor functions are for the generator to use'''
 
     def get_choicecategs(self):
