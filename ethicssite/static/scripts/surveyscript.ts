@@ -151,6 +151,8 @@ function clearPage() {
     }
 }
 
+// View the last page of the survey page (where the user directly 
+// rates the importance of the attributes) before the final results.
 function viewReviewPage() {
     clearPage();
     let element = byid("review_page");
@@ -210,6 +212,7 @@ function viewReviewPage() {
     }
 }
 
+// Navigates back to the pageNumth scenario
 function backToPage(pageNum) {
     byid("review_page").style.display = "none";
     byid("submit").style.display = "none";
@@ -220,6 +223,8 @@ function backToPage(pageNum) {
     byid("scorecontainer").style.display = "block";
 }
 
+// Sorts the features by the specific value the user had given them
+// (in the last survey page).
 function sortFeatures() {
     for (let i in dataFeatures) {
         let scoreId = "score-" + dataFeatures[i]["key"];
@@ -228,6 +233,7 @@ function sortFeatures() {
     dataFeatures = dataFeatures.sort(compare);
 }
 
+// Compares a to b to determine which is larger.
 function compare(a,b){ 
     return b["value"] - a["value"];
 }
@@ -311,7 +317,8 @@ function prev(){
     guicheck()
 }
 
-// TODO Megan: Store data from front-end to data structure.
+// Grabs the user's entered scores and forms the data structure sent to the back-end
+// using the view models.
 function grabscores(){
     let scores = []
     for(let s in totalData){
@@ -326,21 +333,25 @@ function grabscores(){
     return scores
 }
 
+// Submits the data structure representing the scores and scenarios to
+// the submitsurvey url.
 function submitResult(){
     var scores = grabscores()
     http_post('submitsurvey',[totalData,scores], true)
 }
 
+// Created to print something more intuitively
 function printstuff(dat,arg){
     console.log(dat)
 }
 
 // initial page
-var scenarioNum = 0;
-var maxScenarios = 10;
-var data = [];
-var dataFeatures = [];
-var totalData = []
+var scenarioNum = 0; // The current scenario the user is on. Ranges from 0 to maxScenarios-1 inclusive.
+var maxScenarios = 10; // The number of surveys to be displayed.
+var data = []; // Dead variable?
+var dataFeatures = []; // Used to keep track of the data in the current scenario.
+var totalData = [] // The data that holds all of the scenarios
 
+// Initializes the first page.
 http_get('getscenario',writetopage,scenarioNum)
 

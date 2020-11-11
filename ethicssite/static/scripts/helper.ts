@@ -2,12 +2,14 @@
 // works the same as byid
 // I want to change this area here, so instead of appending it to the page, it will just add it to the page.
 
+// Creates a 'tag' element with the id provided.
 function make( tag:string, id?:string){
     let item = document.createElement(tag)
     item.id = id
     return item
 }
 
+// An intuitive way to grab an element by the id given
 function byid( id:string ){ 
     return document.getElementById( id )
 }
@@ -24,6 +26,9 @@ function http_get(endpoint:string,func:any,args:any){
     return reply
 }
 
+// Forms a POST request. Used to transfer data from front-end 
+// to the endpoint specifiec in the back-end using the provided
+// models.
 function http_post(endpoint:string,data:any,redirect:boolean){
     let reply = []
     let fn = function(r){}
@@ -44,6 +49,7 @@ function http_post(endpoint:string,data:any,redirect:boolean){
             )
 }
 
+// Gets the value of the token csrf.
 function get_csrf(){
     return (document.getElementsByName('csrfmiddlewaretoken')[0] as HTMLInputElement).value
 }
