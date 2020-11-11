@@ -25,6 +25,8 @@ class Survey(models.Model):
     attributes = models.ManyToManyField('Attribute')
     ruleset_id = models.IntegerField(null=False, default=2)
 
+    # user taking this survey
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
@@ -57,6 +59,9 @@ class RuleSet(models.Model):
     badcombos = models.ManyToManyField('BadCombo')
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
+
+    # ruleset creator
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     '''These accessor functions are for the generator to use'''
 
     def get_choicecategs(self):
