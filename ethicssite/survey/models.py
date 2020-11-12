@@ -41,10 +41,10 @@ class Attribute(models.Model):
 
 
 class RuleSet(models.Model):
-    generative_survey = models.OneToMany('Survey')
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
     badcombos = models.ManyToManyField('BadCombo')
+    generative_survey = models.ManyToManyField('Survey')
 
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
@@ -336,4 +336,5 @@ def json_to_ruleset(d):
                 subcombo)
         rule_set.badcombos.add(bad_combo)
     rule_set.save()
+    print(rule_set.id)
     return rule_set
