@@ -12,6 +12,11 @@ class Survey(models.Model):
     date = models.DateTimeField(default=timezone.now)
     scenarios = models.ManyToManyField('Scenario')
     attributes = models.ManyToManyField('Attribute')
+
+    """
+        Don't necessarily need this because ruleset id is automatically incrementing
+        in value as a primary key and there's a link between the Survey and RuleSet model
+    """
     ruleset_id = models.IntegerField(null=False, default=2)
 
 
@@ -336,5 +341,4 @@ def json_to_ruleset(d):
                 subcombo)
         rule_set.badcombos.add(bad_combo)
     rule_set.save()
-    print(rule_set.id)
     return rule_set
