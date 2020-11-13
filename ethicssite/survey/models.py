@@ -22,7 +22,7 @@ class Survey(models.Model):
     desc = models.TextField(null=False, blank=False, default='')
     date = models.DateTimeField(default=timezone.now)
     scenarios = models.ManyToManyField('Scenario')
-    attributes = models.ManyToManyField('Attribute')
+    # attributes = models.ManyToManyField('Attribute')
     ruleset_id = models.IntegerField(null=False, default=2)
 
     # user taking this survey
@@ -36,11 +36,11 @@ class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute', related_name='combo_attributes')
     text = models.CharField(max_length=50, null=False, default='')
-
+    score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE)
 
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
-    option = models.OneToOneField(Option, on_delete=models.CASCADE, default=1)
+    # option = models.OneToOneField(Option, on_delete=models.CASCADE, default=1)
 
 
 class Attribute(models.Model):

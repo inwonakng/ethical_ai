@@ -153,6 +153,8 @@ def submit_survey(request):
         print('scenario:',request.body[0])
         print('scores:',request.body[1])
 
+        #Submits the json
+        json_to_survey(request.body[0])
         # print(json.load(request.body))
         return redirect("survey:surveyresult")
 
