@@ -3,6 +3,11 @@
 {% block content %}
 
 <h2>Register</h2>
+
+{% if registered %}
+Thank you for registering! Please check your email to activate your account.
+<a href="/">Return to the homepage.</a><br />
+{% else %}
 <form method="POST" action="/register">
     {% csrf_token %}
     <fieldset class="form-group">
@@ -26,7 +31,24 @@
         <input type="password" class="form-control" id="reg_password" name="password2" placeholder="Password" value="" size="50" />
     </fieldset>
 
-    <button type="submit">Register</button>
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <input type="submit" value='Register'>
 </form>
+
+{% endif %}
 
 {% endblock %}

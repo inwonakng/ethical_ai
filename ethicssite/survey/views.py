@@ -14,28 +14,35 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 def register(request):
+    registered = False
     if request.method == "POST":
         # TODO: stop using the default django form
-        form = UserCreationForm(request.POST)
+        form = UserCreationForm(data=request.POST)
         if form.is_valid():
             user = form.save()
 
             profile = UserProfile(user=user, creation_time=timezone.now())
             profile.save()
 
+            registered = True
+
+            """
             # currently no email authentication, just login the user and redirect to index
             raw_pass = form.cleaned_data.get('password1')
             user = authenticate(username=user.username, password=raw_pass)
             login(request, user)
 
             return redirect('/')
+            """
         else:
-            print(form.errors)
-            # TODO: figure out these errors and make responses for them
-            # (some include password too common or similar to username)
-            return HttpResponse("An error occured with registration. (Check console for details)")
+            pass # fall through to rerendering register html but now form.errors should be filled
+            """
+            for error in form.errors:
+                print(error)
+            """
     else:
-        return render(request, 'survey/register.html')
+        form = UserCreationForm()
+    return render(request, 'survey/register.html', {'form': form, 'registered': registered})
 
 def user_login(request):
     if request.method == "POST":
@@ -56,9 +63,9 @@ def user_login(request):
             else:
                 return redirect('/')
         else:
-            return HttpResponse("Invalid login details.")
+            return render(request, 'survey/login.html', {'error': 'Invalid login details.'})
     else:
-        return render(request, 'survey/login.html')
+        return render(request, 'survey/login.html', {})
 
 def user_logout(request):
     logout(request)

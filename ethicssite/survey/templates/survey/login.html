@@ -6,11 +6,21 @@
 <form method="POST" action="/login">
     {% csrf_token %}
     
-    <label for="username">Username</label>
-    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />
+    <fieldset class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />
+    </fieldset>
+    
+    <fieldset class="form-group">
+        <label for="password">Password</label> 
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
+    </fieldset>
 
-    <label for="password">Password</label> 
-    <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
+    {% if error %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endif %}
 
     <button type="submit">Login</button>
 </form>
