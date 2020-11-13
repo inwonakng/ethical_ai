@@ -49,13 +49,14 @@ function viewCurrentScenario(){
 // created. 
 function callNextScenario(){
     var element = byid(("q"+scenarioNum))
+    var parent_id = byid('parent_id')
     if(typeof(element) != "undefined" && element != null){
         // Then the scenario has already been created.
         viewCurrentScenario()
     }
     else{
         // Create a new scenario if one is needed.
-        http_get('getscenario',writetopage,scenarioNum)
+        http_get('getscenario/'+parent_id,writetopage,scenarioNum)
     }
 }
 

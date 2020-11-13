@@ -114,13 +114,13 @@ class IndexView(views.generic.ListView):
     # page for user survey creation
     # get user defined rules back
     # function to grab new scenario
-def load_survey(request):
+def load_survey(request,parent_id):
     # empty for now
-    survey_info = {}
+    survey_info = {'parent_id':parent_id}
     # survey_info.update(csrf(request))
     return render(request,'survey/survey-page.html',survey_info)
 
-def get_scenario(request):
+def get_scenario(request,parent_id):
     combos = 3
 
     if request.method == "POST":
@@ -132,7 +132,7 @@ def get_scenario(request):
     # Survey
     if RuleSet.objects.all():
         # using defulat model here
-        rr = RuleSet.objects.all()[0]
+        rr = RuleSet.objects.all()[parent_id]
         story_gen = Generator(rule_model=rr)
     else:
         story_gen = Generator(rule=rule)
