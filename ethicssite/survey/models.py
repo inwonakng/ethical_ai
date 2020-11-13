@@ -49,7 +49,8 @@ class RuleSet(models.Model):
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
     badcombos = models.ManyToManyField('BadCombo')
-    generative_survey = models.ManyToManyField('Survey')
+    generative_survey = models.OneToManyField('Survey') # ISSUE OneToMany (get this working) or ManyToMany
+    # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
 
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
