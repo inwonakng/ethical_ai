@@ -3,7 +3,7 @@ config:
   same_categories: 3
   # We should have a fix scenerio size or it is hard to track
   # What we have generated in the next step
-  scenerio_size: 2
+  scenario_size: 2
 categories:
   age:
     0: "5"

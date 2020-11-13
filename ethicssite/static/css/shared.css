@@ -1,0 +1,444 @@
+* {
+	font-size: 100%;
+}
+
+
+a {
+	font-size: 100%;
+	text-decoration: none !important;
+}
+
+button {
+	outline:none;
+}
+
+glyphicon-info-sign {
+	font-size: 60%;
+	color: #56A5EC;
+}
+
+glyphicon-play {
+	color: green;
+}
+
+glyphicon-stop {
+	color: red;
+}
+
+nopadding {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+input[type="submit"] {
+    font-family: FontAwesome;
+}
+
+.greycolor {
+	color: grey;
+}
+
+.greycolor:hover {
+	color: black;
+	cursor: pointer;
+	cursor: hand;
+}
+.greencolor {
+	color: green;
+}
+.greencolor:hover {
+	color: darkgreen;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.bluecolor {
+	color: blue;
+}
+.bluecolor:hover {
+	color: darkblue;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.redcolor {
+	color: red;
+}
+.redcolor:hover {
+	color: darkred;
+	cursor: pointer;
+	cursor: hand;
+}
+
+/* Ranking UI */
+#left-sortable, #right-sortable, #one-sortable, #yesNoList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+}
+
+#yesNoList label {
+    display: block;
+    margin: 5px 5px 5px 5px;
+    padding: 5px;
+    background: #F5F5F5;
+    border: solid;
+    border-radius: 2px;
+    padding-left:10px;
+}
+
+#yesNoList label {
+    border-width: 5px;
+}
+
+html > body #sortable li {
+    height: 1.5em;
+    line-height: 0em;
+}
+.ui-state-highlight {
+    height: 1.5em;
+    line-height: 0em;
+    background: none!important;
+    background-color: #999 !important;
+}
+
+.greybackground {
+    background: none!important;
+    background-color: #aaa !important;
+}
+
+.cliente {
+    margin: 15px;
+    border: #cdcdcd medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+button:hover .greencolor {
+    color: darkgreen;
+}
+
+.margin-panel-top {
+    margin-top: 12px;
+}
+
+@media only screen and (max-device-width: 480px) {
+    .panel-body {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+
+    .container-fluid {
+        padding-left:0px;
+        padding-right:0px;
+    }
+
+		.nav-tabs {
+				display: flex;
+		}
+		.nav-tabs > li {
+				flex: 1;
+				height: 50px;
+				line-height: 50px;
+		}
+		.nav-tabs > li > a {
+				padding: 18px 0px 10px 0px;
+				text-align: center;
+		}
+		.nav-text {
+				display: none;
+		}
+
+}
+
+
+.btn-danger.reset-button {
+    background: rgb(201, 48, 44, 0.9);
+}
+
+.reset-button-mobile {
+    margin-bottom: 0;
+    background: darkred;
+}
+
+.btn-success.submit-button {
+    display: none;
+    background: rgb(68, 157, 68,0.9);
+}
+
+.submit-button-mobile {
+    border: none;
+    float: right;
+    width: 30%;
+    height: 1.25em;
+    margin: 0;
+    display: none;
+    background: darkgreen;
+}
+
+.btn-primary.move-all-button {
+    background: (55,123,181,0.9);
+}
+
+.move-all-button-mobile {
+    margin: 0;
+    background: darkblue;
+}
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ul.example li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ul.example li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
+
+
+/* image */
+img.item {
+	height: 40px;
+	width:auto;
+	max-width:100%;
+
+}
+
+img.item:hover {
+	height: 40px;
+	width:auto;
+	max-width:100%;
+}
+
+div{
+	font-size:100% !important;
+}
+
+.sortable1 {
+    background: transparent;
+}
+.aftersort {
+    background-color: #eee;
+    width: 100%;
+}
+.hide1 {
+    background-color: transparent;
+    min-height: 5px;
+    min-width: 15px;
+}
+
+li.li_item{
+    display: inline-block;
+    padding: 10px;
+}
+li.slider_item{
+    display:block;
+    padding: 10px;
+}
+ul.unselectable{
+    background-color:blue;
+    height: 25px;
+}
+.nav-tabs {
+		position: fixed;
+		top: 50px;
+		left: 0px;
+		right: 0px;
+		z-index: 1;
+		background-color: white;
+}
+
+#top {
+		padding: 110px 20px;
+}
+
+#content-block {
+		padding: 20px;
+		position: absolute;
+		top: 100px;
+		bottom: 0px;
+		right: 0px;
+		left: 0px;
+}
+
+/* handle overflowing text */
+th {
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* handle overflowing text */
+.overflow {
+    white-space: nowrap;
+    max-width:300px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    font-size: 1.2em;
+}
+
+.li_item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tooltip {
+    overflow-wrap: break-word;
+}
+
+#collapse_des span {
+    overflow-wrap: break-word;
+}
+
+.ui-selectable-helper {
+    position: absolute;
+    z-index: 100;
+    border: 2px dotted blue;
+}
+
+.tier {
+    background-color: #999;
+    float: left;
+    border: 8px;
+    color: white;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px; 
+    text-shadow: 1px 1px 2px #444242;
+    box-shadow: 1px 1px 2px #444242;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0px 15px 0px 0px;
+    border-radius: 0.3rem;
+}
+
+.choice1 {
+    white-space: nowrap;
+    background:rgb(223, 222, 222);
+    height: 40px;
+    line-height: 40px; 
+    width: 550px;
+    padding: 0;
+    margin: 8px 0px;
+    border: 0;
+    border-radius: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.choice2 {
+    white-space: nowrap;
+    background: whitesmoke;
+    height: 40px;
+    width: 250px;
+    padding: 0;
+    margin: 5px 0px;
+    animation-duration: 3s;
+    border: 0;
+    border-radius: 0.3rem;
+}
+
+.list-element {
+    flex: 0 50%;
+    display: inline-block;
+    float: left;
+    margin: 2.5px 8px;
+    cursor: default;
+    width: 125px;
+    height: 35px;
+    line-height: 35px; 
+    background-color: white;
+    text-align: center;
+    font-size: 16px;
+    color: #252525;
+    border: 2px solid rgb(145, 138, 138);
+    border-radius: 0.3rem; 
+
+}
+.list-element.ui-selected {
+    background-color: rgb(176, 197, 214)
+}
+
+
+.choice1 li>div {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+.choice1 li .div-sortablehandle {
+    display: none;
+    opacity: 0.5;
+    left: -100%;
+}
+
+.choice1 li.ui-selected .div-sortablehandle {
+    display: inline-block;
+    cursor: default;
+    width: 100px;
+    height: 28px;
+    left: -107%;
+    border-radius: 0.1875rem;
+}
+
+.empty{
+    white-space: nowrap;
+    background: whitesmoke;
+    height: 1px;
+    width: 500px;
+    padding: 0;
+}
+
+.li-placeHolder {
+    float:left;
+    display: inline-block;
+    margin: 2.5px 8px;
+    cursor: default;
+    width: 125px;
+    height: 35px;
+    background-color: rgb(193, 214, 231);
+    border-radius: 0.3rem;
+}
+
+.col-placeHolder {
+    white-space: nowrap;
+    background-color: rgb(193, 214, 231);
+    height: 40px;
+    width: 400px;
+    padding: 0;
+    margin: 10px 0px;
+    border-radius: 0.3rem;
+
+}
+
+.transporter {
+    display: block;
+    float: none;
+    cursor: default;
+    width: 60px;
+    height: 20px;
+    text-align: center;
+    border: 0px solid darkgray;
+}
+
+
+
+
