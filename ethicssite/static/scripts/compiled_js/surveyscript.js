@@ -8,9 +8,14 @@ function writetopage(data, args) {
     addsurveytopage(question, scenarioNum);
     addsliderstopage(scenarioNum, data.length);
 }
+// adds the generated scenario to the front-end web page.
 function addsurveytopage(element, index) {
     byid("survey").append(element);
 }
+// Dynamically adds the sliders for the user to choose from,
+// given the scenario number (to mark the id of the sliders)
+// and the specific slider number (to mark the option that the
+// slider is measuring the preference for).
 function addsliderstopage(scen_idx, i) {
     var element = document.createElement('div');
     element.id = "slides" + scenarioNum;
@@ -48,7 +53,7 @@ function callNextScenario() {
     }
     else {
         // Create a new scenario if one is needed.
-        http_get('getscenario', writetopage, scenarioNum);
+        http_get('/getscenario/' + parent_id, writetopage, scenarioNum);
     }
 }
 // Changes the page from the final survey page to the initial surveys
@@ -89,6 +94,7 @@ function maketable(data, index) {
     }
     return table;
 }
+// Creates the final page of the scenario. 
 function makeFinalPage(data) {
     var element = byid("final_page");
     for (let key in data[0]) {
@@ -118,6 +124,8 @@ function makeFinalPage(data) {
     element.appendChild(p2);
     element.appendChild(textarea);
 }
+// Completely clears the page, leaving the submit button (which submits
+// the POST request)
 function clearPage() {
     byid("final_page").style.display = "none";
     byid("prev").style.display = "none";
@@ -303,5 +311,6 @@ var maxScenarios = 10;
 var data = [];
 var dataFeatures = [];
 var totalData = [];
-http_get('getscenario', writetopage, scenarioNum);
+var parent_id = byid('parent_id').innerHTML;
+http_get('/getscenario/' + parent_id, writetopage, scenarioNum);
 //# sourceMappingURL=surveyscript.js.map

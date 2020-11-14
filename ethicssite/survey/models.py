@@ -304,10 +304,12 @@ def json_to_survey(survey_data, prompt='empty', desc='empty'):
 
 
 # type(d) must be dict()
-def json_to_ruleset(d):
+def json_to_ruleset(d,user):
     inp = {'same_categories': d['config']['same_categories'],
            'scenario_size': d['config']['scenario_size']}
     rule_set = RuleSet(**inp)
+    # This should be converted to actually grab the user. Placeholder for now so stuff don't break
+    rule_set.user = user
     rule_set.save()
     for categ, obj in d['categories'].items():
         if 'range' in obj:
@@ -348,5 +350,6 @@ def json_to_ruleset(d):
             bad_combo.subcombos.add(
                 subcombo)
         rule_set.badcombos.add(bad_combo)
+    
     rule_set.save()
     return rule_set
