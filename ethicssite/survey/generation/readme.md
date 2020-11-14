@@ -4,13 +4,13 @@ Here we use json/yaml to show the inner data structure each Python class represe
 
 ## Concepts
 
-### Scenerio
+### Scenario
 
-Each scenario is composed of n number of combinations. Using `Generator.get_scenario(n)` will return a randomly generated scneario that follows the default rules
+Each scenario is composed of n number of combinations. Using `Generator.get_scenario(n)` will return a randomly generated scenario that follows the default rules
 
 ### Combo
 
-Combo is a part of a scenerio. E.g.
+Combo is a part of a scenario. E.g.
 
 ```json
 {
