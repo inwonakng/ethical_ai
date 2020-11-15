@@ -24,7 +24,7 @@ class Generator():
             # if rule_model is a RuleSet model AND the model is not empty
             if (type(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
                 rule = rule_model.object_form()
-                print('i am using model!!!')
+                print('Using a rule model with an id of: %d' %rule_model.id)
 
             # if rule model is empty
             # else:

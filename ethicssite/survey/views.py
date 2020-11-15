@@ -127,8 +127,7 @@ def get_scenario(request,parent_id):
         combos = request.POST['combo_count']
 
     # grabbing the sample json
-    rule = yaml.safe_load(
-        open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml', 'r'))
+    rule = yaml.safe_load(open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml', 'r'))
     # Survey
     if RuleSet.objects.all():
         # using defulat model here
@@ -184,4 +183,4 @@ def rules_save(request):
         HttpResponseServerError('`rules` field not found in request body.')
 
     json_to_ruleset(json_rules_string)
-    HttpResponse(statud=201)
+    HttpResponse(status=201)

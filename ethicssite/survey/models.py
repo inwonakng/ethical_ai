@@ -57,11 +57,15 @@ class RuleSet(models.Model):
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
     badcombos = models.ManyToManyField('BadCombo')
+    generative_survey = models.OneToManyField('Survey') # ISSUE OneToMany (get this working) or ManyToMany
+    # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
+
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
 
     # ruleset creator
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    generative = models.BooleanField(null=False, blank=False, default=False)
     '''These accessor functions are for the generator to use'''
 
     def get_choicecategs(self):
