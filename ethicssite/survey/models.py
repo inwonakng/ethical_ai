@@ -294,6 +294,7 @@ After this, ss will be the complete survey object
 
 Test scenario example:
 [
+[
   [
     {
       "age": "61",
@@ -354,6 +355,7 @@ Test scenario example:
       "survival difference": "58%",
     },
   ],
+]
 ]
 '''
 # This function will recieve a list of json scenarios and
