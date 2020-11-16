@@ -17,13 +17,10 @@ from django.contrib.auth.decorators import login_required
 def register(request):
     registered = False
     if request.method == "POST":
-        # TODO: stop using the default django form
-        form = UserCreationForm(data=request.POST)
+        form = UserForm(data=request.POST)
+
         if form.is_valid():
             user = form.save()
-
-            # TODO: modify form model to include email in meta (look at opra example)
-            user.email = request.POST['email']
 
             # users are inactive until email verification
             user.is_active = False
@@ -39,7 +36,8 @@ def register(request):
             mail.send_mail("Account Confirmation", "Please confirm your account registration.",
                             settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
         else:
-            pass # fall through to rerendering register html but now form.errors should be filled
+            # fall through to rerendering register html with form.errors filled
+            pass
             """
             for error in form.errors:
                 print(error)
