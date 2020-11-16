@@ -124,7 +124,6 @@ class Option(models.Model):
 
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
-    # option = models.OneToOneField(Option, on_delete=models.CASCADE, default=1)
 
 
 class Attribute(models.Model):
@@ -294,68 +293,73 @@ After this, ss will be the complete survey object
 
 Test scenario example:
 [
-[
-  [
-    {
-      "age": "61",
-      "health": "terminally ill(less than 3 years left)",
-      "gender": "male",
-      "income level": "low",
-      "number of dependents": "2",
-      "survival without": "42%",
-      "survival difference": "79%",
-    },
-    {
-      "age": "12",
-      "health": "small health problems",
-      "gender": "female",
-      "income level": "low",
-      "number of dependents": "0",
-      "survival without": "23%",
-      "survival difference": "66%",
-    },
-  ],
-  [
-    {
-      "age": "5",
-      "health": "small health problems",
-      "gender": "female",
-      "income level": "low",
-      "number of dependents": "3",
-      "survival without": "31%",
-      "survival difference": "59%",
-    },
-    {
-      "age": "23",
-      "health": "moderate health problems",
-      "gender": "male",
-      "income level": "high",
-      "number of dependents": "0",
-      "survival without": "30%",
-      "survival difference": "58%",
-    },
-  ],
-  [
-    {
-      "age": "5",
-      "health": "small health problems",
-      "gender": "female",
-      "income level": "low",
-      "number of dependents": "3",
-      "survival without": "31%",
-      "survival difference": "59%",
-    },
-    {
-      "age": "23",
-      "health": "moderate health problems",
-      "gender": "male",
-      "income level": "high",
-      "number of dependents": "0",
-      "survival without": "30%",
-      "survival difference": "58%",
-    },
-  ],
-]
+    [
+        [
+            {
+            "age": "61",
+            "health": "terminally ill(less than 3 years left)",
+            "gender": "male",
+            "income level": "low",
+            "number of dependents": "2",
+            "survival without": "42%",
+            "survival difference": "79%",
+            },
+            {
+            "age": "12",
+            "health": "small health problems",
+            "gender": "female",
+            "income level": "low",
+            "number of dependents": "0",
+            "survival without": "23%",
+            "survival difference": "66%",
+            },
+        ],
+        [
+            {
+            "age": "5",
+            "health": "small health problems",
+            "gender": "female",
+            "income level": "low",
+            "number of dependents": "3",
+            "survival without": "31%",
+            "survival difference": "59%",
+            },
+            {
+            "age": "23",
+            "health": "moderate health problems",
+            "gender": "male",
+            "income level": "high",
+            "number of dependents": "0",
+            "survival without": "30%",
+            "survival difference": "58%",
+            },
+        ],
+        [
+            {
+            "age": "5",
+            "health": "small health problems",
+            "gender": "female",
+            "income level": "low",
+            "number of dependents": "3",
+            "survival without": "31%",
+            "survival difference": "59%",
+            },
+            {
+            "age": "23",
+            "health": "moderate health problems",
+            "gender": "male",
+            "income level": "high",
+            "number of dependents": "0",
+            "survival without": "30%",
+            "survival difference": "58%",
+            },
+        ],
+    ],
+    [
+        ["0", "0"],
+        ["0", "0"],
+        ["0", "0"],
+    ]
 ]
 '''
 # This function will recieve a list of json scenarios and
@@ -367,7 +371,7 @@ def json_to_survey(survey_data, prompt='empty', desc='empty'):
     curr_survey = Survey(prompt=prompt, desc=desc)
     curr_survey.save()
 
-    for scenario in survey_data:
+    for scenario in survey_data[0]:
 
         curr_scenario = Scenario()
         curr_scenario.save()

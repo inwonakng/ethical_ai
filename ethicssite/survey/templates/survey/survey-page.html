@@ -15,6 +15,8 @@
     <a id="parent_id" style="display:none">{{parent_id}}</a>
     <div id="question">
       <p id="prompt">Prompt</p>
+      <button id="prev" class="action-btn" onclick="prev()">Prev</button>
+      <button id="next" class="action-btn" onclick="next()">Next</button>
       <div id="survey"></div>
 
       <p>Scores: </p>
@@ -33,9 +35,7 @@
       <p id="rate-followup">Please score each feature on how important they were to your decision making</p>  
       <div id='features'></div>  
     </div>
-    
-    <button id="prev" class="action-btn" onclick="prev()">Prev</button>
-    <button id="next" class="action-btn" onclick="next()">Next</button>
+  
     <button id="go-to-review" onclick="viewReviewPage()" style = "display: none; position: absolute; right: 0px;">
       Review Your Choices
     </button>
