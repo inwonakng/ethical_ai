@@ -6,9 +6,10 @@ import yaml
 from django.conf import settings
 from .models import *
 from django import views
+from django.core import mail
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -21,19 +22,22 @@ def register(request):
         if form.is_valid():
             user = form.save()
 
+            # TODO: modify form model to include email in meta (look at opra example)
+            user.email = request.POST['email']
+
+            # users are inactive until email verification
+            user.is_active = False
+            user.save()
+
             profile = UserProfile(user=user, creation_time=timezone.now())
             profile.save()
 
+            # update registered variable for page to be rerendered
             registered = True
 
-            """
-            # currently no email authentication, just login the user and redirect to index
-            raw_pass = form.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_pass)
-            login(request, user)
-
-            return redirect('/')
-            """
+            html_msg = f"<p><a href='{request.build_absolute_uri('/register/confirm/')}{user.id}'>Click here to activate your account</a></p>"
+            mail.send_mail("Account Confirmation", "Please confirm your account registration.",
+                            settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
         else:
             pass # fall through to rerendering register html but now form.errors should be filled
             """
@@ -44,6 +48,21 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'survey/register.html', {'form': form, 'registered': registered})
 
+def confirm_user(request, userid):
+    user = get_object_or_404(User, pk=userid)
+
+    # only activate and login if not already activated
+    # (prevent link from being reused to allow others to login)
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+        login(request, user)
+    
+    # TODO: add link expiration page / some error page
+
+    # TODO: create a successful activation page?
+    return redirect('/')
+
 def user_login(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -52,16 +71,23 @@ def user_login(request):
         user = authenticate(username=username, password=password)
         if user:
             # TODO: check if user.is_active after setting up email confirmation
-            login(request, user)
-            
-            # redirect to previous page if sent from @login_required
-            # else redirect to index
-            print(request.GET.get('next'))
-            if request.GET.get('next', False):
-                # TODO: fix, this redirecting doesn't seem to ever work
-                redirect(request.GET.get('next'))
+            if user.is_active:
+                login(request, user)
+
+                # redirect to previous page if sent from @login_required
+                # else redirect to index
+                if request.GET.get('next', False):
+                    # TODO: fix, this redirecting doesn't seem to ever work
+                    redirect(request.GET.get('next'))
+                else:
+                    return redirect('/')
             else:
-                return redirect('/')
+                # TODO: figure out how to actually determine if a user has confirmed email, inactive users don't show up in authenticate()
+                # resend activation email
+                html_msg = f"<p><a href='{request.build_absolute_uri('/register/confirm/')}{user.id}'>Click here to activate your account</a></p>"
+                mail.send_mail("Account Confirmation", "Please confirm your account registration.",
+                                settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
+                return render(request, 'survey/login.html', {'error': 'Account was not activated. An activation link was resent to your email address.'})
         else:
             return render(request, 'survey/login.html', {'error': 'Invalid login details.'})
     else:
