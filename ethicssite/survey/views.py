@@ -140,28 +140,22 @@ class IndexView(views.generic.ListView):
     # page for user survey creation
     # get user defined rules back
     # function to grab new scenario
-def load_survey(request):
+def load_survey(request,parent_id):
     # empty for now
-    survey_info = {}
+    survey_info = {'parent_id':parent_id}
+    check = SurveyGenerator.objects.filter(rule_id = parent_id)
+    if not check: build_generator(RuleSet.objects.get(id=parent_id))
     # survey_info.update(csrf(request))
     return render(request,'survey/survey-page.html',survey_info)
 
-def get_scenario(request):
+def get_scenario(request,parent_id):
     combos = 3
 
     if request.method == "POST":
         combos = request.POST['combo_count']
 
     # grabbing the sample json
-    rule = yaml.safe_load(
-        open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml', 'r'))
-    # Survey
-    if RuleSet.objects.all():
-        # using defulat model here
-        rr = RuleSet.objects.all()[0]
-        story_gen = Generator(rule_model=rr)
-    else:
-        story_gen = Generator(rule=rule)
+    story_gen = SurveyGenerator.objects.get(rule_id=parent_id)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
     # For frontend, check the html to
@@ -179,6 +173,8 @@ def submit_survey(request):
         print('scenario:',request.body[0])
         print('scores:',request.body[1])
 
+        #Submits the json
+        json_to_survey(request.body[0])
         # print(json.load(request.body))
         return redirect("survey:surveyresult")
 
@@ -208,4 +204,4 @@ def rules_save(request):
         HttpResponseServerError('`rules` field not found in request body.')
 
     json_to_ruleset(json_rules_string)
-    HttpResponse(statud=201)
+    HttpResponse(status=201)

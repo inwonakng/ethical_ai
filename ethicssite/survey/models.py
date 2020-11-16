@@ -4,6 +4,11 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
+from django_mysql.models import JSONField
+from random import sample
+from random import randint as rint
+from itertools import combinations as comb
+from survey.generation import Generator as gen
 
 '''User Profile models'''
 class UserProfile(models.Model):
@@ -15,6 +20,81 @@ class UserProfile(models.Model):
     # TODO: fill other useful fields here as needed
     # current_survey = models.OneToOneField('Survey', default=1)
 
+class Dict(models.Model):
+    json = JSONField()
+
+class SurveyGenerator(models.Model):
+    rule_id = models.ForeignKey('RuleSet',on_delete=models.CASCADE,null=True)
+    combos = models.ManyToManyField('Dict',related_name='combo_dict')
+    config = models.OneToOneField('Dict',related_name='config_dict',on_delete=models.CASCADE)
+    list_categs = models.ManyToManyField('ListCateg')
+    range_categs = models.ManyToManyField('RangeCateg')
+
+    def check_duplicates(self, scenario):
+        # get all possible pairs to compare duplicates
+        tocheck = list(comb(scenario, 2))
+        found = {}
+        for c1, c2 in tocheck:
+            dups = [(k,v) for k,v in c1.items() if c2[k] == v]
+            for d in dups:
+                if not d in found:
+                    found[d] = 0
+                else:
+                    found[d] += 1
+        numfound = list(found.values())
+        numlen = len(numfound)
+        return numlen == 0 or (max(numfound) < self.config.json['same_categories'] + 1 and numfound.count(self.config.json['same_categories']) < len(scenario) - 1)
+
+    def get_scenario(self):
+        '''
+            random pick
+            @TODO we need to record what we have already
+            @TODO maybe take too long
+        '''
+        selected = []
+        while True:
+            s = sample(list(range(len(self.combos.all()))), self.config.json['scenario_size'])
+            outputs = []
+            for i in s:
+                ss = self.combos.all()[i].json.copy()
+                for r in self.range_categs.all(): ss[r.name] = r.get_range()
+                outputs.append(ss)
+            if self.check_duplicates(outputs):
+                selected = outputs
+                break
+        for c in self.list_categs.all():
+            selected = [c.translate(ss) for ss in selected]
+        
+        return selected
+    
+def build_generator(rule):
+    sg = SurveyGenerator()
+    sg.rule_id = rule
+
+    gg = gen.Generator(rule)
+    dd = Dict(json = gg.config)
+    dd.save()
+
+    sg.config = dd
+    sg.save()
+
+    for c in gg.combos:
+        dd = Dict(json = c.getCombo())
+        dd.save() 
+        sg.combos.add(dd)
+    sg.save()
+
+    for rcateg in rule.range_categs.all():
+        sg.range_categs.add(rcateg)
+    for lcateg in rule.choice_categs.all():
+        sg.list_categs.add(lcateg)
+    sg.save()
+    return sg
+
+
+
+
+
 '''Survey models sections start here'''
 
 class Survey(models.Model):
@@ -22,11 +102,15 @@ class Survey(models.Model):
     desc = models.TextField(null=False, blank=False, default='')
     date = models.DateTimeField(default=timezone.now)
     scenarios = models.ManyToManyField('Scenario')
-    attributes = models.ManyToManyField('Attribute')
+    # attributes = models.ManyToManyField('Attribute')
     ruleset_id = models.IntegerField(null=False, default=2)
-
+    feature_scores = models.ManyToManyField('FeatureScore')
     # user taking this survey
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class FeatureScore(models.Model):
+    name = models.TextField(null=False,default='default_namee')
+    score = models.OneToOneField('SingleResponse',on_delete=models.CASCADE)
 
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
@@ -36,11 +120,11 @@ class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute', related_name='combo_attributes')
     text = models.CharField(max_length=50, null=False, default='')
-
+    score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE)
 
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
-    option = models.OneToOneField(Option, on_delete=models.CASCADE, default=1)
+    # option = models.OneToOneField(Option, on_delete=models.CASCADE, default=1)
 
 
 class Attribute(models.Model):
@@ -57,11 +141,15 @@ class RuleSet(models.Model):
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
     badcombos = models.ManyToManyField('BadCombo')
+    # generative_survey = models.OneToManyField('Survey') # ISSUE OneToMany (get this working) or ManyToMany
+    # # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
+
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
 
     # ruleset creator
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    generative = models.BooleanField(null=False, blank=False, default=False)
     '''These accessor functions are for the generator to use'''
 
     def get_choicecategs(self):
@@ -155,6 +243,12 @@ class ListCateg(models.Model):
     def __str__(self):
         return json.dumps(self.object_form())
 
+    def translate(self,vals):
+        idx = vals[self.name]
+        vals[self.name] = self.choices.get(index=idx).value
+        return vals
+
+
 # Rule set choice model
 class RuleSetChoice(models.Model):
     index = models.IntegerField()
@@ -172,6 +266,9 @@ class RangeCateg(models.Model):
     minVal = models.FloatField()
     maxVal = models.FloatField()
     unit = models.CharField(max_length=50)
+
+    def get_range(self):
+        return str(rint(self.minVal,self.maxVal)) + self.unit
 
     def object_form(self):
         return {self.name: {
@@ -304,49 +401,57 @@ def json_to_survey(survey_data, prompt='empty', desc='empty'):
 
 
 # type(d) must be dict()
-def json_to_ruleset(d):
+def json_to_ruleset(d,user):
+    # true if 'config' values exist in d
+    generative = 'config' in d
     inp = {'same_categories': d['config']['same_categories'],
            'scenario_size': d['config']['scenario_size']}
     rule_set = RuleSet(**inp)
+    # This should be converted to actually grab the user. Placeholder for now so stuff don't break
+    rule_set.user = user
+    rule_set.generative = generative
     rule_set.save()
-    for categ, obj in d['categories'].items():
-        if 'range' in obj:
-            range_category = RangeCateg(
-                name=categ,
-                minVal=float(obj['range'][0]),
-                maxVal=float(obj['range'][1]),
-                unit=obj['unit'])
-            range_category.save()
-            rule_set.range_categs.add(range_category)
-        else:
-            list_categ = ListCateg(name=categ)
-            list_categ.save()
-            for k, v in obj.items():
-                list_categ.choices.create(
-                    index=k, value=v)
-            rule_set.choice_categs.add(list_categ)
+    if generative:
+        for categ, obj in d['categories'].items():
+            if 'range' in obj:
+                range_category = RangeCateg(
+                    name=categ,
+                    minVal=float(obj['range'][0]),
+                    maxVal=float(obj['range'][1]),
+                    unit=obj['unit'])
+                range_category.save()
+                rule_set.range_categs.add(range_category)
+            else:
+                list_categ = ListCateg(name=categ)
+                list_categ.save()
+                for k, v in obj.items():
+                    list_categ.choices.create(
+                        index=k, value=v)
+                rule_set.choice_categs.add(list_categ)
 
-    for categ_name, obj in d['bad_combos'].items():
-        bad_combo = BadCombo(category_name=categ_name)
-        bad_combo.save()
-        for cval, sub_obj in obj.items():
-            subcombo = BadSubCombo(
-                categ=cval)
-            subcombo.save()
+        for categ_name, obj in d['bad_combos'].items():
+            bad_combo = BadCombo(category_name=categ_name)
+            bad_combo.save()
+            for cval, sub_obj in obj.items():
+                subcombo = BadSubCombo(
+                    categ=cval)
+                subcombo.save()
 
-            for category_name_in in sub_obj.keys():
-                bsubcom_elem = BadSubComboElement(
-                    categ=category_name_in)
-                bsubcom_elem.save()
-                for category_index in sub_obj[category_name_in]:
-                    bsubcom_elem.elems.create(
-                        category_index=category_index)
+                for category_name_in in sub_obj.keys():
+                    bsubcom_elem = BadSubComboElement(
+                        categ=category_name_in)
+                    bsubcom_elem.save()
+                    for category_index in sub_obj[category_name_in]:
+                        bsubcom_elem.elems.create(
+                            category_index=category_index)
 
-                subcombo.badcombo_elems.add(
-                    bsubcom_elem)
+                    subcombo.badcombo_elems.add(
+                        bsubcom_elem)
 
-            bad_combo.subcombos.add(
-                subcombo)
-        rule_set.badcombos.add(bad_combo)
+                bad_combo.subcombos.add(
+                    subcombo)
+            rule_set.badcombos.add(bad_combo)
+    
     rule_set.save()
     return rule_set
+
