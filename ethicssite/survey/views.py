@@ -179,3 +179,7 @@ def rules_save(request):
 
     json_to_ruleset(json_rules_string)
     HttpResponse(status=201)
+
+def my_polls(request):
+    rulesets = {'a':'b'}
+    return render(request, 'my_polls.html', rulesets)

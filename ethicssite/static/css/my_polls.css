@@ -1,0 +1,30 @@
+.poll_div{
+    margin-top: 20px;
+    background-color: lightgrey;
+    width: 800px;
+    border: 1px solid black;
+    padding-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.my_poll_date{
+    float: right;
+    padding-right: 25px;
+    color: black;
+}
+.my_poll_title{
+    text-align: center;
+}
+.my_poll_subject{
+    font-size: 16px;
+    font-weight: 600;
+}
+.my_poll_information{
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-top: 20px;
+}
+.detail_button{
+    float: right;
+
+}

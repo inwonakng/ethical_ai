@@ -13,5 +13,7 @@ urlpatterns = [
     path('rulessample',views.rules_explain,name='rulessample'),
     path('submitsurvey', views.submit_survey, name="submitsurvey"),
     path('surveyresult', views.survey_result, name="surveyresult"),
-    path('<random>', views.unknown_path)
+    path('mypolls', views.my_polls, name='mypolls'),
+    path('<random>', views.unknown_path),
+    
 ]
