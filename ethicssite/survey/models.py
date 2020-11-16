@@ -360,9 +360,9 @@ Test scenario example:
 # load them into Django models.
 
 
-def json_to_survey(survey_data, prompt='empty', desc='empty'):
+def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
-    curr_survey = Survey(prompt=prompt, desc=desc)
+    curr_survey = Survey(prompt=prompt, desc=desc, user=user)
     curr_survey.save()
 
     for scenario in survey_data:

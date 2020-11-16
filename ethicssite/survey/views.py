@@ -167,6 +167,7 @@ def get_scenario(request,parent_id):
     # you can see the json object printed on the console
 
 # @csrf_exempt
+@login_required
 def submit_survey(request):
     if request.method == 'POST':
         # for now not storing scores
@@ -174,7 +175,7 @@ def submit_survey(request):
         print('scores:',request.body[1])
 
         #Submits the json
-        json_to_survey(request.body[0])
+        json_to_survey(request.body[0], request.user)
         # print(json.load(request.body))
         return redirect("survey:surveyresult")
 
@@ -191,9 +192,8 @@ def unknown_path(request, random):
 
 # Django endpoint to save rule to database from json post request body
 
-
+@login_required
 def rules_save(request):
-
     if request.method != 'POST':
         return HttpResponse(status=400)
     json_data = json.loads(request.body)
@@ -203,5 +203,5 @@ def rules_save(request):
     except KeyError:
         HttpResponseServerError('`rules` field not found in request body.')
 
-    json_to_ruleset(json_rules_string)
+    json_to_ruleset(json_rules_string, request.user)
     HttpResponse(status=201)
