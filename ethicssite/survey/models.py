@@ -24,9 +24,13 @@ class Survey(models.Model):
     scenarios = models.ManyToManyField('Scenario')
     # attributes = models.ManyToManyField('Attribute')
     ruleset_id = models.IntegerField(null=False, default=2)
-
+    feature_scores = models.ManyToManyField('FeatureScore')
     # user taking this survey
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class FeatureScore(models.Model):
+    name = models.TextField(null=False,default='default_namee')
+    score = models.OneToOneField('SingleResponse',on_delete=models.CASCADE)
 
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
@@ -57,8 +61,8 @@ class RuleSet(models.Model):
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
     badcombos = models.ManyToManyField('BadCombo')
-    generative_survey = models.OneToManyField('Survey') # ISSUE OneToMany (get this working) or ManyToMany
-    # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
+    # generative_survey = models.OneToManyField('Survey') # ISSUE OneToMany (get this working) or ManyToMany
+    # # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
 
     same_categories = models.IntegerField(null=False, default=2)
     scenario_size = models.IntegerField(null=False, default=2)
@@ -309,51 +313,55 @@ def json_to_survey(survey_data, prompt='empty', desc='empty'):
 
 # type(d) must be dict()
 def json_to_ruleset(d,user):
+    # true if 'config' values exist in d
+    generative = 'config' in d
     inp = {'same_categories': d['config']['same_categories'],
            'scenario_size': d['config']['scenario_size']}
     rule_set = RuleSet(**inp)
     # This should be converted to actually grab the user. Placeholder for now so stuff don't break
     rule_set.user = user
+    rule_set.generative = generative
     rule_set.save()
-    for categ, obj in d['categories'].items():
-        if 'range' in obj:
-            range_category = RangeCateg(
-                name=categ,
-                minVal=float(obj['range'][0]),
-                maxVal=float(obj['range'][1]),
-                unit=obj['unit'])
-            range_category.save()
-            rule_set.range_categs.add(range_category)
-        else:
-            list_categ = ListCateg(name=categ)
-            list_categ.save()
-            for k, v in obj.items():
-                list_categ.choices.create(
-                    index=k, value=v)
-            rule_set.choice_categs.add(list_categ)
+    if generative:
+        for categ, obj in d['categories'].items():
+            if 'range' in obj:
+                range_category = RangeCateg(
+                    name=categ,
+                    minVal=float(obj['range'][0]),
+                    maxVal=float(obj['range'][1]),
+                    unit=obj['unit'])
+                range_category.save()
+                rule_set.range_categs.add(range_category)
+            else:
+                list_categ = ListCateg(name=categ)
+                list_categ.save()
+                for k, v in obj.items():
+                    list_categ.choices.create(
+                        index=k, value=v)
+                rule_set.choice_categs.add(list_categ)
 
-    for categ_name, obj in d['bad_combos'].items():
-        bad_combo = BadCombo(category_name=categ_name)
-        bad_combo.save()
-        for cval, sub_obj in obj.items():
-            subcombo = BadSubCombo(
-                categ=cval)
-            subcombo.save()
+        for categ_name, obj in d['bad_combos'].items():
+            bad_combo = BadCombo(category_name=categ_name)
+            bad_combo.save()
+            for cval, sub_obj in obj.items():
+                subcombo = BadSubCombo(
+                    categ=cval)
+                subcombo.save()
 
-            for category_name_in in sub_obj.keys():
-                bsubcom_elem = BadSubComboElement(
-                    categ=category_name_in)
-                bsubcom_elem.save()
-                for category_index in sub_obj[category_name_in]:
-                    bsubcom_elem.elems.create(
-                        category_index=category_index)
+                for category_name_in in sub_obj.keys():
+                    bsubcom_elem = BadSubComboElement(
+                        categ=category_name_in)
+                    bsubcom_elem.save()
+                    for category_index in sub_obj[category_name_in]:
+                        bsubcom_elem.elems.create(
+                            category_index=category_index)
 
-                subcombo.badcombo_elems.add(
-                    bsubcom_elem)
+                    subcombo.badcombo_elems.add(
+                        bsubcom_elem)
 
-            bad_combo.subcombos.add(
-                subcombo)
-        rule_set.badcombos.add(bad_combo)
+                bad_combo.subcombos.add(
+                    subcombo)
+            rule_set.badcombos.add(bad_combo)
     
     rule_set.save()
     return rule_set
