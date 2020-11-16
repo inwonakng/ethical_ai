@@ -4,6 +4,11 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
+from django_mysql.models import JSONField
+from random import sample
+from random import randint as rint
+from itertools import combinations as comb
+from survey.generation import Generator as gen
 
 '''User Profile models'''
 class UserProfile(models.Model):
@@ -14,6 +19,81 @@ class UserProfile(models.Model):
 
     # TODO: fill other useful fields here as needed
     # current_survey = models.OneToOneField('Survey', default=1)
+
+class Dict(models.Model):
+    json = JSONField()
+
+class SurveyGenerator(models.Model):
+    rule_id = models.ForeignKey('RuleSet',on_delete=models.CASCADE,null=True)
+    combos = models.ManyToManyField('Dict',related_name='combo_dict')
+    config = models.OneToOneField('Dict',related_name='config_dict',on_delete=models.CASCADE)
+    list_categs = models.ManyToManyField('ListCateg')
+    range_categs = models.ManyToManyField('RangeCateg')
+
+    def check_duplicates(self, scenario):
+        # get all possible pairs to compare duplicates
+        tocheck = list(comb(scenario, 2))
+        found = {}
+        for c1, c2 in tocheck:
+            dups = [(k,v) for k,v in c1.items() if c2[k] == v]
+            for d in dups:
+                if not d in found:
+                    found[d] = 0
+                else:
+                    found[d] += 1
+        numfound = list(found.values())
+        numlen = len(numfound)
+        return numlen == 0 or (max(numfound) < self.config.json['same_categories'] + 1 and numfound.count(self.config.json['same_categories']) < len(scenario) - 1)
+
+    def get_scenario(self):
+        '''
+            random pick
+            @TODO we need to record what we have already
+            @TODO maybe take too long
+        '''
+        selected = []
+        while True:
+            s = sample(list(range(len(self.combos.all()))), self.config.json['scenario_size'])
+            outputs = []
+            for i in s:
+                ss = self.combos.all()[i].json.copy()
+                for r in self.range_categs.all(): ss[r.name] = r.get_range()
+                outputs.append(ss)
+            if self.check_duplicates(outputs):
+                selected = outputs
+                break
+        for c in self.list_categs.all():
+            selected = [c.translate(ss) for ss in selected]
+        
+        return selected
+    
+def build_generator(rule):
+    sg = SurveyGenerator()
+    sg.rule_id = rule
+
+    gg = gen.Generator(rule)
+    dd = Dict(json = gg.config)
+    dd.save()
+
+    sg.config = dd
+    sg.save()
+
+    for c in gg.combos:
+        dd = Dict(json = c.getCombo())
+        dd.save() 
+        sg.combos.add(dd)
+    sg.save()
+
+    for rcateg in rule.range_categs.all():
+        sg.range_categs.add(rcateg)
+    for lcateg in rule.choice_categs.all():
+        sg.list_categs.add(lcateg)
+    sg.save()
+    return sg
+
+
+
+
 
 '''Survey models sections start here'''
 
@@ -163,6 +243,12 @@ class ListCateg(models.Model):
     def __str__(self):
         return json.dumps(self.object_form())
 
+    def translate(self,vals):
+        idx = vals[self.name]
+        vals[self.name] = self.choices.get(index=idx).value
+        return vals
+
+
 # Rule set choice model
 class RuleSetChoice(models.Model):
     index = models.IntegerField()
@@ -180,6 +266,9 @@ class RangeCateg(models.Model):
     minVal = models.FloatField()
     maxVal = models.FloatField()
     unit = models.CharField(max_length=50)
+
+    def get_range(self):
+        return str(rint(self.minVal,self.maxVal)) + self.unit
 
     def object_form(self):
         return {self.name: {
@@ -365,3 +454,4 @@ def json_to_ruleset(d,user):
     
     rule_set.save()
     return rule_set
+

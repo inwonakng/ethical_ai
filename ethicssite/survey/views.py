@@ -117,6 +117,8 @@ class IndexView(views.generic.ListView):
 def load_survey(request,parent_id):
     # empty for now
     survey_info = {'parent_id':parent_id}
+    check = SurveyGenerator.objects.filter(rule_id = parent_id)
+    if not check: build_generator(RuleSet.objects.get(id=parent_id))
     # survey_info.update(csrf(request))
     return render(request,'survey/survey-page.html',survey_info)
 
@@ -127,14 +129,7 @@ def get_scenario(request,parent_id):
         combos = request.POST['combo_count']
 
     # grabbing the sample json
-    rule = yaml.safe_load(open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml', 'r'))
-    # Survey
-    if RuleSet.objects.all():
-        # using defulat model here
-        rr = RuleSet.objects.all()[parent_id]
-        story_gen = Generator(rule_model=rr)
-    else:
-        story_gen = Generator(rule=rule)
+    story_gen = SurveyGenerator.objects.get(rule_id=parent_id)
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
     # For frontend, check the html to

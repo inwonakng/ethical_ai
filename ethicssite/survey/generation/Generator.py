@@ -9,7 +9,7 @@ import yaml
 from ..models import *
 
 class Generator():
-    def __init__(self, adaptive=False, rule={}, rule_model=None):
+    def __init__(self, rule,adaptive=False):
 
         # assign attributes
         self.adaptive = adaptive
@@ -18,27 +18,12 @@ class Generator():
         self.bad_combos = []
         self.config = {}
         
-        # if rule dictionary (passed in) is empty
-        if len(rule) == 0:
 
-            # if rule_model is a RuleSet model AND the model is not empty
-            if (type(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
-                rule = rule_model.object_form()
-                print('Using a rule model with an id of: %d' %rule_model.id)
-
-            # if rule model is empty
-            # else:
-            #     # DEFAULT to the rules.json file
-            #     rule = {}
-            #     with open(str(Path("survey/generation/rule/rule.yaml").resolve()), "r") as stream:
-            #         try:
-            #             rule = yaml.safe_load(stream)
-            #         except yaml.YAMLError as exc:
-            #             print(exc)
+        rule = rule.object_form()
 
         self.config['same_categories'] = rule['config'].get(
             'same_categories', -1)
-        self.config['scenerio_size'] = rule['config'].get('scenerio_size', 2)
+        self.config['scenario_size'] = rule['config'].get('scenario_size', 2)
 
         for key, value in rule['categories'].items():
             cc = Category(name=key, options=value)
@@ -66,7 +51,7 @@ class Generator():
         '''
         selected = []
         while True:
-            s = sample(self.combos, self.config['scenerio_size'])
+            s = sample(self.combos, self.config['scenario_size'])
             for ss in s:
                 for k,v in self.range_categories.items():
                     ss.attach(k,v.get_range())
