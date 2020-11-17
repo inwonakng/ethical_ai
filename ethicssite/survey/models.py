@@ -366,6 +366,15 @@ Test scenario example:
             "survival without": "30%",
             "survival difference": "58%",
             },
+            {
+            "age": "23",
+            "health": "moderate health problems",
+            "gender": "male",
+            "income level": "high",
+            "number of dependents": "0",
+            "survival without": "30%",
+            "survival difference": "58%",
+            },
         ],
         [
             {
@@ -390,7 +399,7 @@ Test scenario example:
     ],
     [
         ["0", "1"],
-        ["2", "3"],
+        ["2", "3", "5"],
         ["4", "5"],
     ],
 ]
@@ -420,7 +429,8 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
             #curr_option.save()
 
             # Saves option scores
-            curr_score = SingleResponse(value=survey_data[1][(int(person_count/2))][int((person_count-1)%2)])
+            print(len(scenario))
+            curr_score = SingleResponse(value=survey_data[1][(int(person_count/2))][int((person_count-1)%len(scenario))])
             curr_score.save()
 
             curr_option.score = curr_score
