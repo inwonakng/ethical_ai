@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
   <title>ethical ai</title>
   {% load static %}
@@ -11,19 +12,22 @@
 
   <!-- Custom CSS -->
   <link rel="stylesheet" type="text/css" href="{% static 'css/stylish-portfolio.css' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'css/shared.css' %}"/>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}"/>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/rule_style_latest.css' %}"/>
-  {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'css/rule_style_latest.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/shared.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/rule_style_latest.css' %}" />
+  {% comment %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/rule_style_latest.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"> {% endcomment %}
   <script type="text/javascript" src="{% static '/scripts/jquery-3.5.1.min.js' %}"></script>
 </head>
+
 <body>
   {% include 'survey/navbar.html' %}
-  <div class = 'page'>
-  {% block content %}
-  {% endblock %}
+  <div class='page' style="width:100%">
+    {% block content %}
+    {% endblock %}
   </div>
 </body>
+
 </html>
