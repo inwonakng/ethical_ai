@@ -326,66 +326,73 @@ After this, ss will be the complete survey object
 
 Test scenario example:
 [
-  [
-    {
-      "age": "61",
-      "health": "terminally ill(less than 3 years left)",
-      "gender": "male",
-      "income level": "low",
-      "number of dependents": "2",
-      "survival without": "42%",
-      "survival difference": "79%",
-    },
-    {
-      "age": "12",
-      "health": "small health problems",
-      "gender": "female",
-      "income level": "low",
-      "number of dependents": "0",
-      "survival without": "23%",
-      "survival difference": "66%",
-    },
-  ],
-  [
-    {
-      "age": "5",
-      "health": "small health problems",
-      "gender": "female",
-      "income level": "low",
-      "number of dependents": "3",
-      "survival without": "31%",
-      "survival difference": "59%",
-    },
-    {
-      "age": "23",
-      "health": "moderate health problems",
-      "gender": "male",
-      "income level": "high",
-      "number of dependents": "0",
-      "survival without": "30%",
-      "survival difference": "58%",
-    },
-  ],
-  [
-    {
-      "age": "5",
-      "health": "small health problems",
-      "gender": "female",
-      "income level": "low",
-      "number of dependents": "3",
-      "survival without": "31%",
-      "survival difference": "59%",
-    },
-    {
-      "age": "23",
-      "health": "moderate health problems",
-      "gender": "male",
-      "income level": "high",
-      "number of dependents": "0",
-      "survival without": "30%",
-      "survival difference": "58%",
-    },
-  ],
+    [
+        [
+            {
+            "age": "61",
+            "health": "terminally ill(less than 3 years left)",
+            "gender": "male",
+            "income level": "low",
+            "number of dependents": "2",
+            "survival without": "42%",
+            "survival difference": "79%",
+            },
+            {
+            "age": "12",
+            "health": "small health problems",
+            "gender": "female",
+            "income level": "low",
+            "number of dependents": "0",
+            "survival without": "23%",
+            "survival difference": "66%",
+            },
+        ],
+        [
+            {
+            "age": "5",
+            "health": "small health problems",
+            "gender": "female",
+            "income level": "low",
+            "number of dependents": "3",
+            "survival without": "31%",
+            "survival difference": "59%",
+            },
+            {
+            "age": "23",
+            "health": "moderate health problems",
+            "gender": "male",
+            "income level": "high",
+            "number of dependents": "0",
+            "survival without": "30%",
+            "survival difference": "58%",
+            },
+        ],
+        [
+            {
+            "age": "5",
+            "health": "small health problems",
+            "gender": "female",
+            "income level": "low",
+            "number of dependents": "3",
+            "survival without": "31%",
+            "survival difference": "59%",
+            },
+            {
+            "age": "23",
+            "health": "moderate health problems",
+            "gender": "male",
+            "income level": "high",
+            "number of dependents": "0",
+            "survival without": "30%",
+            "survival difference": "58%",
+            },
+        ],
+    ],
+    [
+        ["0", "1"],
+        ["2", "3"],
+        ["4", "5"],
+    ],
 ]
 '''
 # This function will recieve a list of json scenarios and
@@ -396,17 +403,27 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
     curr_survey = Survey(prompt=prompt, desc=desc, user=user)
     curr_survey.save()
+    scenarios = 0
 
-    for scenario in survey_data:
-
+    for scenario in survey_data[0]:
+        
         curr_scenario = Scenario()
         curr_scenario.save()
 
+        
         person_count = 1
+        scenarios += 1
 
         for option in scenario:
-
+            
             curr_option = Option(name="Person " + str(person_count))
+            #curr_option.save()
+
+            # Saves option scores
+            curr_score = SingleResponse(value=survey_data[1][(int(person_count/2))][int((person_count-1)%2)])
+            curr_score.save()
+
+            curr_option.score = curr_score
             curr_option.save()
 
             person_count += 1
@@ -419,9 +436,6 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
                 curr_option.attributes.add(curr_attribute)
                 curr_option.save()
-
-                curr_survey.attributes.add(curr_attribute)
-                curr_survey.save()
 
             curr_scenario.options.add(curr_option)
             curr_scenario.save()
