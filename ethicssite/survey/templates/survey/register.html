@@ -2,52 +2,67 @@
 
 {% block content %}
 
-<h2>Register</h2>
+<div style="height:100%;width:100%;display:block;text-align:center;position:relative;top:42px;">
+    <h2>Register</h2>
 
-{% if registered %}
-Thank you for registering! Please check your email to activate your account.
-<a href="/">Return to the homepage.</a><br />
-{% else %}
-<form method="POST" action="/register">
-    {% csrf_token %}
-    <fieldset class="form-group">
-        <label for="email">Email</label>
-        <input type="text" class="form-control" id="reg_email" name="email" placeholder="Enter Email" value="" size="50" autofocus />
-        <small class="text-muted">We will only use this to send notifications. We will never share your information with anyone else.</small>
-    </fieldset>
-    
-    <fieldset class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="reg_username" name="username" placeholder="Enter Username" value="" size="50" />  
-    </fieldset>
-    
-    <fieldset class="form-group">
-        <label for="password1">Password</label> 
-        <input type="password" class="form-control" id="reg_password" name="password1" placeholder="Password" value="" size="50" />
-    </fieldset>
+    {% if registered %}
+    Thank you for registering! Please check your email to activate your account.
+    <a href="/">Return to the homepage.</a><br />
+    {% else %}
 
-    <fieldset class="form-group">
-        <label for="password2">Confirm Password</label> 
-        <input type="password" class="form-control" id="reg_password" name="password2" placeholder="Password" value="" size="50" />
-    </fieldset>
+    <form method="POST" action="/register"
+        style="display: inline-block;margin-left:auto;margin-right:auto;text-align:center;margin-top:20px;">
+        {% csrf_token %}
 
-    {% if form.errors %}
+        <fieldset class="form-group" style="text-align:left">
+            <label for="email">Email</label>
+            <input class="form-control" id="reg_email" name="email" placeholder="Enter your email" value="" size="50"
+                autofocus />
+        </fieldset>
+
+        <fieldset class="form-group" style="text-align:left">
+            <label for="username">Username</label>
+            <input class="form-control" id="reg_username" name="username" placeholder="Enter your username" value=""
+                size="50" />
+        </fieldset>
+
+        <fieldset class="form-group" style="text-align:left">
+            <label for="password1">Password</label>
+            <input type="password" class="form-control" id="reg_password" name="password1"
+                placeholder="Enter your password" value="" size="50" />
+        </fieldset>
+
+        <fieldset class="form-group " style="text-align:left">
+            <label for="password2">Confirm Password</label>
+            <input type="password" class="form-control" id="reg_password" name="password2"
+                placeholder="Confirm your password" value="" size="50" />
+        </fieldset>
+
+        {% if form.errors %}
         {% for field in form %}
-            {% for error in field.errors %}
-                <div class="alert alert-danger">
-                    <strong>{{ error|escape }}</strong>
-                </div>
-            {% endfor %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+        {% endfor %}
         {% endfor %}
         {% for error in form.non_field_errors %}
-            <div class="alert alert-danger">
-                <strong>{{ error|escape }}</strong>
-            </div>
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
         {% endfor %}
-    {% endif %}
+        {% endif %}
 
-    <input type="submit" value='Register'>
-</form>
+        <button type="submit" style="margin-top:28px;height:36px;width:72px;">Register</button>
+    </form>
+    <br /><br /><br />
+    <small class="text-muted" style="width:1px;">We will only use this to send
+        notifications. We will never share
+        your information
+        with
+        anyone else.
+    </small>
+</div>
 
 {% endif %}
 
