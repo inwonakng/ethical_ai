@@ -10,7 +10,7 @@ from ..models import *
 
 
 class Generator():
-    def __init__(self, adaptive=False, rule={}, rule_model=None, plain_text_scenarios=None):
+    def __init__(self, rule_model, adaptive=False, plain_text_scenarios=None):
 
         # assign attributes
         self.adaptive = adaptive
@@ -24,18 +24,12 @@ class Generator():
 
         # index bound of collection that still hasn't been picked
         # [yet to pick elements, hat, already picked]
-        self.hat = len(plain_text_scenarios) - 1
+        if self.plain_text_scenarios:
+            self.hat = len(plain_text_scenarios) - 1
+            # if plain_text_scenarios is not None, then use this to get scenarios.
+            return
 
-        # if plain_text_scenarios is not None, then use this to get scenarios.
-        return
-
-        # if rule dictionary (passed in) is empty
-        if len(rule) == 0:
-
-            # if rule_model is a RuleSet model AND the model is not empty
-            if (type(rule_model) == RuleSet) and (len(rule_model.object_form()) > 0):
-                rule = rule_model.object_form()
-                print('i am using model!!!')
+        rule = rule_model.object_form()
 
             # if rule model is empty
             # else:
@@ -79,7 +73,7 @@ class Generator():
         '''
 
         # Random pick from hat if plain_text_scenarios is not None
-        if not self.plain_text_scenarios == None:
+        if not self.plain_text_scenarios:
             if self.hat == -1:
                 self.hat = len(self.plain_text_scenarios) - 1
             ridx = randint(0, self.hat)
