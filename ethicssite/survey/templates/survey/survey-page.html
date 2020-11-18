@@ -15,8 +15,6 @@
     <a id="parent_id" style="display:none">{{parent_id}}</a>
     <div id="question">
       <p id="prompt">Prompt</p>
-      <button id="prev" class="action-btn" onclick="prev()">Prev</button>
-      <button id="next" class="action-btn" onclick="next()">Next</button>
       <div id="survey"></div>
 
       <p>Scores: </p>
@@ -45,6 +43,8 @@
         <hr class = "head_hr"></hr>
       </div>
     </div>
+    <button id="prev" class="action-btn" onclick="prev()">Prev</button>
+    <button id="next" class="action-btn" onclick="next()">Next</button>
     {% comment %} <form action='/submitsurvey/' method="POST"> {% endcomment %}
       <button id = "submit" onclick="submitResult()" style="display: none; position: absolute; right: 0px;">Submit</button>
     {% comment %} </form> {% endcomment %}
