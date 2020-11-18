@@ -12,8 +12,6 @@ TO CREATE A USER FOR TESTING:
 '''
 
 user = User.objects.all()[0]
-# user.user_id = 'ddkadfjviasdl'
-# user.save()
 rule = yaml.safe_load(
         open(settings.BASE_DIR+'/survey/generation/rule/rule.yaml', 'r'))
 

@@ -1,10 +1,28 @@
 # Ethical AI Platform
 
-# Todo:
+# Development setup
+- migrate the latest model changes to the database by running the following commands
 
-- Create workflow
-- Discuss front-end choices
-- Start migrating the code to this project
+```bash
+python manage.py makemigrations
+python manage.py migrate
+``` 
+- If you run in to errors, either go in the docker shell or command line and run the following query to reset the database
+
+```sql
+DROP DATABASE mysqldb; CREATE DATABASE mysqldb;
+```
+
+- After you migrate, create a user in the database by running the app and going to \register
+- Once you create a user, run the django shell in order to populate the database
+
+```bash
+python manage.py shell
+```
+
+- Then copy and run the code in defulat_database.py in the repo's root folder
+- Now you should have the current setup for testing.
+
 
 # Installation
 
