@@ -5,6 +5,12 @@ from django.conf import settings
 
 # placeholder user
 
+'''
+TO CREATE A USER FOR TESTING:
+1. go to the app's /register endpoint
+2. register a user
+'''
+
 user = User.objects.all()[0]
 # user.user_id = 'ddkadfjviasdl'
 # user.save()
