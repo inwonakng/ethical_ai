@@ -38,21 +38,6 @@
                 placeholder="Confirm your password" value="" size="50" />
         </fieldset>
 
-        {% if form.errors %}
-        {% for field in form %}
-        {% for error in field.errors %}
-        <div class="alert alert-danger">
-            <strong>{{ error|escape }}</strong>
-        </div>
-        {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-        <div class="alert alert-danger">
-            <strong>{{ error|escape }}</strong>
-        </div>
-        {% endfor %}
-        {% endif %}
-
         <button type="submit" style="margin-top:28px;height:36px;width:72px;">Register</button>
     </form>
     <br /><br /><br />
