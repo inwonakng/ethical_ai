@@ -118,16 +118,14 @@ def load_survey(request,parent_id):
     # empty for now
     survey_info = {'parent_id':parent_id}
 
-    # check = SurveyGenerator.objects.filter(rule_id = parent_id)
-    # if not check: build_generator(RuleSet.objects.get(id=parent_id))
-    
-    
+    check = SurveyGenerator.objects.filter(rule_id = parent_id)
+    if not check: build_generator(RuleSet.objects.get(id=parent_id))
     
     # hardcoded!!!!!
     # grabbing default rule
-    rule = RuleSet.objects.all()[0]
-    check = SurveyGenerator.objects.filter(rule_id = rule.id)
-    if not check: build_generator(rule)
+    # rule = RuleSet.objects.all()[0]
+    # check = SurveyGenerator.objects.filter(rule_id = rule.id)
+    # if not check: build_generator(rule)
 
     # survey_info.update(csrf(request))
     return render(request,'survey/survey-page.html',survey_info)
@@ -139,9 +137,9 @@ def get_scenario(request,parent_id):
         combos = request.POST['combo_count']
 
     # grabbing the sample json
-    # story_gen = SurveyGenerator.objects.get(rule_id=parent_id)
+    story_gen = SurveyGenerator.objects.get(rule_id=parent_id)
 
-    story_gen = SurveyGenerator.objects.get(rule_id=RuleSet.objects.all()[0].id)
+    # story_gen = SurveyGenerator.objects.get(rule_id=RuleSet.objects.all()[0].id)
 
     ss = story_gen.get_scenario()
     survey_information = json.dumps(ss)
