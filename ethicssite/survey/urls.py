@@ -1,10 +1,12 @@
 from django.urls import path
+from django.conf.urls import url
 from . import views
 app_name = 'survey'
 urlpatterns = [
     # this path is for mturk, where the random survey would be
     path('',views.IndexView.as_view(),name='index'),
     path('register', views.register, name='register'),
+    url(r'^register/confirm/(?P<userid>\w+)/$', views.confirm_user, name='confirm_user'),
     path('login', views.user_login, name='login'),
     path('logout', views.user_logout, name='logout'),
     path('rules',views.rules_view,name='rules'),

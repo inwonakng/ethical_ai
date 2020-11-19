@@ -1,8 +1,10 @@
 import json
+from django import forms
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.contrib.auth.models import User
 from django_mysql.models import JSONField
 from random import sample
@@ -19,6 +21,36 @@ class UserProfile(models.Model):
 
     # TODO: fill other useful fields here as needed
     # current_survey = models.OneToOneField('Survey', default=1)
+
+class UserForm(forms.ModelForm):
+    """UserForm is the form for user registration
+    """
+    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput())
+    password2 = forms.CharField(label=_("Confirm Password"), widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ('username', 'email',)
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        # will raise a ValidationError if email is invalid
+        validate_email(email)
+        return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("The two passwords do not match", 'password_mismatch')
+        return password2
+
+    def save(self, commit=True):
+        user = super(UserForm, self).save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
 
 class Dict(models.Model):
     json = JSONField()
@@ -333,6 +365,15 @@ Test scenario example:
             "survival without": "30%",
             "survival difference": "58%",
             },
+            {
+            "age": "23",
+            "health": "moderate health problems",
+            "gender": "male",
+            "income level": "high",
+            "number of dependents": "0",
+            "survival without": "30%",
+            "survival difference": "58%",
+            },
         ],
         [
             {
@@ -356,31 +397,42 @@ Test scenario example:
         ],
     ],
     [
-        ["0", "0"],
-        ["0", "0"],
-        ["0", "0"],
-    ]
+        ["0", "1"],
+        ["2", "3", "5"],
+        ["4", "5"],
+    ],
 ]
 '''
 # This function will recieve a list of json scenarios and
 # load them into Django models.
 
 
-def json_to_survey(survey_data, prompt='empty', desc='empty'):
+def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
-    curr_survey = Survey(prompt=prompt, desc=desc)
+    curr_survey = Survey(prompt=prompt, desc=desc, user=user)
     curr_survey.save()
+    scenarios = 0
 
     for scenario in survey_data[0]:
-
+        
         curr_scenario = Scenario()
         curr_scenario.save()
 
+        
         person_count = 1
+        scenarios += 1
 
         for option in scenario:
-
+            
             curr_option = Option(name="Person " + str(person_count))
+            #curr_option.save()
+
+            # Saves option scores
+            print(len(scenario))
+            curr_score = SingleResponse(value=survey_data[1][(int(person_count/2))][int((person_count-1)%len(scenario))])
+            curr_score.save()
+
+            curr_option.score = curr_score
             curr_option.save()
 
             person_count += 1
@@ -393,9 +445,6 @@ def json_to_survey(survey_data, prompt='empty', desc='empty'):
 
                 curr_option.attributes.add(curr_attribute)
                 curr_option.save()
-
-                curr_survey.attributes.add(curr_attribute)
-                curr_survey.save()
 
             curr_scenario.options.add(curr_option)
             curr_scenario.save()
