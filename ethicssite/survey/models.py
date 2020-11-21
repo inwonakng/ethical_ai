@@ -5,6 +5,9 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
+class Custom_rule(models.Model):
+    texta = models.CharField(max_length=50, null=False, default='');
+
 '''Survey models sections start here'''
 # Question model
 @python_2_unicode_compatible
@@ -145,8 +148,17 @@ class ListCateg(models.Model):
             for c in self.choices.all()}
         return [self.name,r]
 
+    def object_form_choices(self):
+        l = [];
+        for c in self.choices.all():
+            l.append([c.object_form()[0],c.object_form()[1]])
+        return l
+
     def __str__(self):
         return json.dumps(self.object_form())
+
+    def get_id(self):
+        return self.id
 
 # Rule set choice model
 class RuleSetChoice(models.Model):

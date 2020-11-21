@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest, HttpResponseServerError
 from .generation.Generator import Generator
 from django.shortcuts import render
@@ -10,13 +10,33 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
+def lookup_view(request):
+    queryset = ListCateg.objects.all()
+    context = {
+        "obj_list":queryset
+    }
+    return render(request, "survey/lookup.html", context);
+
+def dynamic_lookup_view(request,id):
+    obj = ListCateg.objects.get(id=id)
+    if request.method == "POST":
+        obj.delete()
+        return redirect("./")
+    context = {
+        "obj":obj
+    }
+    return render(request, "survey/delete.html", context);
+
+
 
 def rules_view(request):
     if request.method == "POST":
         print("i'm in post request")
-        print(request.POST);
+        print(request.POST)
         print(request.POST.getlist('rule_name'))
         print(request.POST.getlist('rule_set'))
+        print(request.POST.getlist('custom'));
+
         rule_names = request.POST.getlist('rule_name')
         rule_sets = request.POST.getlist('rule_set')
 
@@ -51,7 +71,9 @@ def rules_view(request):
 
         # rule_name = request.POST.get('rule_name')
         # rule_type = request.POST.get('rule_type')
-        # RuleForm.objects.create(rule=rule_name,type=rule_type)
+        custom_rules = request.POST.getlist('custom');
+        for custom_rule in custom_rules:
+            Custom_rule.objects.create(texta=custom_rule)
 
     context = {}
     return render(request, "survey/rules.html", context)

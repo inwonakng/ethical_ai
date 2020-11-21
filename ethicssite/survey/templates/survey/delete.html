@@ -1,0 +1,31 @@
+{% extends 'survey/base.html' %}
+{% block content %}
+
+<div class = "bg">
+  <div class = "col2">
+    <div class = 'rules_container'>
+      <div class = "prompt">
+        <div class="title">Rules</div>
+        <underline></underline>
+      </div>
+      <p>You are going to delete rule <hl>{{obj.name}}</hl>.</p>
+      <p> Possible option:
+      {% for list in obj.object_form_choices %}
+        {{list.1}},
+      {% endfor %}
+      </p>
+      <p>It can not be recovered. Are you sure?</p>
+      <form method="POST">{% csrf_token %}
+        <input type="submit" value="Delete" id="delete_rule">
+      </form>
+      <form method="GET" action="/rules/lookup" id="delete_rule_cancel">
+        <input type="submit" value="Cancel">
+      </form>
+      <br><br>
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

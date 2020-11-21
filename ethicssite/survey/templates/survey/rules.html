@@ -1,94 +1,109 @@
 {% extends 'survey/base.html' %}
 {% block content %}
 
-<div class = "col1">
-  <h1 >Side Bar</h1>
-</div>
+<div class = "bg">
+  <div class = "col2">
+    <div class = 'rules_container'>
+      <div class = "prompt">
+        <div class="title">Rules</div>
+        <underline></underline>
+      </div>
 
-<vl></vl>
+      <div class = "options">
+        <form action="/rules/lookup"><input type="submit" value="View existing rules"></form>
+        <p>Would you like to set your own options or generate them?</p>
+        <button id = "generate_rules" type="button">Generate options</button>
+        <button id = "set_rules" type="button">Set my own options</button>
 
-<div class = "col2">
-  <div class = 'create_rules'>
-    <div class = "prompt">
-      <h1 id="prompt">Prompt</h1>
+        <form action="/rules" method='POST'>{% csrf_token %}
+          <div id = "container1">
+
+            <!-- <div class = "rule_card card">
+              <label>Rule name:</label>
+              <input type="text" id="attribute_name" placeholder="Rule name">
+              <br>
+              <label>Rule type:</label>
+              <input type="text" id="attribute_type" placeholder="Rule type">
+              <div id="slider">
+                <div id="custom-handle1" class="ui-slider-handle"></div>
+                <div id="custom-handle2" class="ui-slider-handle"></div>
+              </div>
+            </div> -->
+
+
+          </div>
+          <div id = "container2">
+
+            <!-- <div class = "custom_rule_card">
+              <p>Scenario</p>
+              <div class = "custom_option_container">
+                <div class = "custom_option_card">
+                  <textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea>
+                </div>
+              </div>
+
+              <div class = "add_option custom_option_card">
+                <p class="p_card_custom_option">Add more options</p>
+              </div>
+              <br/>
+            </div> -->
+
+
+
+          </div>
+          <div class="add_rules_card card"><p class="p_card">Add more rules</p></div>
+          <div class="custom_rules_card card"><p class="p_card">Add more rules</p></div>
+
+          <p id="bad_text">Forbidden Combinations</p>
+          <div id = "container3">
+
+            <!-- <div class = "card">
+              <label>Rule:</label>
+              <input type="text" id="attribute_name" placeholder="Rule name">
+              <br>
+              <label>Bad value:</label>
+              <input type="text" id="attribute_type" placeholder="Bad value">
+            </div> -->
+
+          </div>
+
+          <div id = "container4">
+
+            <!-- <div class = "card">
+              <label>Rule:</label>
+              <input type="text" id="attribute_name" placeholder="Rule name">
+              <br>
+              <label>Bad value:</label>
+              <input type="text" id="attribute_type" placeholder="Bad value">
+            </div> -->
+
+          </div>
+          <div class="bad_cob1 card"><p class="p_card">Set a new one</p></div>
+          <div class="bad_cob2 card"><p class="p_card">Set a new one</p></div>
+          <input type="submit" value="Save" />
+        </form>
+
+
+        <br>
+        <form action="/loadsurvey">
+          <input type="submit" value="Continue" />
+        </form>
+
+      </div>
+
+
+      <!-- <div class = "options">
+        <form action="." method='POST'>{% csrf_token %}
+          <div class="rule_form">
+            <input type="text" name="rule_name" placeholder="Your rules">
+            <input type="text" name="rule_type" placeholder="Type of your rule"><br>
+          </div>
+          <input type="submit" value="Save"><br>
+        </form>
+
+        <div class="add_one"><p>Set a new one</p></div>
+      </div> -->
     </div>
-
-    <div class = "options">
-      <p>Would you like to set your own options or generate them?</p>
-      <button id = "generate_rules" type="button">Generate options</button>
-      <button id = "set_rules" type="button">Set my own options</button>
-      <form action="/rules" method='POST'>{% csrf_token %}
-        <div id = "container1">
-
-          <!-- <div class = "rule_card card">
-            <label>Rule name:</label>
-            <input type="text" id="attribute_name" placeholder="Rule name">
-            <br>
-            <label>Rule type:</label>
-            <input type="text" id="attribute_type" placeholder="Rule type">
-          </div> -->
-          
-
-        </div>
-        <div id = "container2">
-
-          <!-- <div class = "rule_card card">
-            <textarea id="custom_rule" placeholder="Custom rule"></textarea>
-          </div> -->
-
-        </div>
-        <div class="add_rules_card card"><p class="p_card">Add more rules</p></div>
-        <div class="custom_rules_card card"><p class="p_card">Add more rules</p></div>
-
-        <p id="bad_text">Forbidden Combinations</p>
-        <div id = "container3">
-
-          <!-- <div class = "card">
-            <label>Rule:</label>
-            <input type="text" id="attribute_name" placeholder="Rule name">
-            <br>
-            <label>Bad value:</label>
-            <input type="text" id="attribute_type" placeholder="Bad value">
-          </div> -->
-
-        </div>
-
-        <div id = "container4">
-
-          <!-- <div class = "card">
-            <label>Rule:</label>
-            <input type="text" id="attribute_name" placeholder="Rule name">
-            <br>
-            <label>Bad value:</label>
-            <input type="text" id="attribute_type" placeholder="Bad value">
-          </div> -->
-
-        </div>
-        <div class="bad_cob1 card"><p class="p_card">Set a new one</p></div>
-        <div class="bad_cob2 card"><p class="p_card">Set a new one</p></div>
-        <input type="submit" value="Save" />
-      </form>
-
-
-      <br>
-      <form action="loadsurvey">
-        <input type="submit" value="Continue" />
-      </form>
-
-    </div>
-
-
-    <!-- <div class = "options">
-      <form action="." method='POST'>{% csrf_token %}
-        <div class="rule_form">
-          <input type="text" name="rule_name" placeholder="Your rules">
-          <input type="text" name="rule_type" placeholder="Type of your rule"><br>
-        </div>
-        <input type="submit" value="Save"><br>
-      </form>
-
-      <div class="add_one"><p>Set a new one</p></div>
-    </div> -->
   </div>
 </div>
 
