@@ -71,14 +71,17 @@ def user_login(request):
             # TODO: check if user.is_active after setting up email confirmation
             if user.is_active:
                 login(request, user)
-
+                request.session['is_login'] = True
+                request.session['user_name'] = username
+                user_id = User.objects.filter(username = username).values('id').first()
+                request.session['user_id'] = user_id['id']
                 # redirect to previous page if sent from @login_required
                 # else redirect to index
                 if request.GET.get('next', False):
                     # TODO: fix, this redirecting doesn't seem to ever work
                     redirect(request.GET.get('next'))
                 else:
-                    return redirect('/')
+                    return redirect('/')   
             else:
                 # TODO: figure out how to actually determine if a user has confirmed email, inactive users don't show up in authenticate()
                 # resend activation email
@@ -92,8 +95,10 @@ def user_login(request):
         return render(request, 'survey/login.html', {})
 
 def user_logout(request):
+    if not request.session.get('is_login',None):
+        return redirect("/")
     logout(request)
-
+    request.session.flush()
     return redirect('/')
 
 def rules_view(request):
@@ -180,8 +185,10 @@ def get_scenario(request,parent_id):
 def submit_survey(request):
     if request.method == 'POST':
         # for now not storing scores
+        print(request.body)
         print('scenario:',request.body[0])
         print('scores:',request.body[1])
+        print('asd', request.body[10])
 
         #Submits the json
         json_to_survey(request.body, request.user)
@@ -215,6 +222,11 @@ def rules_save(request):
     json_to_ruleset(json_rules_string, request.user)
     HttpResponse(status=201)
 
-def my_polls(request):
-    rulesets = {'a':'b'}
-    return render(request, 'my_polls.html', rulesets)
+@login_required
+def my_polls(request,parent_id):
+    #the list of rule sets by the parent_id
+    #besides the features and its values in each scenario, their should also be values
+    #including poll create date and number of particiants
+    rulesets = RuleSet.objects.get(user_id = parent_id)
+
+    return render(request, 'my_polls.html', {'asd':[1,2,3]})

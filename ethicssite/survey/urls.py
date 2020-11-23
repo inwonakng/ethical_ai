@@ -13,9 +13,9 @@ urlpatterns = [
     path('loadsurvey/<int:parent_id>', views.load_survey, name='loadsurvey'),
     path('getscenario/<int:parent_id>', views.get_scenario, name='getscenario'),
     path('rulessample',views.rules_explain,name='rulessample'),
-    path('submitsurvey', views.submit_survey, name="submitsurvey"),
+    path('loadsurvey/submitsurvey', views.submit_survey, name="submitsurvey"),
     path('surveyresult', views.survey_result, name="surveyresult"),
-    path('mypolls', views.my_polls, name='mypolls'),
+    path('mypolls/<parent_id>', views.my_polls, name='mypolls'),
     path('<random>', views.unknown_path),
     
 ]

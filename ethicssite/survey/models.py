@@ -412,7 +412,6 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
     curr_survey = Survey(prompt=prompt, desc=desc, user=user)
     curr_survey.save()
     scenarios = 0
-
     for scenario in survey_data[0]:
         
         curr_scenario = Scenario()
