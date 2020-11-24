@@ -14,6 +14,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
+def idx_view(request):
+    context = {}
+    return render(request, "survey/idx.html", context)
+
 def register(request):
     registered = False
     if request.method == "POST":
@@ -55,7 +59,7 @@ def confirm_user(request, userid):
         user.is_active = True
         user.save()
         login(request, user)
-    
+
     # TODO: add link expiration page / some error page
 
     # TODO: create a successful activation page?
@@ -114,10 +118,10 @@ def rules_view(request):
 class IndexView(views.generic.ListView):
     """
     Define homepage view, inheriting ListView class, which specifies a context variable.
-    
+
     Note that login is required to view the items on the page.
     """
-    
+
     template_name = 'survey/index.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -144,7 +148,7 @@ def load_survey(request,parent_id):
 
     check = SurveyGenerator.objects.filter(rule_id = parent_id)
     if not check: build_generator(RuleSet.objects.get(id=parent_id))
-    
+
     # hardcoded!!!!!
     # grabbing default rule
     # rule = RuleSet.objects.all()[0]
@@ -191,7 +195,7 @@ def submit_survey(request):
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')
-    
+
 def survey_result(request):
     return render(request, 'survey/surveyresult.html')
 
