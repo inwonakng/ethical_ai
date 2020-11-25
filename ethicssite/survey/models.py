@@ -146,7 +146,6 @@ class Survey(models.Model):
     desc = models.TextField(null=False, blank=False, default='')
     date = models.DateTimeField(default=timezone.now)
     scenarios = models.ManyToManyField('Scenario')
-    # attributes = models.ManyToManyField('Attribute')
     ruleset_id = models.IntegerField(null=False, default=2)
     feature_scores = models.ManyToManyField('FeatureScore')
     # user taking this survey
@@ -168,12 +167,6 @@ class Option(models.Model):
 
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
-
-
-class Attribute(models.Model):
-    name = models.CharField(max_length=50, null=False, default='')
-    value = models.CharField(max_length=50, null=False, default='')
-
 
 '''Survey models sections end here'''
 
