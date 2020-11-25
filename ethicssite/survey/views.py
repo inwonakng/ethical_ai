@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpRequest, HttpResponseServerError, Http
 from .generation.Generator import Generator
 from django.shortcuts import render
 import yaml
+import json
 from django.conf import settings
 from .models import *
 from django import views
@@ -180,6 +181,52 @@ def get_scenario(request,parent_id):
     # and press ctrl+shift+i and switch to console tab,
     # you can see the json object printed on the console
 
+# Save individual scenario
+def save_scenario(request):
+    if request.method == "POST":
+        # ruleset id
+        ruleset_id = request.post['ruleset_id']
+
+        # prompt & description
+        prompt = request.post['prompt']
+        prompt_description = request.post['description']
+
+        # not too sure how I'd take in a dictionary, but the idea is I somehow DO get a dictionary (combo stuff)
+        attribute_dictionary = request.post['dictionary']
+        json_version = json.loads(attribute_dictionary)
+
+        # slider score
+        scenario_score = request.post['score']
+
+        individual_scenario = Scenario()
+        individual_scenario.save()
+        individual_scenario.options.add(name=prompt, text=prompt_description)
+
+        # saving each attribute (from dictionary)
+        for key,value in json_version:
+            individual_scenario.options.attributes.add(name=key, value=value)
+
+        individual_scenario.options.score.add(value=scenario_score)
+
+        '''
+            so in theory, we're taking in scenarios and saving them but we have to
+            assign them a ruleset id so we can create a jumbo survey @ end
+        '''
+
+        # so now figure out how to take this scenario and shove it to a tempClass
+
+# From gigantic list of scenarios create a Survey object
+def create_survey(request):
+    pass
+    if request.method == "POST":
+        # grab user id, session id, and ruleset id
+        # grab all objects of TempScenario
+        # filter
+        # create big survey
+        # done!
+
+
+
 # @csrf_exempt
 @login_required
 def submit_survey(request):
@@ -194,7 +241,6 @@ def submit_survey(request):
         json_to_survey(request.body, request.user)
         # print(json.load(request.body))
         return redirect("survey:surveyresult")
-
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')

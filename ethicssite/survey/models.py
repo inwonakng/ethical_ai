@@ -147,7 +147,6 @@ class FeatureScore(models.Model):
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
 
-
 class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute', related_name='combo_attributes')
@@ -157,17 +156,33 @@ class Option(models.Model):
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
 
-
 class Attribute(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     value = models.CharField(max_length=50, null=False, default='')
 
+# Holds ruleset ID and scenario model
+'''
+With this class, we can create a container to hold all scenarios
+to create a survey then when the survey is created, destroy the model
+'''
+class TempScenario(models.Model):
+    user_id = models.CharField(null=False, blank=False)
+    session_id = models.CharField(null=False, blank=False)
+    ruleset_id = models.CharField(null=False, blank=False)
+    scenario_model = models.ForeignKey(Scenario)
+
+
+"""
+TODO
+Userid and ruleset id parent id of survey
+and survey id would be created @ end of survey model
+session id
+view function should take endpoint of rule id wtf
+"""
 
 '''Survey models sections end here'''
 
 # Rule model
-
-
 class RuleSet(models.Model):
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
