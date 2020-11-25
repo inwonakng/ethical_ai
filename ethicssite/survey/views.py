@@ -184,8 +184,11 @@ def get_scenario(request,parent_id):
 # Save individual scenario
 def save_scenario(request):
     if request.method == "POST":
-        # ruleset id
+        # user id, session id, ruleset id
+        user_id = request.post['user_id']
+        session_id = request.post['session_id']
         ruleset_id = request.post['ruleset_id']
+        
 
         # prompt & description
         prompt = request.post['prompt']
@@ -208,6 +211,14 @@ def save_scenario(request):
 
         individual_scenario.options.score.add(value=scenario_score)
 
+        # at this point, we have successfully created an individual_scenario object
+
+        # now send that data to TempScenarios
+        all_scenarios = TempScenarios(user_id=user_id, session_id=session_id, ruleset_id=ruleset_id)
+        all_scenarios.save()
+        all_scenarios.
+
+
         '''
             so in theory, we're taking in scenarios and saving them but we have to
             assign them a ruleset id so we can create a jumbo survey @ end
@@ -219,11 +230,18 @@ def save_scenario(request):
 def create_survey(request):
     pass
     if request.method == "POST":
+        user_id = request.post['user_id']
+        session_id = request.post['session_id']
+        ruleset_id = request.post['ruleset_id']
         # grab user id, session id, and ruleset id
-        # grab all objects of TempScenario
+        # grab all objects of TempScenarios
         # filter
         # create big survey
         # done!
+
+        # filter for all the scenarios that relate to the ruleset id (along with other ids too)
+        all_scenarios = TempScenarios.objects.filter(user_id=user_id).filter(session_id=session_id).filter(ruleset_id=ruleset_id)
+
 
 
 

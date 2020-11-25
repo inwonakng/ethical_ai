@@ -165,7 +165,7 @@ class Attribute(models.Model):
 With this class, we can create a container to hold all scenarios
 to create a survey then when the survey is created, destroy the model
 '''
-class TempScenario(models.Model):
+class TempScenarios(models.Model):
     user_id = models.CharField(null=False, blank=False)
     session_id = models.CharField(null=False, blank=False)
     ruleset_id = models.CharField(null=False, blank=False)
