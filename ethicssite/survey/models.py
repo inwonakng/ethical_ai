@@ -126,8 +126,20 @@ def build_generator(rule):
 
 
 
-
 '''Survey models sections start here'''
+
+class RuleForm (models.Model):
+    rule = models.TextField()
+    type = models.TextField()
+
+# Question model
+@python_2_unicode_compatible
+# Model for a generic attribute for some combination (e.g. age or health)
+class Attribute(models.Model):
+    # attribute name (e.g. age or health)
+    name = models.CharField(max_length=50, null=False, default='')
+    # value for the attribute
+    value = models.CharField(max_length=50, null=False, default='')
 
 class Survey(models.Model):
     prompt = models.CharField(max_length=200, null=False, default='')
@@ -237,7 +249,7 @@ class BadSubCombo(models.Model):
     def object_form(self):
         return (self.categ,
                 {key: value
-                 for (key, value) in
+                for (key, value) in
                     [obj.object_form() for obj in self.badcombo_elems.all()]})
 
     def __str__(self):
@@ -320,7 +332,7 @@ ex)
 ss = Survey(prompt='test',desc='hi')
 ss.save()
 ss.create_survey([[{'alt1':2,'alt2':3}]])
-After this, ss will be the complete survey object 
+After this, ss will be the complete survey object
 (does not carry user scores yet)
 
 Test scenario example:

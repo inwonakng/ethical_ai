@@ -102,16 +102,13 @@ def user_logout(request):
     return redirect('/')
 
 def rules_view(request):
-    # if request.method == "POST":
-    #     print(request.POST.getlist('rule_name'))
-    #     print(request.POST.getlist('rule_type'))
-    #     rule_names = request.POST.getlist('rule_name')
-    #     rule_types = request.POST.getlist('rule_type')
-    #     for i,rule_name in enumerate(rule_names):
-    #         RuleForm.objects.create(rule=rule_name,type=rule_types[i])
-    #     # rule_name = request.POST.get('rule_name')
-    #     # rule_type = request.POST.get('rule_type')
-    #     # RuleForm.objects.create(rule=rule_name,type=rule_type)
+    if request.method == "POST":
+        print(request.POST.getlist('rule_name'))
+        print(request.POST.getlist('rule_type'))
+        rule_names = request.POST.getlist('rule_name')
+        rule_types = request.POST.getlist('rule_type')
+        for i,rule_name in enumerate(rule_names):
+            RuleForm.objects.create(rule=rule_name,type=rule_types[i])
 
     context = {}
     return render(request, "survey/rules.html", context)
