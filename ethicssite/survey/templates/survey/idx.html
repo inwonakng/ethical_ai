@@ -1,6 +1,44 @@
 {% extends 'survey/my_base.html' %}
 
 {% block content %}
-<div class="consent"></div>
+<div class = "idx_pg">
 
+<form method="GET" action="/q1">
+  <div class="card card_one" onClick="javascript:this.parentNode.submit();">
+    {% load static %}
+    <div class="card_image" style="background-image: url({% static 'img/22780984.png' %})"></div>
+    <div class="card_catagory">
+      <h2>Group decision making</h2>
+      <p>Desc</p>
+    </div>
+    <div class="card_stats">
+      <div class="stat border">
+        Views
+      </div>
+      <div class="stat">
+        Answers
+      </div>
+    </div>
+  </div>
+</form>
+
+<form method="GET" action="/q2">
+  <div class="card card_two" onClick="javascript:this.parentNode.submit();">
+    <div class="card_image"></div>
+    <div class="card_catagory">
+      <h2>Moral Dilemmas</h2>
+      <p>Desc</p>
+    </div>
+    <div class="card_stats">
+      <div class="stat border">
+        Views
+      </div>
+      <div class="stat">
+        Answers
+      </div>
+    </div>
+  </div>
+</form>
+
+</div>
 {% endblock %}

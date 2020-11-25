@@ -5,6 +5,8 @@ app_name = 'survey'
 urlpatterns = [
     # this path is for mturk, where the random survey would be
     path('',views.idx_view,name='index'),
+    path('q1',views.desicion_questions_view),
+    path('q2',views.delima_questions_view),
     path('register', views.register, name='register'),
     url(r'^register/confirm/(?P<userid>\w+)/$', views.confirm_user, name='confirm_user'),
     path('login', views.user_login, name='login'),

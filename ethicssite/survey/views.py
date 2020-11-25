@@ -18,6 +18,15 @@ def idx_view(request):
     context = {}
     return render(request, "survey/idx.html", context)
 
+
+def delima_questions_view(request):
+    context = {}
+    return render(request, "survey/delima_questions.html", context)
+
+def desicion_questions_view(request):
+    context = {}
+    return render(request, "survey/desicion_questions.html", context)
+
 def register(request):
     registered = False
     if request.method == "POST":
