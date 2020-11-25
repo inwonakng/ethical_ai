@@ -158,12 +158,11 @@ class FeatureScore(models.Model):
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
 
-
 class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute', related_name='combo_attributes')
     text = models.CharField(max_length=50, null=False, default='')
-    score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE)
+    score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE,null=True)
 
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')

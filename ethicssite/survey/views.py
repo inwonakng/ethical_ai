@@ -168,6 +168,28 @@ def get_scenario(request,parent_id):
     # story_gen = SurveyGenerator.objects.get(rule_id=RuleSet.objects.all()[0].id)
 
     ss = story_gen.get_scenario()
+
+    '''
+    Example of how a scenario object is created from the json.
+    For @Taras, when you work on this, convert this function to return the model 
+    rather than the json, so that the template can unpack the model instance there. 
+    '''
+        
+    scen = Scenario()
+    scen.save()
+    for i,s in enumerate(ss):
+        op = Option()
+        op.name = 'Option '+ str(i)
+        op.save()
+        for k,v in s.items():
+            attr = Attribute()
+            attr.name = k
+            attr.value = v
+            attr.save()
+            op.attributes.add(attr)
+        op.save()
+        scen.options.add(op)
+
     survey_information = json.dumps(ss)
     # For frontend, check the html to
     # see how the object is grabbed.
