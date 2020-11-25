@@ -401,6 +401,15 @@ Test scenario example:
         ["2", "3", "5"],
         ["4", "5"],
     ],
+    [
+        { "key": "age", "value": "0"},
+        { "key": "gender", "value": "5"},
+        { "key": "health", "value": "3"},
+        { "key": "income level", "value": "6"},
+        { "key": "number of dependents", "value": "8"},
+        { "key": "survival without", "value": "2"},
+        { "key": "survival difference", "value": "9"},
+    ],
 ]
 '''
 # This function will recieve a list of json scenarios and
@@ -425,10 +434,8 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
         for option in scenario:
             
             curr_option = Option(name="Person " + str(person_count))
-            #curr_option.save()
 
             # Saves option scores
-            print(len(scenario))
             curr_score = SingleResponse(value=survey_data[1][(int(person_count/2))][int((person_count-1)%len(scenario))])
             curr_score.save()
 
@@ -451,6 +458,19 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
         curr_survey.scenarios.add(curr_scenario)
         curr_survey.save()
+
+    # loads feature scores into survey
+    for feature in survey_data[2]:
+        
+        curr_score = SingleResponse(value=feature["value"])
+        curr_score.save()
+
+        curr_feature = FeatureScore(name=feature["key"], score=curr_score)
+        curr_feature.save()
+
+        curr_survey.feature_scores.add(curr_feature)
+        curr_survey.save()
+    
 
     return curr_survey
 
