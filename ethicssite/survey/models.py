@@ -126,6 +126,9 @@ def build_generator(rule):
 
 
 
+class Custom_rule(models.Model):
+    texta = models.CharField(max_length=50, null=False, default='');
+
 '''Survey models sections start here'''
 
 class RuleForm (models.Model):
@@ -213,8 +216,8 @@ class RuleSet(models.Model):
         return bb
 
     def get_badcombos(self):
-        return {bc.object_form()[0]: bc.object_form()[1]
-                for bc in self.badcombos.all()}
+        return {bc.object_form()[0]:bc.object_form()[1]
+        for bc in self.badcombos.all()}
 
     def get_configs(self):
         return {
@@ -275,6 +278,12 @@ class ListCateg(models.Model):
              for c in self.choices.all()}
         return [self.name, r]
 
+    def object_form_choices(self):
+        l = [];
+        for c in self.choices.all():
+            l.append([c.object_form()[0],c.object_form()[1]])
+        return l
+
     def __str__(self):
         return json.dumps(self.object_form())
 
@@ -283,6 +292,8 @@ class ListCateg(models.Model):
         vals[self.name] = self.choices.get(index=idx).value
         return vals
 
+    def get_id(self):
+        return self.id
 
 # Rule set choice model
 class RuleSetChoice(models.Model):

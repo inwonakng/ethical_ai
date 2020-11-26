@@ -1,0 +1,32 @@
+{% extends 'survey/base.html' %}
+{% block content %}
+
+<div class = "bg">
+  <div class = "col2">
+    <div class = 'rules_container'>
+      <div class = "prompt">
+        <div class="title">Rules</div>
+        <underline></underline>
+      </div>
+      {% for instance in obj_list %}
+        <div class = "rule_card card">
+          <label>Rule name:</label>
+          {{ instance.object_form.0 }}
+          <br>
+          <label>Possible options:</label>
+          {% for list in instance.object_form_choices %}
+            {{list.1}}
+          {% endfor %}
+          <form action="/rules/lookup/{{instance.get_id}}"><input type="submit" value="Delete"></form>
+        </div>
+      {% empty %}
+        <p>No rules created.</p>
+      {% endfor %}
+      <form action="/rules"><input type="submit" value="Generate your Rules"></form>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

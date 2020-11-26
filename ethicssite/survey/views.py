@@ -1,5 +1,5 @@
-from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest, HttpResponseServerError, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from .generation.Generator import Generator
 from django.shortcuts import render
 import yaml
@@ -101,30 +101,87 @@ def user_logout(request):
     request.session.flush()
     return redirect('/')
 
+def lookup_view(request):
+    queryset = ListCateg.objects.all()
+    context = {
+        "obj_list":queryset
+    }
+    return render(request, "survey/lookup.html", context);
+
+def dynamic_lookup_view(request,id):
+    obj = ListCateg.objects.get(id=id)
+    if request.method == "POST":
+        obj.delete()
+        return redirect("./")
+    context = {
+        "obj":obj
+    }
+    return render(request, "survey/delete.html", context)
+
 def rules_view(request):
     if request.method == "POST":
+        print("i'm in post request")
+        print(request.POST)
         print(request.POST.getlist('rule_name'))
-        print(request.POST.getlist('rule_type'))
+        print(request.POST.getlist('rule_set'))
+        print(request.POST.getlist('custom'));
+
         rule_names = request.POST.getlist('rule_name')
-        rule_types = request.POST.getlist('rule_type')
+        rule_sets = request.POST.getlist('rule_set')
+
+        # rs = RuleSet()
+        # rs.save()
+        #
+        # ls = ListCateg(name="age")
+        # ls.save()
+        #
+        # rsc = RuleSetChoice(index=1,value="asdf")
+        # rsc.save()
+        #
+        # ls.choices.add(rsc)
+        # rs.choice_categs.add(ls)
+        rs = RuleSet()
+        rs.save()
         for i,rule_name in enumerate(rule_names):
-            RuleForm.objects.create(rule=rule_name,type=rule_types[i])
+            print(rule_name)
+            if rule_name:
+                ls = ListCateg(name=rule_name)
+                ls.save()
+                print(rule_sets[i].split(','))
+                rule_set = rule_sets[i].split(',')
+                for j,val in enumerate(rule_set):
+                    print(j,val)
+                    rsc = RuleSetChoice(index=j,value=val)
+                    rsc.save()
+                    ls.choices.add(rsc)
+                rs.choice_categs.add(ls)
+
+
+
+        # rule_name = request.POST.get('rule_name')
+        # rule_type = request.POST.get('rule_type')
+        custom_rules = request.POST.getlist('custom')
+        for custom_rule in custom_rules:
+            Custom_rule.objects.create(texta=custom_rule)
 
     context = {}
     return render(request, "survey/rules.html", context)
 
-class IndexView(views.generic.ListView):
-    """
-    Define homepage view, inheriting ListView class, which specifies a context variable.
-    
-    Note that login is required to view the items on the page.
-    """
-    
-    template_name = 'survey/index.html'
-    context_object_name = 'question_list'
-    def get_queryset(self):
-        """Override function in parent class and return all questions."""
-        return Survey.objects.all().order_by('-pub_date')
+def index_view(request):
+    return render(request,"survey/index.html",{})
+
+# class IndexView(views.generic.ListView):
+#     """
+#     Define homepage view, inheriting ListView class, which specifies a context variable.
+#
+#     Note that login is required to view the items on the page.
+#     """
+#
+#     template_name = 'survey/index.html'
+#     context_object_name = 'question_list'
+#     def get_queryset(self):
+#         """Override function in parent class and return all questions."""
+#         return Survey.objects.all().order_by('-pub_date')
 
 # Start survey
 
@@ -217,7 +274,7 @@ def submit_survey(request):
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')
-    
+
 def survey_result(request):
     return render(request, 'survey/surveyresult.html')
 
