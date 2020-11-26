@@ -119,51 +119,6 @@ def dynamic_lookup_view(request,id):
     return render(request, "survey/delete.html", context)
 
 def rules_view(request):
-    if request.method == "POST":
-        print("i'm in post request")
-        print(request.POST)
-        print(request.POST.getlist('rule_name'))
-        print(request.POST.getlist('rule_set'))
-        print(request.POST.getlist('custom'));
-
-        rule_names = request.POST.getlist('rule_name')
-        rule_sets = request.POST.getlist('rule_set')
-
-        # rs = RuleSet()
-        # rs.save()
-        #
-        # ls = ListCateg(name="age")
-        # ls.save()
-        #
-        # rsc = RuleSetChoice(index=1,value="asdf")
-        # rsc.save()
-        #
-        # ls.choices.add(rsc)
-        # rs.choice_categs.add(ls)
-        rs = RuleSet()
-        rs.save()
-        for i,rule_name in enumerate(rule_names):
-            print(rule_name)
-            if rule_name:
-                ls = ListCateg(name=rule_name)
-                ls.save()
-                print(rule_sets[i].split(','))
-                rule_set = rule_sets[i].split(',')
-                for j,val in enumerate(rule_set):
-                    print(j,val)
-                    rsc = RuleSetChoice(index=j,value=val)
-                    rsc.save()
-                    ls.choices.add(rsc)
-                rs.choice_categs.add(ls)
-
-
-
-        # rule_name = request.POST.get('rule_name')
-        # rule_type = request.POST.get('rule_type')
-        custom_rules = request.POST.getlist('custom')
-        for custom_rule in custom_rules:
-            Custom_rule.objects.create(texta=custom_rule)
-
     context = {}
     return render(request, "survey/rules.html", context)
 
@@ -286,8 +241,46 @@ def unknown_path(request, random):
 
 @login_required
 def save_rule(request):
+    
     if request.method != 'POST':
         return HttpResponse(status=400)
+    print("i'm in post request")
+    print(request.POST)
+    print(request.POST.getlist('rule_name'))
+    print(request.POST.getlist('rule_set'))
+    print(request.POST.getlist('custom'))
+    
+    '''
+    for now we are ignoring generatives!!
+    '''
+
+    rule_names = request.POST.getlist('rule_name')
+    rule_sets = request.POST.getlist('rule_set')
+    rule_type = request.POST.getlist('final_type')
+
+    rs = RuleSet()
+    userid = request.session['user_id']
+    rs.user = User.objects.get(id=userid)
+    rs.save()
+    for i,rule_name in enumerate(rule_names):
+        print(rule_name)
+        if rule_name:
+            ls = ListCateg(name=rule_name)
+            ls.save()
+            print(rule_sets[i].split(','))
+            rule_set = rule_sets[i].split(',')
+            for j,val in enumerate(rule_set):
+                print(j,val)
+                rsc = RuleSetChoice(index=j,value=val)
+                rsc.save()
+                ls.choices.add(rsc)
+            rs.choice_categs.add(ls)
+
+    # rule_name = request.POST.get('rule_name')
+    # rule_type = request.POST.get('rule_type')
+    custom_rules = request.POST.getlist('custom')
+    for custom_rule in custom_rules:
+        Custom_rule.objects.create(texta=custom_rule)
     json_data = json.loads(request.body)
     json_rules_string = ''
     try:

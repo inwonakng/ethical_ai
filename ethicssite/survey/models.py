@@ -188,6 +188,10 @@ class RuleSet(models.Model):
     # ruleset creator
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     generative = models.BooleanField(null=False, blank=False, default=False)
+    # this field is only populated if not generative
+
+    
+
     '''These accessor functions are for the generator to use'''
 
     def get_choicecategs(self):
@@ -520,7 +524,8 @@ def json_to_ruleset(d,user):
                 bad_combo.subcombos.add(
                     subcombo)
             rule_set.badcombos.add(bad_combo)
-    
+    else:
+
     rule_set.save()
     return rule_set
 

@@ -7,6 +7,7 @@ $(document).ready(() => {
     $("#container1").show();
     $(".custom_rules_card").hide();
     $(".add_rules_card").show();
+    $("#final_type").val('generate') 
 
     $("#bad_text").show();
     $("#container4").hide();
@@ -36,6 +37,7 @@ $(document).ready(() => {
   $('.custom_rules_card').on('click', event => {
     var structure = $('<div class = "custom_rule_card"><p>Scenario</p><div class = "custom_option_container"><div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div></div><div class = "add_option custom_option_card"><p class="p_card_custom_option">Add more options</p></div><br/></div>');
     $("#container2").append(structure);
+    $("#final_type").val('custom')
   });
 
   $('.bad_cob1').on('click', event => {
@@ -48,10 +50,10 @@ $(document).ready(() => {
     $("#container4").append(structure);
   });
 
-  $('.add_one').on('click', event => {
-    var structure = $('<input type="text" name="rule_name" placeholder="Your rules"><input type="text" name="rule_type" placeholder="Type of your rule"><br>');
-    $(".rule_form").append(structure);
-  });
+  // $('.add_one').on('click', event => {
+  //   var structure = $('<input type="text" name="rule_name" placeholder="Your rules"><input type="text" name="rule_type" placeholder="Type of your rule"><br>');
+  //   $(".rule_form").append(structure);
+  // });
 
   // $('.add_option').on('click', event => {
   //   var structure = $('<div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div>');
@@ -91,7 +93,6 @@ $(document).on('click','.add_rules_card', function(){
 
   });
 });
-
 
 $( function() {
     var handle1 = $( "#custom-handle1" );

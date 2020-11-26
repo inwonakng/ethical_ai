@@ -13,15 +13,12 @@ urlpatterns = [
     path('getscenario/<int:parent_id>', views.get_scenario, name='getscenario'),
     path('rules/lookup/',views.lookup_view),
     path('rules/lookup/<int:id>',views.dynamic_lookup_view),
-    # path('rules/',views.rules_view),
     path('rules',views.rules_view,name='rules'),
-    # path('loadsurvey', views.load_survey, name='loadsurvey'),
-    # path('getscenario', views.get_scenario, name='getscenario'),
+    path('saverule',views.save_rule, name='saverule'),
     path('rulessample',views.rules_explain,name='rulessample'),
     path('loadsurvey/submitsurvey', views.submit_survey, name="submitsurvey"),
     path('surveyresult', views.survey_result, name="surveyresult"),
     path('mypolls/<int:parent_id>', views.my_polls, name='mypolls'),
     path('<random>', views.unknown_path),
-    path('saverule',views.save_rule, name='saverule')
     
 ]
