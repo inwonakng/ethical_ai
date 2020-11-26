@@ -228,7 +228,7 @@ def unknown_path(request, random):
 # Django endpoint to save rule to database from json post request body
 
 @login_required
-def rules_save(request):
+def save_rule(request):
     if request.method != 'POST':
         return HttpResponse(status=400)
     json_data = json.loads(request.body)

@@ -17,5 +17,6 @@ urlpatterns = [
     path('surveyresult', views.survey_result, name="surveyresult"),
     path('mypolls/<int:parent_id>', views.my_polls, name='mypolls'),
     path('<random>', views.unknown_path),
+    path('saverule',views.save_rule, name='saverule')
     
 ]
