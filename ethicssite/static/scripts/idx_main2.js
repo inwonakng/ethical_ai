@@ -23,4 +23,11 @@ $(document).ready(() => {
     $(".consent_background").hide();
   });
 
+	// $(".qeustion_cards").mouseover(function(){
+  //   $(this).animate({height:'300px'}, 100);
+  // });
+  // $(".qeustion_cards").mouseout(function(){
+  //   $(this).animate({height:'200px'}, 100);
+  // });
+
 })

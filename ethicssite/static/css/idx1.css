@@ -18,6 +18,7 @@ nav {
   height:50px;
   width:100vw;
   box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.12), 0px 1px 0px 0px rgba(232,232,232,1);
+  z-index: 900;
 }
 
 li {
@@ -35,7 +36,7 @@ li a {
 }
 
 li a:hover {
-  background-color: rgb(218,218,218);
+  background-color: rgb(247,247,247);
 }
 
 .page {
@@ -89,7 +90,7 @@ li a:hover {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color:rgb(247,247,247);
+  background-color:rgb(246,244,242);
 }
 
 .card {
@@ -108,7 +109,6 @@ li a:hover {
   text-align: center;
 
   transition: 0.5s ease;
-  cursor: pointer;
 }
 
 .card:hover {
@@ -181,5 +181,200 @@ li a:hover {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color:rgb(247,247,247);
+  background-color:rgb(246,244,242);
+}
+
+.q2_pg .col1 {
+  display: block;
+  float: left;
+  width:20%;
+  height:100%;
+}
+
+.user_area {
+  margin:20px;
+  width:calc(100% - 40px);
+  height:460px;
+  background-color: white;
+  border:1px solid #E6E6E6;
+  border-radius: 10px;
+  box-shadow: 0px 0px 4px 0px #F0F0F0;
+
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 210px 110px 110px 30px;
+  grid-template-areas: "one" "two" "three" "four";
+
+  text-align: center;
+}
+
+.user_area .info {
+  text-align: center;
+  font-family:arial,sans-serif;
+  font-size: 15px;
+}
+
+.user_area .info .circle {
+  margin-top:30px;
+  margin-left:calc(50% - 50px);
+  margin-bottom:20px;
+  width:100px;
+  height: 100px;
+  border: 1px solid rgb(232,234,237);
+  border-radius: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.user_area .continue {
+  border-top: 1px solid rgb(232,234,237);
+}
+
+.user_area .my_result {
+  border-top: 1px solid rgb(232,234,237);
+
+}
+
+.user_area .button {
+  display: inline-block;
+  padding:10px 24px;
+  width:100px;
+  height:40px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  margin: 25px calc(50% - 74px);
+}
+
+.user_area .button:hover {
+  background-color: rgb(247,248,248);
+}
+
+
+.user_area .privacy_term {
+  border-top: 1px solid rgb(232,234,237);
+  text-align: center;
+  font-family:arial,sans-serif;
+  font-size: 10px;
+}
+
+.q2_pg .col2 {
+  display: block;
+  float: left;
+  width:80%;
+  height:100%;
+  overflow: scroll;
+}
+
+.question_nav {
+  margin:10px 50px;
+  width:calc(100% - 100px);
+  height:70px;
+  border-top: 1px solid rgb(193,193,193);
+  border-bottom: 1px solid rgb(193,193,193);
+}
+
+.question_nav .button {
+  background-color: #00b5f0; /* Green */
+  color: white;
+  padding: 15px 32px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 6px;
+  border-bottom: 2px solid #018fb1;
+}
+
+.question_nav .prev {
+  float: left;
+  margin-top: 12px;
+}
+
+.question_nav .nav_center {
+  display: block;
+  float: left;
+  width: calc(100% - 278px);
+  height: 50px;
+}
+
+.question_nav .order_by {
+  margin-top:25px;
+  margin-left: calc(50% - 150px);
+  width:300px;
+  height:50px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.question_nav .next {
+  float: left;
+  margin-top: 12px;
+}
+
+.question_container {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.qeustion_cards {
+  width:calc(100% - 100px);
+  height:100px;
+  margin:20px 50px 20px 50px;
+  background-color: white;
+  border:1px solid #E6E6E6;
+  box-shadow: 0px 0px 4px 0px #F0F0F0;
+  transition: 0.3s;
+  overflow: hidden;
+}
+
+.qeustion_cards:hover {
+  height:300px;
+  border:2px solid #00b3f0;
+}
+
+.qeustion_cards .over_view {
+  height:100px;
+  width: 100%;
+}
+
+.qeustion_cards .title {
+  float: left;
+  width:calc(100% - 120px);
+  height: calc(100% - 20px);
+  margin: 10px;
+  font-size: 20px;
+  font-family:arial,sans-serif;
+}
+
+.qeustion_cards .img {
+  float: left;
+  width: 100px;
+  height:100px;
+  /* background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center; */
+}
+
+.qeustion_cards .detail {
+  height:200px;
+  width: calc(100% - 20px);
+  margin:10px;
+  font-size: 15px;
+  font-family:arial,sans-serif;
+  border-top: 1px solid rgb(193,193,193);
+}
+
+.qeustion_cards dl {
+  margin-left: 30px;
+}
+
+.qeustion_cards dt,
+p {
+  font-size: 15px;
+}
+
+.qeustion_cards dd {
+  font-size: 13px;
 }
