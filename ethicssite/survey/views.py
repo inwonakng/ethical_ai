@@ -14,14 +14,18 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
-def idx_view(request):
-    context = {}
-    return render(request, "survey/idx.html", context)
 
-
-def delima_questions_view(request):
+def idx_view_all_questions(request):
     context = {}
-    return render(request, "survey/delima_questions.html", context)
+    return render(request, "survey/all_questions.html", context)
+
+def idx_view_answered_questions(request):
+    context = {}
+    return render(request, "survey/answered_questions.html", context)
+
+def idx_view_result_analysis(request):
+    context = {}
+    return render(request, "survey/result_analysis.html", context)
 
 def desicion_questions_view(request):
     context = {}
