@@ -188,15 +188,14 @@ def save_scenario(request):
         user_id = request.post['user_id']
         session_id = request.post['session_id']
         ruleset_id = request.post['ruleset_id']
-        
 
         # prompt & description
         prompt = request.post['prompt']
         prompt_description = request.post['description']
 
-        # not too sure how I'd take in a dictionary, but the idea is I somehow DO get a dictionary (combo stuff)
+        # not too sure how I'd take in a dictionary, but the idea is I somehow get a dictionary
         attribute_dictionary = request.post['dictionary']
-        json_version = json.loads(attribute_dictionary)
+        json_attribute = json.loads(attribute_dictionary)
 
         # slider score
         scenario_score = request.post['score']
@@ -206,7 +205,7 @@ def save_scenario(request):
         individual_scenario.options.add(name=prompt, text=prompt_description)
 
         # saving each attribute (from dictionary)
-        for key,value in json_version:
+        for key,value in json_attribute:
             individual_scenario.options.attributes.add(name=key, value=value)
 
         individual_scenario.options.score.add(value=scenario_score)
@@ -216,15 +215,9 @@ def save_scenario(request):
         # now send that data to TempScenarios
         all_scenarios = TempScenarios(user_id=user_id, session_id=session_id, ruleset_id=ruleset_id)
         all_scenarios.save()
-        all_scenarios.
+        all_scenarios.scenarios.add(individual_scenario)
 
 
-        '''
-            so in theory, we're taking in scenarios and saving them but we have to
-            assign them a ruleset id so we can create a jumbo survey @ end
-        '''
-
-        # so now figure out how to take this scenario and shove it to a tempClass
 
 # From gigantic list of scenarios create a Survey object
 def create_survey(request):
@@ -234,14 +227,20 @@ def create_survey(request):
         session_id = request.post['session_id']
         ruleset_id = request.post['ruleset_id']
         # grab user id, session id, and ruleset id
-        # grab all objects of TempScenarios
         # filter
+        # grab all objects of TempScenarios
         # create big survey
         # done!
 
         # filter for all the scenarios that relate to the ruleset id (along with other ids too)
         all_scenarios = TempScenarios.objects.filter(user_id=user_id).filter(session_id=session_id).filter(ruleset_id=ruleset_id)
+        
+        saved_survey = Scenario(prompt=prompt, desc=desc, user=user)
+        saved_survey.save()
 
+        # save scenario into survey
+        for x in all_scenarios:
+            saved_survey.scenarios.add(x)
 
 
 

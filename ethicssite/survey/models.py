@@ -161,24 +161,12 @@ class Attribute(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
 
 # Holds ruleset ID and scenario model
-'''
-With this class, we can create a container to hold all scenarios
-to create a survey then when the survey is created, destroy the model
-'''
 class TempScenarios(models.Model):
     user_id = models.CharField(null=False, blank=False)
     session_id = models.CharField(null=False, blank=False)
     ruleset_id = models.CharField(null=False, blank=False)
-    scenario_model = models.ForeignKey(Scenario)
+    scenario = models.ManyToManyField('Scenario')
 
-
-"""
-TODO
-Userid and ruleset id parent id of survey
-and survey id would be created @ end of survey model
-session id
-view function should take endpoint of rule id wtf
-"""
 
 '''Survey models sections end here'''
 
