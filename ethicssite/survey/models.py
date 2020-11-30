@@ -123,18 +123,6 @@ def build_generator(rule):
     sg.save()
     return sg
 
-
-
-
-class Custom_rule(models.Model):
-    texta = models.CharField(max_length=50, null=False, default='');
-
-'''Survey models sections start here'''
-
-class RuleForm (models.Model):
-    rule = models.TextField()
-    type = models.TextField()
-
 # Question model
 @python_2_unicode_compatible
 # Model for a generic attribute for some combination (e.g. age or health)
@@ -182,15 +170,15 @@ class RuleSet(models.Model):
     # generative_survey = models.OneToManyField('Survey') # ISSUE OneToMany (get this working) or ManyToMany
     # # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
 
-    same_categories = models.IntegerField(null=False, default=2)
-    scenario_size = models.IntegerField(null=False, default=2)
+    same_categories = models.IntegerField(null=True, default=2)
+    scenario_size = models.IntegerField(null=True, default=2)
 
     # ruleset creator
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     generative = models.BooleanField(null=False, blank=False, default=False)
     # this field is only populated if not generative
 
-    
+    scenarios = models.ManyToManyField("Scenario")    
 
     '''These accessor functions are for the generator to use'''
 
@@ -472,14 +460,21 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
     return curr_survey
 
+'''
+type(d) must be dict()
+some hardcoding stuff:
+If the user is passing in a 'custom' ruleset, then the dictionary must take this form:
+{1:['text1','text2'],2:['text1','text2'],...}
 
-# type(d) must be dict()
+'''
 def json_to_ruleset(d,user):
     # true if 'config' values exist in d
     generative = 'config' in d
-    inp = {'same_categories': d['config']['same_categories'],
-           'scenario_size': d['config']['scenario_size']}
-    rule_set = RuleSet(**inp)
+    if generative:
+        inp = {'same_categories': d['config']['same_categories'],
+            'scenario_size': d['config']['scenario_size']}
+        rule_set = RuleSet(**inp)
+    else: rule_set = RuleSet()
     # This should be converted to actually grab the user. Placeholder for now so stuff don't break
     rule_set.user = user
     rule_set.generative = generative
@@ -525,7 +520,22 @@ def json_to_ruleset(d,user):
                     subcombo)
             rule_set.badcombos.add(bad_combo)
     else:
-
+        for v in d.values():
+            scen = Scenario()
+            scen.save()
+            for i,s in enumerate(v):
+                op = Option()
+                op.name = 'Option '+ str(i)
+                op.save()
+                attr = Attribute()
+                attr.name = 'Description'
+                attr.value = s
+                attr.save()
+                op.attributes.add(attr)
+                op.save()
+                scen.options.add(op)
+            scen.save()
+            rule_set.scenarios.add(scen)
     rule_set.save()
     return rule_set
 

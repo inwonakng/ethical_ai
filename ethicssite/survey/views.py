@@ -257,39 +257,11 @@ def save_rule(request):
     rule_names = request.POST.getlist('rule_name')
     rule_sets = request.POST.getlist('rule_set')
     rule_type = request.POST.getlist('final_type')
-
-    rs = RuleSet()
-    userid = request.session['user_id']
-    rs.user = User.objects.get(id=userid)
-    rs.save()
-    for i,rule_name in enumerate(rule_names):
-        print(rule_name)
-        if rule_name:
-            ls = ListCateg(name=rule_name)
-            ls.save()
-            print(rule_sets[i].split(','))
-            rule_set = rule_sets[i].split(',')
-            for j,val in enumerate(rule_set):
-                print(j,val)
-                rsc = RuleSetChoice(index=j,value=val)
-                rsc.save()
-                ls.choices.add(rsc)
-            rs.choice_categs.add(ls)
-
-    # rule_name = request.POST.get('rule_name')
-    # rule_type = request.POST.get('rule_type')
     custom_rules = request.POST.getlist('custom')
-    for custom_rule in custom_rules:
-        Custom_rule.objects.create(texta=custom_rule)
-    json_data = json.loads(request.body)
-    json_rules_string = ''
-    try:
-        json_rules_string = json.dumps(json_data['rules'])
-    except KeyError:
-        HttpResponseServerError('`rules` field not found in request body.')
 
-    json_to_ruleset(json_rules_string, request.user)
-    HttpResponse(status=201)
+    if rule_type == 'custom': inp_data = {1:custom_rules}
+
+    json_to_ruleset(inp_data, request.user)
 
 @login_required
 def my_polls(request,parent_id):
