@@ -14,6 +14,23 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
+
+def idx_view_all_questions(request):
+    context = {}
+    return render(request, "survey/all_questions.html", context)
+
+def idx_view_answered_questions(request):
+    context = {}
+    return render(request, "survey/answered_questions.html", context)
+
+def idx_view_result_analysis(request):
+    context = {}
+    return render(request, "survey/result_analysis.html", context)
+
+def desicion_questions_view(request):
+    context = {}
+    return render(request, "survey/desicion_questions.html", context)
+
 def register(request):
     registered = False
     if request.method == "POST":
@@ -55,7 +72,7 @@ def confirm_user(request, userid):
         user.is_active = True
         user.save()
         login(request, user)
-    
+
     # TODO: add link expiration page / some error page
 
     # TODO: create a successful activation page?
@@ -122,21 +139,18 @@ def rules_view(request):
     context = {}
     return render(request, "survey/rules.html", context)
 
-def index_view(request):
-    return render(request,"survey/index.html",{})
+class IndexView(views.generic.ListView):
+    """
+    Define homepage view, inheriting ListView class, which specifies a context variable.
 
-# class IndexView(views.generic.ListView):
-#     """
-#     Define homepage view, inheriting ListView class, which specifies a context variable.
-#
-#     Note that login is required to view the items on the page.
-#     """
-#
-#     template_name = 'survey/index.html'
-#     context_object_name = 'question_list'
-#     def get_queryset(self):
-#         """Override function in parent class and return all questions."""
-#         return Survey.objects.all().order_by('-pub_date')
+    Note that login is required to view the items on the page.
+    """
+
+    template_name = 'survey/index.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        """Override function in parent class and return all questions."""
+        return Survey.objects.all().order_by('-pub_date')
 
 # Start survey
 
@@ -158,7 +172,7 @@ def load_survey(request,parent_id):
 
     check = SurveyGenerator.objects.filter(rule_id = parent_id)
     if not check: build_generator(RuleSet.objects.get(id=parent_id))
-    
+
     # hardcoded!!!!!
     # grabbing default rule
     # rule = RuleSet.objects.all()[0]
@@ -244,30 +258,16 @@ def save_rule(request):
     
     if request.method != 'POST':
         return HttpResponse(status=400)
-    print("i'm in post request")
-    print(request.POST)
-    print(request.POST.getlist('rule_name'))
-    print(request.POST.getlist('rule_set'))
-    print(request.POST.getlist('custom'))
-    
-    '''
-    for now we are ignoring generatives!!
-    '''
+    json_data = json.loads(request.body)
+    json_rules_string = ''
+    try:
+        json_rules_string = json.dumps(json_data['rules'])
+    except KeyError:
+        HttpResponseServerError('`rules` field not found in request body.')
 
-    rule_names = request.POST.getlist('rule_name')
-    rule_sets = request.POST.getlist('rule_set')
-    rule_type = request.POST.getlist('final_type')
-    custom_rules = request.POST.getlist('custom')
+    json_to_ruleset(json_rules_string, request.user)
+    HttpResponse(status=201)
 
-    if rule_type == 'custom': inp_data = {1:custom_rules}
-
-    json_to_ruleset(inp_data, request.user)
-
-@login_required
-def my_polls(request,parent_id):
-    #the list of rule sets by the parent_id
-    #besides the features and its values in each scenario, their should also be values
-    #including poll create date and number of particiants
-    rulesets = RuleSet.objects.get(user_id = parent_id)
-
-    return render(request, 'my_polls.html', {'asd':[1,2,3]})
+def my_polls(request):
+    rulesets = {'a':'b'}
+    return render(request, 'my_polls.html', rulesets)

@@ -1,0 +1,53 @@
+{% extends 'survey/my_base.html' %}
+
+{% block content %}
+<div class = "q2_pg">
+
+  <div class="col1">
+    <div class = "user_area">
+
+      {% if request.user.id %}
+        <div class = "info">
+          {% load static %}
+          <div class = "usr_icon" style = "background-image: url({% static 'img/5770409.png' %})"></div>
+          <div class = "usr_name">{{ request.session.user_name }}</div>
+        </div>
+
+        <form method="GET" action="/">
+          <div class = "all_questions option" onClick="javascript:this.parentNode.submit();">
+            All Questions
+          </div>
+        </form>
+
+        <form method="GET" action="/ans">
+          <div class = "continue option" onClick="javascript:this.parentNode.submit();">
+            Answered Questions
+          </div>
+        </form>
+
+        <form method="GET" action="/res">
+          <div class = "my_result option" onClick="javascript:this.parentNode.submit();">
+            Result Analysis
+          </div>
+        </form>
+
+        <a href="{% url 'survey:logout' %}">Log out</a>
+      {% else %}
+          <a href="{% url 'survey:login' %}">Log in</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col2">
+    {% block main_content %}
+    {% endblock %}
+  <!-- end of col2 -->
+  </div>
+  <div class = "foot_note">
+    <li class="first"><a href="asdf">About</a></li>
+    <li><a href="asdf">Acceptable Use</a></li>
+    <li><a href="asdf">Privacy</a></li>
+  </div>
+</div>
+
+{% endblock %}

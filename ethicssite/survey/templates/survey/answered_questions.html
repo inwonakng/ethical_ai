@@ -1,0 +1,18 @@
+{% extends 'survey/delima_questions.html' %}
+
+{% block script %}
+<script>
+$(document).ready(() => {
+  if (!$(".user_area .continue").hasClass("selected")) {
+    $(".user_area .option").removeClass("selected");
+    $(".user_area .continue").addClass("selected");
+  }
+})
+</script>
+{% endblock %}
+
+{% block main_content %}
+{% load static %}
+
+
+{% endblock %}

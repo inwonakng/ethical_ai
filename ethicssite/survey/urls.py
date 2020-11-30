@@ -4,7 +4,9 @@ from . import views
 app_name = 'survey'
 urlpatterns = [
     # this path is for mturk, where the random survey would be
-    path('',views.index_view,name='index'),
+    path('',views.idx_view_all_questions,name='index'),
+    path('ans',views.idx_view_answered_questions),
+    path('res',views.idx_view_result_analysis),
     path('register', views.register, name='register'),
     url(r'^register/confirm/(?P<userid>\w+)/$', views.confirm_user, name='confirm_user'),
     path('login', views.user_login, name='login'),
@@ -20,5 +22,5 @@ urlpatterns = [
     path('surveyresult', views.survey_result, name="surveyresult"),
     path('mypolls/<int:parent_id>', views.my_polls, name='mypolls'),
     path('<random>', views.unknown_path),
-    
+
 ]
