@@ -177,7 +177,7 @@ class RuleSet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     generative = models.BooleanField(null=False, blank=False, default=False)
     rule_title = models.TextField(null=False,default='Default description')
-    prompt = models.TextField(null=False,default='Default description')
+    prompt = models.TextField(null=False,default='Default prompt!s')
     # this field is only populated if not generative
 
     scenarios = models.ManyToManyField("Scenario")    
