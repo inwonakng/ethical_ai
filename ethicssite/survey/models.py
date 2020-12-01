@@ -158,12 +158,11 @@ class Option(models.Model):
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
 
-
 # Holds ruleset ID and scenario model
 class TempScenarios(models.Model):
-    user_id = models.CharField(max_length=50, null=False, blank=False)
-    session_id = models.CharField(max_length=50, null=False, blank=False)
-    ruleset_id = models.CharField(max_length=50, null=False, blank=False)
+    user_id = models.IntegerField(null=False, blank=False)
+    session_id = models.IntegerField(null=False, blank=False)
+    ruleset_id = models.IntegerField(null=False, blank=False)
     scenario = models.ManyToManyField('Scenario')
 
 
