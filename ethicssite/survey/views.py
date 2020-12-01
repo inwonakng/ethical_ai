@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 
 
 def idx_view_all_questions(request):
-    context = {}
+    context = {'rules':RuleSet.objects.all()}
     return render(request, "survey/all_questions.html", context)
 
 def idx_view_answered_questions(request):
@@ -170,8 +170,9 @@ def load_survey(request,parent_id):
     # empty for now
     survey_info = {'parent_id':parent_id}
 
-    check = SurveyGenerator.objects.filter(rule_id = parent_id)
-    if not check: build_generator(RuleSet.objects.get(id=parent_id))
+    if RuleSet.objects.get(id=parent_id).generative:
+        check = SurveyGenerator.objects.filter(rule_id = parent_id)
+        if not check: build_generator(RuleSet.objects.get(id=parent_id))
 
     # hardcoded!!!!!
     # grabbing default rule
@@ -259,14 +260,18 @@ def save_rule(request):
     if request.method != 'POST':
         return HttpResponse(status=400)
     json_data = json.loads(request.body)
-    json_rules_string = ''
-    try:
-        json_rules_string = json.dumps(json_data['rules'])
-    except KeyError:
-        HttpResponseServerError('`rules` field not found in request body.')
+    # json_rules_string = ''
+    
+    # not doing error checks but we shoul dhave this later, i dont wanna do it now
+    # try:
+    #     json_rules_string = json.dumps(json_data['rules'])
+    # except KeyError:
+    #     HttpResponseServerError('`rules` field not found in request body.')
 
-    json_to_ruleset(json_rules_string, request.user)
+    
+    json_to_ruleset(json_data['data'], request.user,json_data['title'],json_data['prompt'])
     HttpResponse(status=201)
+    return redirect('/')
 
 def my_polls(request):
     rulesets = {'a':'b'}

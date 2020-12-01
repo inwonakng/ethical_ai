@@ -45,294 +45,31 @@ $(document).ready(() => {
     <div class = "filter_options"></div>
 
   </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
+  
+  {% for r in rules %}
+
+    <div class = "question_cards">
+      <div class = "over_view">
+        <div class = "title">
+          <a href="/loadsurvey/{{r.id}}">{{r.rule_title}}</a>
+        </div>
+        <div class = "img" style="background-color: #3498db;"></div>
       </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
+      <div class = "detail">
+        <p>Your will be rating on:</p>
+        <dl>
+          {% if r.generative %}
+            <a>Generative!!!</a>
+          {% else %}
+            {% for text in r.get_sample %}
+              <dt>{{text}}</dt>
+            {% endfor %}
+          {% endif %}
+        </dl>
       </div>
-      <div class = "img" style="background-color: #3498db;"></div>
     </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
 
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
-  <div class = "question_cards last">
-    <div class = "over_view">
-      <div class = "title">
-        Suppose you are on an airplane that is about to land on a water body and there is only one rescue jacket left.
-        <br/>
-        Whom would you prefer to give the jacket to?
-      </div>
-      <div class = "img" style="background-color: #3498db;"></div>
-    </div>
-    <div class = "detail">
-      <p>Your will be rating on:</p>
-      <dl>
-        <dt>Age</dt>
-        <dd>0-100</dd>
-
-        <dt>Health</dt>
-        <dd>small health problems, in great health	</dd>
-
-        <dt>Gender</dt>
-        <dd>Male, Female</dd>
-        etc.
-      </dl>
-    </div>
-  </div>
+  {% endfor %}
 </div>
 
 <div class = "side_col">

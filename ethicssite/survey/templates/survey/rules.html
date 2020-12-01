@@ -1,6 +1,10 @@
 {% extends 'survey/base.html' %}
 {% block content %}
 
+{% load static %}
+<script type="text/javascript" src="{% static '/scripts/compiled_js/helper.js' %}"></script> 
+<script type="text/javascript" src="{% static '/scripts/rule_main_latest2.js' %}"></script>
+
 <div class = "bg">
   <div class = "col2">
     <div class = 'rules_container'>
@@ -8,16 +12,20 @@
         <div class="title">Rules</div>
         <underline></underline>
       </div>
-
+      
       <div class = "options">
+        {% csrf_token %} 
         <form action="/rules/lookup"><input type="submit" value="View existing rules"></form>
         <p>Would you like to set your own options or generate them?</p>
         <button id = "generate_rules" type="button">Generate options</button>
         <button id = "set_rules" type="button">Set my own options</button>
 
-        <form action="/saverule" method='POST'>{% csrf_token %}
-          
-          <input type="text" name="rule_name" placeholder="Title for your survey!"><br>
+        <!-- <form action="/saverule" method='POST'>{% csrf_token %} -->
+          <br>
+          <input type="text" id="rule_name" placeholder="Title for your survey!">
+          <br>
+          <input type="text" id="rule_prompt" placeholder="Prompt (explanation) for your survey!">
+          <br>
           <input type="text" id="final_type" name="final_type" style="display: none;">
 
           <div id = "container1">
@@ -37,8 +45,10 @@
           
           <div class="bad_cob1 card"><p class="p_card">Set a new one</p></div>
           <div class="bad_cob2 card"><p class="p_card">Set a new one</p></div>
-          <input type="submit" value="Save" />
-        </form>
+          <!-- i couldn't find a better way to format the data well, so here we go -->
+          <input type="submit" onclick = "parse_data()" value="Save" />
+          
+        <!-- </form> -->
       </div>
     </div>
   </div>

@@ -176,11 +176,17 @@ class RuleSet(models.Model):
     # ruleset creator
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     generative = models.BooleanField(null=False, blank=False, default=False)
+    rule_title = models.TextField(null=False,default='Default description')
+    prompt = models.TextField(null=False,default='Default description')
     # this field is only populated if not generative
 
     scenarios = models.ManyToManyField("Scenario")    
 
     '''These accessor functions are for the generator to use'''
+
+    def get_sample(self):
+        ss = self.scenarios.all()[0]
+        return [o.text for o in ss.options.all()]
 
     def get_choicecategs(self):
         # for cc in self.choice_categs
@@ -467,7 +473,7 @@ If the user is passing in a 'custom' ruleset, then the dictionary must take this
 {1:['text1','text2'],2:['text1','text2'],...}
 
 '''
-def json_to_ruleset(d,user):
+def json_to_ruleset(d,user,title,prompt):
     # true if 'config' values exist in d
     generative = 'config' in d
     if generative:
@@ -475,9 +481,11 @@ def json_to_ruleset(d,user):
             'scenario_size': d['config']['scenario_size']}
         rule_set = RuleSet(**inp)
     else: rule_set = RuleSet()
+    rule_set.rule_title = title
     # This should be converted to actually grab the user. Placeholder for now so stuff don't break
     rule_set.user = user
     rule_set.generative = generative
+    rule_set.prompt = prompt
     rule_set.save()
     if generative:
         for categ, obj in d['categories'].items():
@@ -520,18 +528,13 @@ def json_to_ruleset(d,user):
                     subcombo)
             rule_set.badcombos.add(bad_combo)
     else:
-        for v in d.values():
+        for v in d:
             scen = Scenario()
             scen.save()
             for i,s in enumerate(v):
                 op = Option()
                 op.name = 'Option '+ str(i)
-                op.save()
-                attr = Attribute()
-                attr.name = 'Description'
-                attr.value = s
-                attr.save()
-                op.attributes.add(attr)
+                op.text = s
                 op.save()
                 scen.options.add(op)
             scen.save()

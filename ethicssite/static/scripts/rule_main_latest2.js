@@ -26,6 +26,7 @@ $(document).ready(() => {
     $("#container2").show();
     $(".add_rules_card").hide();
     $(".custom_rules_card").show();
+    $("#final_type").val('custom')
 
     $("#bad_text").show();
     $("#container3").hide();
@@ -37,7 +38,6 @@ $(document).ready(() => {
   $('.custom_rules_card').on('click', event => {
     var structure = $('<div class = "custom_rule_card"><p>Scenario</p><div class = "custom_option_container"><div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div></div><div class = "add_option custom_option_card"><p class="p_card_custom_option">Add more options</p></div><br/></div>');
     $("#container2").append(structure);
-    $("#final_type").val('custom')
   });
 
   $('.bad_cob1').on('click', event => {
@@ -113,3 +113,42 @@ $( function() {
 
     });
   });
+
+function parse_data() {
+  // get type here
+  // just gonna cover custom case for demo.
+  ttype = $("#final_type")[0].value
+  ttitle = byid('rule_name').value
+  pprompt = byid('rule_prompt').value
+
+  data_tosend = []
+  if (ttype === 'custom'){
+    cont = $('#container2')[0]
+    for(i of cont.children){
+      tmp = []
+      for (card of i.querySelectorAll('.custom_option_card')){
+        // add_option is the last child and it has no value so skip
+        if (card.classList.contains('add_option')){break}
+        tmp.push(card.children[0].value)
+      }
+      data_tosend.push(tmp)
+    }
+  }
+
+  // nullchecks
+  if(ttitle.length==0 || data_tosend[0].length == 0){
+    alert('title or survey content cannot be null!')
+    return
+  }
+
+  http_post('saverule',
+    {
+      type:ttype,
+      title:ttitle,
+      prompt:pprompt,
+      data:data_tosend
+    }
+    ,true
+  )
+
+}
