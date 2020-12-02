@@ -151,18 +151,24 @@ class Scenario(models.Model):
 
 class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
-    attributes = models.ManyToManyField('Attribute', related_name='combo_attributes')
+    attributes = models.ManyToManyField('Attribute' , related_name='combo_attributes')
     text = models.CharField(max_length=50, null=False, default='')
     score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE,null=True)
 
 class SingleResponse(models.Model):
     value = models.CharField(max_length=50, null=False, default='')
 
+# Holds ruleset ID and scenario model
+class TempScenarios(models.Model):
+    user_id = models.IntegerField(null=False, blank=False)
+    session_id = models.IntegerField(null=False, blank=False)
+    ruleset_id = models.IntegerField(null=False, blank=False)
+    scenario = models.ManyToManyField('Scenario')
+
+
 '''Survey models sections end here'''
 
 # Rule model
-
-
 class RuleSet(models.Model):
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')

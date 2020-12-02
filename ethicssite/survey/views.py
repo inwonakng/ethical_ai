@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .generation.Generator import Generator
 from django.shortcuts import render
 import yaml
+import json
 from django.conf import settings
 from .models import *
 from django import views
@@ -226,6 +227,69 @@ def get_scenario(request,parent_id):
     # and press ctrl+shift+i and switch to console tab,
     # you can see the json object printed on the console
 
+# Save individual scenario
+def save_scenario(request):
+    if request.method == "POST":
+        # user id, session id, ruleset id
+        user_id = request.post['user_id']
+        session_id = request.post['session_id']
+        ruleset_id = request.post['ruleset_id']
+
+        # prompt & description
+        prompt = request.post['prompt']
+        prompt_description = request.post['description']
+
+        # not too sure how I'd take in a dictionary, but the idea is I somehow get a dictionary
+        attribute_dictionary = request.post['dictionary']
+        json_attribute = json.loads(attribute_dictionary)
+
+        # slider score
+        scenario_score = request.post['score']
+
+        individual_scenario = Scenario()
+        individual_scenario.save()
+        individual_scenario.options.add(name=prompt, text=prompt_description)
+
+        # saving each attribute (from dictionary)
+        for key,value in json_attribute:
+            individual_scenario.options.attributes.add(name=key, value=value)
+
+        individual_scenario.options.score.add(value=scenario_score)
+
+        # at this point, we have successfully created an individual_scenario object
+
+        # now send that data to TempScenarios
+        all_scenarios = TempScenarios(user_id=user_id, session_id=session_id, ruleset_id=ruleset_id)
+        all_scenarios.save()
+        all_scenarios.scenarios.add(individual_scenario)
+
+
+
+# From gigantic list of scenarios create a Survey object
+def create_survey(request):
+    pass
+    if request.method == "POST":
+        user_id = request.post['user_id']
+        session_id = request.post['session_id']
+        ruleset_id = request.post['ruleset_id']
+        # grab user id, session id, and ruleset id
+        # filter
+        # grab all objects of TempScenarios
+        # create big survey
+        # done!
+
+        # filter for all the scenarios that relate to the ruleset id (along with other ids too)
+        all_scenarios = TempScenarios.objects.filter(user_id=user_id).filter(session_id=session_id).filter(ruleset_id=ruleset_id)
+        
+        saved_survey = Scenario(prompt=prompt, desc=desc, user=user)
+        saved_survey.save()
+
+        # save scenario into survey
+        for x in all_scenarios:
+            saved_survey.scenarios.add(x)
+
+
+
 # @csrf_exempt
 @login_required
 def submit_survey(request):
@@ -240,7 +304,6 @@ def submit_survey(request):
         json_to_survey(request.body, request.user)
         # print(json.load(request.body))
         return redirect("survey:surveyresult")
-
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')
@@ -273,6 +336,11 @@ def save_rule(request):
     HttpResponse(status=201)
     return redirect('/')
 
-def my_polls(request):
-    rulesets = {'a':'b'}
-    return render(request, 'my_polls.html', rulesets)
+@login_required
+def my_polls(request,parent_id):
+    #the list of rule sets by the parent_id
+    #besides the features and its values in each scenario, their should also be values
+    #including poll create date and number of particiants
+    rulesets = RuleSet.objects.get(user_id = parent_id)
+
+    return render(request, 'my_polls.html', {'asd':[1,2,3]})

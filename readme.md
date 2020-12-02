@@ -64,7 +64,7 @@ If you set the password, you may not need to do the step below.
 After running MySQL with admin priveges (sudo), run the following queries to reset the root password.
 
 ```
-DROP USER 'root'@'localhost';
+DROP USER 'root'@'%';
 CREATE USER 'root'@'%' IDENTIFIED BY '';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
