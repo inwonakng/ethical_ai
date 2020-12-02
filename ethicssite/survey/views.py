@@ -113,7 +113,8 @@ def user_login(request):
         return render(request, 'survey/login.html', {})
 
 def user_logout(request):
-    if not request.session.get('is_login',None):
+    # the id is none if not logged in
+    if not request.user.id:
         return redirect("/")
     logout(request)
     request.session.flush()
