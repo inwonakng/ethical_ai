@@ -31,6 +31,12 @@
           </div>
         </form>
 
+        <form method="GET" action="/mysurvey/{{request.user.id}}">
+          <div class = "my_result option" onClick="javascript:this.parentNode.submit();">
+            My Surveys
+          </div>
+        </form>
+
         <a href="{% url 'survey:logout' %}">Log out</a>
       {% else %}
           <a href="{% url 'survey:login' %}">Log in</a>
