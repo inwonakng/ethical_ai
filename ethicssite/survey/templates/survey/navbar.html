@@ -27,7 +27,7 @@
         <!-- THIS SHOULD BE CHANGED! right now a placeholder for default survey -->
         <li><a href="{% url 'survey:loadsurvey' 1 %}"><span class="fa fa-object-ungroup"></span>Take</a></li>
         {% if request.session.is_login %}
-          <li><a href="{% url 'survey:mypolls' request.session.user_id%}"><span class="fa fa-object-ungroup"></span>My polls</a></li>
+          <li><a href="{% url 'survey:mysurvey' request.session.user_id%}"><span class="fa fa-object-ungroup"></span>My polls</a></li>
           <li style="position: absolute; right: 0;"><a href="{% url 'survey:logout' %}">Log out</a></li>
           <li style="float: right;"><a href="#">Current User: {{ request.session.user_name }}</a></li>
         {% else %}

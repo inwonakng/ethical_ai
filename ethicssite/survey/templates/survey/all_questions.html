@@ -56,15 +56,9 @@ $(document).ready(() => {
         <div class = "img" style="background-color: #3498db;"></div>
       </div>
       <div class = "detail">
-        <p>Your will be rating on:</p>
+        <p>Prompt of the survey:</p>
         <dl>
-          {% if r.generative %}
-            <a>Generative!!!</a>
-          {% else %}
-            {% for text in r.get_sample %}
-              <dt>{{text}}</dt>
-            {% endfor %}
-          {% endif %}
+          {{r.prompt}}
         </dl>
       </div>
     </div>

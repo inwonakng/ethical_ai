@@ -14,10 +14,14 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 
 def idx_view_all_questions(request):
-    context = {'rules':RuleSet.objects.all()}
+    if request.user.id:
+        context = {'rules':RuleSet.objects.filter(~Q(user=request.user))}
+    else:
+        context = {'rules':RuleSet.objects.all()}
     return render(request, "survey/all_questions.html", context)
 
 def idx_view_answered_questions(request):
@@ -137,22 +141,12 @@ def dynamic_lookup_view(request,id):
     }
     return render(request, "survey/delete.html", context)
 
+'''
+Page for users to create their own view
+'''
 def rules_view(request):
     context = {}
     return render(request, "survey/rules.html", context)
-
-class IndexView(views.generic.ListView):
-    """
-    Define homepage view, inheriting ListView class, which specifies a context variable.
-
-    Note that login is required to view the items on the page.
-    """
-
-    template_name = 'survey/index.html'
-    context_object_name = 'question_list'
-    def get_queryset(self):
-        """Override function in parent class and return all questions."""
-        return Survey.objects.all().order_by('-pub_date')
 
 # Start survey
 
@@ -170,11 +164,12 @@ class IndexView(views.generic.ListView):
     # function to grab new scenario
 def load_survey(request,parent_id):
     # empty for now
-    survey_info = {'parent_id':parent_id}
+    rule = RuleSet.objects.get(id=parent_id)
+    survey_info = {'parent_id':parent_id,'generative':rule.generative,'length':len(rule.scenarios.all())}
 
-    if RuleSet.objects.get(id=parent_id).generative:
+    if rule.generative:
         check = SurveyGenerator.objects.filter(rule_id = parent_id)
-        if not check: build_generator(RuleSet.objects.get(id=parent_id))
+        if not check: build_generator(rule)
 
     # hardcoded!!!!!
     # grabbing default rule
@@ -185,39 +180,44 @@ def load_survey(request,parent_id):
     # survey_info.update(csrf(request))
     return render(request,'survey/survey-page.html',survey_info)
 
-def get_scenario(request,parent_id):
+def get_scenario(request,parent_id,scenario_num):
+
+    rule = RuleSet.objects.get(id=parent_id)
     combos = 3
 
     if request.method == "POST":
         combos = request.POST['combo_count']
 
-    # grabbing the sample json
-    story_gen = SurveyGenerator.objects.get(rule_id=parent_id)
-
-    # story_gen = SurveyGenerator.objects.get(rule_id=RuleSet.objects.all()[0].id)
-
-    ss = story_gen.get_scenario()
 
     '''
     Example of how a scenario object is created from the json.
     For @Taras, when you work on this, convert this function to return the model 
     rather than the json, so that the template can unpack the model instance there. 
     '''
-        
-    scen = Scenario()
-    scen.save()
-    for i,s in enumerate(ss):
-        op = Option()
-        op.name = 'Option '+ str(i)
-        op.save()
-        for k,v in s.items():
-            attr = Attribute()
-            attr.name = k
-            attr.value = v
-            attr.save()
-            op.attributes.add(attr)
-        op.save()
-        scen.options.add(op)
+    # if the survey is generative
+    if rule.generative:
+        # grabbing the sample json
+        story_gen = SurveyGenerator.objects.get(rule_id=parent_id)
+        # story_gen = SurveyGenerator.objects.get(rule_id=RuleSet.objects.all()[0].id)
+        ss = story_gen.get_scenario()
+        scen = Scenario()
+        scen.save()
+        for i,s in enumerate(ss):
+            op = Option()
+            op.name = 'Option '+ str(i)
+            op.save()
+            for k,v in s.items():
+                attr = Attribute()
+                attr.name = k
+                attr.value = v
+                attr.save()
+                op.attributes.add(attr)
+            op.save()
+            scen.options.add(op)
+    else:
+        scen = rule.scenarios.all()[scenario_num]
+        ss = [o.text for o in scen.options.all()]
+    
 
     survey_information = json.dumps(ss)
     # For frontend, check the html to
@@ -294,6 +294,7 @@ def create_survey(request):
 # @csrf_exempt
 @login_required
 def submit_survey(request):
+    return redirect('/')
     if request.method == 'POST':
         # for now not storing scores
         print(request.body)
@@ -338,10 +339,11 @@ def save_rule(request):
     return redirect('/')
 
 @login_required
-def my_polls(request,parent_id):
+def my_survey(request,user_id):
     #the list of rule sets by the parent_id
     #besides the features and its values in each scenario, their should also be values
     #including poll create date and number of particiants
-    rulesets = RuleSet.objects.get(user_id = parent_id)
+    context = {'rules':RuleSet.objects.filter(user_id = user_id)}
 
-    return render(request, 'my_polls.html', {'asd':[1,2,3]})
+
+    return render(request, 'survey/my_survey.html', context)
