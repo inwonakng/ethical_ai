@@ -3,8 +3,23 @@
 function writetopage(data, args) {
     totalData.push(data);
     let question = make('div', 'q' + args);
-    let table = maketable(data, args);
-    question.appendChild(table);
+    if(isgen){
+        let table = maketable(data, args);
+        question.appendChild(table);
+    }
+    // super hardcoding time...
+    // html_text = ''
+
+    outli = make('table','listq'+args)
+    for(dd of data){
+        inli = make('tr','')
+        inli.innerHTML = dd
+        inli.style.fontSize='large'
+        outli.appendChild(inli)
+    }
+    outli.style.borderColor = 'white'
+    console.log(data)
+    question.appendChild(outli)
     addsurveytopage(question, scenarioNum);
     addsliderstopage(scenarioNum, data.length);
 }
@@ -52,8 +67,9 @@ function callNextScenario() {
         viewCurrentScenario();
     }
     else {
+        console.log(scenarioNum)
         // Create a new scenario if one is needed.
-        http_get('/getscenario/' + parent_id, writetopage, scenarioNum);
+        http_get('/getscenario/' + parent_id +'/'+scenarioNum ,writetopage, scenarioNum);
     }
 }
 // Changes the page from the final survey page to the initial surveys
@@ -307,10 +323,11 @@ function printstuff(dat, arg) {
 }
 // initial page
 var scenarioNum = 0;
-var maxScenarios = 10;
+var maxScenarios = Number(byid('maxlen').innerHTML)
 var data = [];
 var dataFeatures = [];
 var totalData = [];
 var parent_id = byid('parent_id').innerHTML;
-http_get('/getscenario/' + parent_id, writetopage, scenarioNum);
+var isgen = byid('is_gen').innerHTML === "True"
+http_get('/getscenario/' + parent_id+'/0', writetopage, scenarioNum);
 //# sourceMappingURL=surveyscript.js.map

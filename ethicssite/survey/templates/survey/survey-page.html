@@ -13,6 +13,9 @@
   </head>
   <body onload="guicheck()">
     <a id="parent_id" style="display:none">{{parent_id}}</a>
+    <a id="is_gen" style="display:none">{{generative}}</a>
+    <a id="maxlen" style="display:none">{{length}}</a>
+
     <div id="question">
       <p id="prompt">Prompt</p>
       <div id="survey"></div>
@@ -49,8 +52,8 @@
       <button id = "submit" onclick="submitResult()" style="display: none; position: absolute; right: 0px;">Submit</button>
     {% comment %} </form> {% endcomment %}
     {% load static %}
-    <script type="text/javascript" src="{% static '/scripts/compiled_js/helper.js' %}"></script> 
-    <script type="text/javascript" src="{% static '/scripts/compiled_js/surveyscript.js' %}"></script> 
+    <script type="text/javascript" src="{% static '/scripts/helper.js' %}"></script> 
+    <script type="text/javascript" src="{% static '/scripts/surveyscript.js' %}"></script> 
   </body>
 </html>
 

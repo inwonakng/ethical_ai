@@ -11,7 +11,7 @@ function byid(id) {
 }
 // method for interacting with the python server.
 // args should look like this: (fill in as we go)
-function http_get(endpoint, func, args) {
+function http_get(endpoint, func,args) {
     let reply = [];
     var resp = fetch(endpoint)
         .then(r => r.json())

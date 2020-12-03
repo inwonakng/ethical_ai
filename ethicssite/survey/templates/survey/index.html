@@ -1,57 +1,50 @@
 {% extends 'survey/base.html' %}
 
-{% block extra_head %} 
+{% block extra_head %}
 {% endblock %}
-        
+
 
 {% block content %}
-{% comment %} not for now since we have no login {% endcomment %}
-    {% comment %} {% if user.is_authenticated %}  {% endcomment %}
-
-<br/><br/>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-2 col-sm-6" align="center">
-            <br/>
-            <div class="service-item">
-                <a href="{% url 'survey:rules' %}">
-                    <i class="fa fa-object-ungroup fa-5x" aria-hidden="true"></i>
-                    <h4><strong>Create Survey</strong>
-                </h4>
-                </a>
-                <p>You can create a simple or randomly generated survey vote here.</p>
-            </div>
-        </div>
-        <div class="col-md-4  col-sm-6" align="center">
-            <br/>
-            <div class="service-item">
-                <a href="{% url 'survey:loadsurvey' 1 %}">
-                <i class="fa fa-object-group fa-5x" aria-hidden="true"></i>
-                
-                    <h4><strong>Take Surveys</strong></h4>
-                </a>
-                <p>Here you can view created surveys</p>
-            </div>
-        </div>
-                        
+<div class = "idx_page">
+<div class = "col1_idx">
+  <div class = "items">
+    <div class = "create_poll">
+      <div class = "create_poll_text"><a href="/rules">CREATE YOUR POLL</a></div>
     </div>
-    
+    <div class="asdf"></div>
+    <div class="ph"><div class="ph_text">My polls</div></div>
+    <div class="ph"><div class="ph_text">All polls</div></div>
+    <div class="ph"><div class="ph_text">...</div></div>
+  </div>
 </div>
+<div class = "col2_idx">
+  <div class="text">
+    <h1>Popular polls</h1>
+    <input id="search" type="text" placeholder="Search..">
+  </div>
 
-{% comment %} this is if closing for user authentcation check {% endcomment %}
-{% comment %} {% endif %} {% endcomment %}
+  <div class = "poll">
+  </div>
+  <div class = "poll">
+  </div>
+  <div class = "poll">
+  </div>
+  <div class = "poll">
+  </div>
+  <div class = "poll">
+  </div>
+</div>
+</div>
 {% endblock %}
 
 <!--
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  
+
   {% include "polls/poll_created_tab.html" %}
   {% include "polls/poll_participated_tab.html" %}
   {% include "polls/m_poll_created_tab.html" %}
   {% include "polls/m_poll_participated_tab.html" %}
 
-    
+
 </div>
 -->
-
-
