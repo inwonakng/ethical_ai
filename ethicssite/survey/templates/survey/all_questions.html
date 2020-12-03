@@ -14,11 +14,17 @@ $(document).ready(() => {
 {% block main_content %}
 {% load static %}
 
+<div class = "touch_screen">
+  Please use a larger screen.<br/><br/>
+  Please don't use a touch screen.<br/><br/>
+  Still working on responsive layout and touch screen.
+</div>
+
 <div class = "questions_col">
   <div class = "question_nav">
     <div class = "basic_nav">
+      <div class = "first_line">
       <div class = "title">RANK BY:</div>
-
       <div class = "input_wrap">
         <input type="radio" id = "method1" name="ranking" checked>
         <label for="method1">Trending</label>
@@ -31,17 +37,18 @@ $(document).ready(() => {
         <input type="radio" id = "method3" name="ranking">
         <label for ="method3">Alphabetical</label>
       </div>
-
-      <div class = "layout_wrap">
+      </div>
+      <div class = "second_line">
         <div class = "title">LAYOUT:</div>
         <div class = "input_wrap">
           <input type="radio" id = "method1" name="layout" checked>
           <label for ="method1">Cards</label>
         </div>
+        <div class = "title filter">FILTER</div>
+        </div>
       </div>
 
-      <div class = "title filter">FILTER</div>
-    </div>
+
     <div class = "filter_options"></div>
 
   </div>
