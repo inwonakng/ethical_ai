@@ -15,13 +15,26 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django import forms
 
 
-def idx_view_all_questions(request):
+def idx_view_all_questions_trending(request):
     if request.user.id:
-        context = {'rules':RuleSet.objects.filter(~Q(user=request.user))}
+        context = {'rules':RuleSet.objects.filter(~Q(user=request.user)).order_by('-number_of_answers'),
+                    'by':'trending'}
     else:
-        context = {'rules':RuleSet.objects.all()}
+        context = {'rules':RuleSet.objects.all().order_by('-number_of_answers'), 'by':'trending'}
+    print(context['by'])
+    return render(request, "survey/all_questions.html", context)
+
+def idx_view_all_questions_latest(request):
+    print("asd")
+    if request.user.id:
+        context = {'rules':RuleSet.objects.filter(~Q(user=request.user)).order_by('-creation_time'),
+                    'by':'latest'}
+    else:
+        context = {'rules':RuleSet.objects.all().order_by('-creation_time'), 'by':'latest'}
+    print(context['by'])
     return render(request, "survey/all_questions.html", context)
 
 def idx_view_answered_questions(request):
@@ -235,6 +248,10 @@ def save_scenario(request):
         user_id = request.post['user_id']
         session_id = request.post['session_id']
         ruleset_id = request.post['ruleset_id']
+        # used to implement trending of index page.
+        current_ruleset = RuleSet.objects.get(id=ruleset_id)
+        current_ruleset.number_of_answers += 1
+        current_ruleset.save()
 
         # prompt & description
         prompt = request.post['prompt']
