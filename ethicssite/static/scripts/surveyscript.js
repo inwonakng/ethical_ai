@@ -11,6 +11,7 @@ function writetopage(data, args) {
     // html_text = ''
 
     var outli = make('table','listq'+args)
+    var dd;
     for(dd of data){
         var inli = make('tr','')
         inli.innerHTML = dd
