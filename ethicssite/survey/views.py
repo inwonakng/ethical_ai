@@ -30,10 +30,10 @@ def idx_view_all_questions_trending(request):
 def idx_view_all_questions_latest(request):
     print("asd")
     if request.user.id:
-        context = {'rules':RuleSet.objects.filter(~Q(user=request.user)).order_by('-creation_time'),
+        context = {'rules':RuleSet.objects.filter(~Q(user=request.user)).order_by('creation_time'),
                     'by':'latest'}
     else:
-        context = {'rules':RuleSet.objects.all().order_by('-creation_time'), 'by':'latest'}
+        context = {'rules':RuleSet.objects.all().order_by('creation_time'), 'by':'latest'}
     print(context['by'])
     return render(request, "survey/all_questions.html", context)
 
