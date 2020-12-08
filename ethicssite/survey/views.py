@@ -19,21 +19,19 @@ from django import forms
 
 
 def idx_view_all_questions_trending(request):
-    if request.user.id:
-        context = {'rules':RuleSet.objects.filter(~Q(user=request.user)).order_by('-number_of_answers'),
-                    'by':'trending'}
-    else:
-        context = {'rules':RuleSet.objects.all().order_by('-number_of_answers'), 'by':'trending'}
+    if request.user.id: queryset = RuleSet.objects.filter(~Q(user=request.user))
+    else: queryset = RuleSet.objects.all()
+    
+    context = {'rules':queryset.order_by('-number_of_answers'), 'by':'trending'}
     print(context['by'])
     return render(request, "survey/all_questions.html", context)
 
 def idx_view_all_questions_latest(request):
     print("asd")
-    if request.user.id:
-        context = {'rules':RuleSet.objects.filter(~Q(user=request.user)).order_by('creation_time'),
-                    'by':'latest'}
-    else:
-        context = {'rules':RuleSet.objects.all().order_by('creation_time'), 'by':'latest'}
+    if request.user.id: queryset = RuleSet.objects.filter(~Q(user=request.user))
+    else: queryset = RuleSet.objects.all()
+
+    context = {'rules':queryset.order_by('creation_time'), 'by':'latest'}
     print(context['by'])
     return render(request, "survey/all_questions.html", context)
 

@@ -1,17 +1,17 @@
 @media (hover:none) and (pointer:coarse) {
   .touch_screen {
-      display: block !important;
+      display: block;
     }
 }
 
 @media screen and (max-width: 1000px) {
   .touch_screen {
-      display: block !important;
+      display: block;
     }
 }
 
 .touch_screen {
-  display: none;
+  display: block;
   position: fixed;
   top:25vh;
   left:25vw;
