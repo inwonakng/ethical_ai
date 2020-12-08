@@ -1,20 +1,20 @@
 {% extends 'survey/base.html' %}
 
 {% block content %}
-  <div class="poll_div">
-    {% for r in rules %}
-    <div class = 'my_poll_title'>
-      <span class='my_poll_subject'>{{r.rule_title}}</span> 
+  {% for r in rules %}
+    <div class="poll_div">
+      <div class = 'my_poll_title'>
+        <span class='my_poll_subject'>{{r.rule_title}}</span> 
+      </div>
+      <span class='my_poll_date'>Created at: {{'2020-11-11'}}</span>
+      <div class='my_poll_information'>
+        <p>Number of participant: {{7}}</p>
+        <p>Highest ranked features: </p>
+        <p>Average time to complete: {{7}}</p>
+      </div>
+      <button class="download_button"><a>Click to download</a></button>
+      <button class="detail_button">See Details</button>
     </div>
-    <span class='my_poll_date'>Created at: {{'2020-11-11'}}</span>
-    <div class='my_poll_information'>
-      <p>Number of participant: {{7}}</p>
-      <p>Highest ranked features: </p>
-      <p>Average time to complete: {{7}}</p>
-    </div>
-    <button class="download_button"><a>Click to download</a></button>
-    <button class="detail_button">See Details</button>
     {% endfor %}
         
-  </div>
 {% endblock %}

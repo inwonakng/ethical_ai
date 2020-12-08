@@ -11,6 +11,7 @@ from random import sample
 from random import randint as rint
 from itertools import combinations as comb
 from survey.generation import Generator as gen
+import time
 
 '''User Profile models'''
 class UserProfile(models.Model):
@@ -178,6 +179,8 @@ class RuleSet(models.Model):
 
     same_categories = models.IntegerField(null=True, default=2)
     scenario_size = models.IntegerField(null=True, default=2)
+    creation_time = models.DateTimeField()
+    number_of_answers = models.IntegerField(null=True, default=0)
 
     # ruleset creator
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -492,6 +495,9 @@ def json_to_ruleset(d,user,title,prompt):
     rule_set.user = user
     rule_set.generative = generative
     rule_set.prompt = prompt
+    rule_set.creation_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+
+    print(rule_set.creation_time)
     rule_set.save()
     if generative:
         for categ, obj in d['categories'].items():
