@@ -20,7 +20,7 @@ $(document).ready(() => {
 
       <div class = "input_wrap">
         <input type="radio" id = "method1" name="ranking" checked>
-        <label for="method1">Trending</label>
+        <label for="method1">Earliest</label>
       </div>
       <div class = "input_wrap">
         <input type="radio" id = "method2" name="ranking">
@@ -45,21 +45,49 @@ $(document).ready(() => {
 
   </div>
   
+
+
 {% for a in ans %}
 <div class = "question_cards">
   <div class = "over_view">
     <div class = "title">
-      <a href="/loadsurvey/{{r.id}}">{{r.rule_title}}</a>
+      <a href="/loadsurvey/{{a.ruleset_id}}">{{a.prompt}}</a>
+      <p>Date Taken: {{a.date}}</p>
     </div>
     <div class = "img" style="background-color: #3498db;"></div>
-  </div>
+  </div
   <div class = "detail">
-    <p>Prompt of the survey:</p>
+    <p>Description:</p>
     <dl>
-      {{r.prompt}}
+      {{a.desc}}
     </dl>
   </div>
 </div>
 {% endfor %}
+
+</div>
+
+
+<div class = "side_col">
+  <div class = "side_card first" style= "height:300px;">
+    <div class = "trend_title" style = "background-image: url({% static 'img/14035064.png' %});">
+      Most Viewed Question
+    </div>
+    <div class = "content"></div>
+  </div>
+
+  <div class = "side_card" style= "height:500px;">
+    <div class = "title">
+      Ask Your Questions
+    </div>
+    <div class = "content"></div>
+  </div>
+
+  <div class = "side_card last" style= "height:200px;">
+    <div class = "title">
+      Help Us Improve
+    </div>
+    <div class = "content"></div>
+  </div>
 </div>
 {% endblock %}
