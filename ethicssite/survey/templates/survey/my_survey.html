@@ -6,10 +6,12 @@
       <div class = 'my_poll_title'>
         <span class='my_poll_subject'>{{r.rule_title}}</span> 
       </div>
-      <span class='my_poll_date'>Created at: {{'2020-11-11'}}</span>
+      <span class='my_poll_date'>Created at: {{r.creation_time}}</span>
       <div class='my_poll_information'>
-        <p>Number of participant: {{7}}</p>
+        <p>Number of participant: {{r.number_of_answers}}</p>
+        {% if r.gernative %}
         <p>Highest ranked features: </p>
+        {% endif %}
         <p>Average time to complete: {{7}}</p>
       </div>
       <button class="download_button"><a>Click to download</a></button>

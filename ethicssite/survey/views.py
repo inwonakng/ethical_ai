@@ -31,7 +31,7 @@ def idx_view_all_questions_latest(request):
     if request.user.id: queryset = RuleSet.objects.filter(~Q(user=request.user))
     else: queryset = RuleSet.objects.all()
 
-    context = {'rules':queryset.order_by('creation_time'), 'by':'latest'}
+    context = {'rules':queryset.order_by('-creation_time'), 'by':'latest'}
     print(context['by'])
     return render(request, "survey/all_questions.html", context)
 
@@ -358,7 +358,7 @@ def my_survey(request,user_id):
     #the list of rule sets by the parent_id
     #besides the features and its values in each scenario, their should also be values
     #including poll create date and number of particiants
-    context = {'rules':RuleSet.objects.filter(user_id = user_id)}
+    context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time')}
 
 
     return render(request, 'survey/my_survey.html', context)
