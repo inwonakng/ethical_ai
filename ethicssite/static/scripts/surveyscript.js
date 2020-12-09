@@ -10,9 +10,10 @@ function writetopage(data, args) {
     // super hardcoding time...
     // html_text = ''
 
-    outli = make('table','listq'+args)
+    var outli = make('table','listq'+args)
+    var dd;
     for(dd of data){
-        inli = make('tr','')
+        var inli = make('tr','')
         inli.innerHTML = dd
         inli.style.fontSize='large'
         outli.appendChild(inli)
@@ -228,6 +229,8 @@ function viewReviewPage() {
         div.appendChild(button_div);
         element.appendChild(div);
     }
+    featuresAsString();
+    console.log(dataFeatures);
 }
 function backToPage(pageNum) {
     byid("review_page").style.display = "none";
@@ -323,7 +326,7 @@ function prev() {
     viewCurrentScenario();
     guicheck();
 }
-// TODO Megan: Store data from front-end to data structure.
+// Grabs the user's scores from the survey scenarios.
 function grabscores() {
     let scores = [];
     for (let s in totalData) {
@@ -337,6 +340,9 @@ function grabscores() {
     }
     return scores;
 }
+// Submits the original scenarios, the user's option 
+// scores for each scenario, and the user's scores 
+// for each feature. 
 function submitResult() {
     var scores = grabscores();
     http_post('submitsurvey', 
@@ -346,7 +352,13 @@ function submitResult() {
 function printstuff(dat, arg) {
     console.log(dat);
 }
-// initial page
+function featuresAsString() {
+    console.log(dataFeatures[i].key);
+    for (var i = 0; i < dataFeatures.length; i++) {
+        dataFeatures[i].value = dataFeatures[i].value.toString();
+    }
+}
+// initial Take Survey Page
 var scenarioNum = 0;
 var maxScenarios = Number(byid('maxlen').innerHTML)
 var data = [];
