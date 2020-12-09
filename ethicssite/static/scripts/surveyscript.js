@@ -171,38 +171,56 @@ function viewReviewPage() {
         div.className = "review_div";
         let p = make("p", "prompt");
         div.appendChild(p);
-        p.innerHTML = "Prompt";
-        let table = make('table', 'q' + i + "review");
-        // table headers
-        let row = table.createTHead().insertRow();
-        row.appendChild(make('th'));
-        for (let j = 0; j < 3; j++) {
-            let th = make('th');
-            th.innerHTML = dataFeatures[j]["key"];
-            row.appendChild(th);
-        }
-        let th = make('th');
-        th.innerHTML = "Your Choices";
-        console.log('current question: ', currentQuestion);
-        row.appendChild(th);
-        // table body
-        for (let j = 0; j < currentQuestion.length; j++) {
-            let row = table.insertRow();
-            row.insertCell().innerHTML = "Option " + j;
-            for (let k = 0; k < 3; k++) {
-                let currentFeauture = dataFeatures[k]["key"];
-                row.insertCell().innerHTML = currentQuestion[j][currentFeauture];
+        p.innerHTML = "Prompt: " + byid('rule_prompt').innerHTML;
+        
+        if(isgen){
+            let table = make('table', 'q' + i + "review");
+            // table headers
+            let row = table.createTHead().insertRow();
+            row.appendChild(make('th'));
+            for (let j = 0; j < 3; j++) {
+                let th = make('th');
+                th.innerHTML = dataFeatures[j]["key"];
+                row.appendChild(th);
             }
-            let sliderIndex = j;
-            console.log("q" + i + "range" + sliderIndex);
-            let value = byid("q" + i + "range" + sliderIndex).value;
-            row.insertCell().innerHTML = value;
+            let th = make('th');
+            th.innerHTML = "Your Choices";
+            console.log('current question: ', currentQuestion);
+            row.appendChild(th);
+            // table body
+            for (let j = 0; j < currentQuestion.length; j++) {
+                let row = table.insertRow();
+                row.insertCell().innerHTML = "Option " + j;
+                for (let k = 0; k < 3; k++) {
+                    let currentFeauture = dataFeatures[k]["key"];
+                    row.insertCell().innerHTML = currentQuestion[j][currentFeauture];
+                }
+                let sliderIndex = j;
+                console.log("q" + i + "range" + sliderIndex);
+                let value = byid("q" + i + "range" + sliderIndex).value;
+                row.insertCell().innerHTML = value;
+            }
+            div.appendChild(table);
+        } else {
+            let table = make('table', 'q' + i + "review");
+            headrow = table.createTHead().insertRow()
+            headrow.insertCell().innerHTML = 'Options'
+            headrow.insertCell().innerHTML = 'Scores'
+            scos = grabscores()
+            for(j=0;j<totalData[i].length;j++){
+                let row = table.insertRow();
+                row.insertCell().innerHTML = totalData[i][j]
+                row.insertCell().innerHTML = scos[i][j]
+            }
+            div.appendChild(table)
         }
-        div.appendChild(table);
+
+
         let button_div = make("div");
         button_div.className = "review_button";
         let button = make("button", i + "review_button");
         button.innerHTML = "Modify Anwser";
+        button.className = 'action-btn'
         button.onclick = function (i) {
             backToPage(parseInt(i.target.id));
         };
@@ -274,7 +292,12 @@ function next() {
     scenarioNum++;
     // Has the user finished the first part of the survey?
     if (scenarioNum == maxScenarios) {
-        viewFinalSurveyPage();
+        if(isgen){
+            viewFinalSurveyPage();
+        }else{
+            viewReviewPage();
+            byid("next").style.display = "none";
+        }
     }
     else {
         // Assumes the person is still taking the first part of the scenario.
@@ -316,7 +339,9 @@ function grabscores() {
 }
 function submitResult() {
     var scores = grabscores();
-    http_post('submitsurvey', [totalData, scores], true);
+    http_post('submitsurvey', 
+                {'survey_data':totalData, 'scores':scores,'parent_id':parent_id}, 
+                true);
 }
 function printstuff(dat, arg) {
     console.log(dat);

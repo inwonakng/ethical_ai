@@ -11,6 +11,7 @@ from random import sample
 from random import randint as rint
 from itertools import combinations as comb
 from survey.generation import Generator as gen
+from django.db.models import Q
 import time
 
 '''User Profile models'''
@@ -196,6 +197,10 @@ class RuleSet(models.Model):
     def get_sample(self):
         ss = self.scenarios.all()[0]
         return [o.text for o in ss.options.all()]
+
+    def get_num_answers(self):
+        qset = Survey.objects.filter(Q(ruleset_id = self.id))
+        return len(qset)
 
     def get_choicecategs(self):
         # for cc in self.choice_categs
@@ -429,43 +434,44 @@ Test scenario example:
 # load them into Django models.
 
 
-def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
-
-    curr_survey = Survey(prompt=prompt, desc=desc, user=user)
+def json_to_survey(survey_data, scores, parent_id, user):
+    
+    seed_rule = RuleSet.objects.get(id=int(parent_id))
+    # incrementing the num here
+    seed_rule.number_of_answers  += 1
+    seed_rule.save()
+    
+    curr_survey = Survey(prompt=seed_rule.prompt, desc=seed_rule.rule_title, user=user,ruleset_id=int(parent_id))
     curr_survey.save()
-    scenarios = 0
-    for scenario in survey_data[0]:
+
+    for scenario,scen_scores in zip(survey_data,scores):
         
         curr_scenario = Scenario()
         curr_scenario.save()
 
-        
-        person_count = 1
-        scenarios += 1
-
-        for option in scenario:
+        for i,(option,onesco) in enumerate(zip(scenario,scen_scores)):
             
-            curr_option = Option(name="Person " + str(person_count))
-            #curr_option.save()
-
+            curr_option = Option(name="Option " + str(i+1))
+            
             # Saves option scores
-            print(len(scenario))
-            curr_score = SingleResponse(value=survey_data[1][(int(person_count/2))][int((person_count-1)%len(scenario))])
+            curr_score = SingleResponse(value=onesco)
             curr_score.save()
 
             curr_option.score = curr_score
+            
+            if not seed_rule.generative: curr_option.text = option
             curr_option.save()
 
-            person_count += 1
+            # do only if generative! 
+            if seed_rule.generative:
+                for attribute in option:
+                    value = option[attribute]
 
-            for attribute in option:
-                value = option[attribute]
+                    curr_attribute = Attribute(name=attribute, value=value)
+                    curr_attribute.save()
 
-                curr_attribute = Attribute(name=attribute, value=value)
-                curr_attribute.save()
-
-                curr_option.attributes.add(curr_attribute)
-                curr_option.save()
+                    curr_option.attributes.add(curr_attribute)
+                    curr_option.save()
 
             curr_scenario.options.add(curr_option)
             curr_scenario.save()

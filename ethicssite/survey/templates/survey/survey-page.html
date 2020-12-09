@@ -12,8 +12,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body onload="guicheck()">
-    <a id="parent_id" style="display:none">{{parent_id}}</a>
-    <a id="is_gen" style="display:none">{{generative}}</a>
+    <a id="parent_id" style="display:none">{{rule.id}}</a>
+    <a id="rule_prompt" style="display:none">{{rule.prompt}}</a>
+    <a id="is_gen" style="display:none">{{rule.generative}}</a>
     <a id="maxlen" style="display:none">{{length}}</a>
 
     <div id="question">
@@ -43,12 +44,13 @@
       <div class = 'review_head'>
         <h1 class = 'head'>Your Answers</h1>
         <hr class = "head_hr"></hr>
+        <br><br>
       </div>
     </div>
     <button id="prev" class="action-btn" onclick="prev()">Prev</button>
     <button id="next" class="action-btn" onclick="next()">Next</button>
     {% comment %} <form action='/submitsurvey/' method="POST"> {% endcomment %}
-      <button id = "submit" onclick="submitResult()" style="display: none; position: absolute; right: 0px;">Submit</button>
+      <button id = "submit" class="action-btn" onclick="submitResult()" style="display: none; position: absolute; right: 0px;">Submit</button>
     {% comment %} </form> {% endcomment %}
     {% load static %}
     <script type="text/javascript" src="{% static '/scripts/helper.js' %}"></script> 

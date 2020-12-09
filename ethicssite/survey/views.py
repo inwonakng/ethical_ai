@@ -176,7 +176,7 @@ def rules_view(request):
 def load_survey(request,parent_id):
     # empty for now
     rule = RuleSet.objects.get(id=parent_id)
-    survey_info = {'parent_id':parent_id,'generative':rule.generative,'length':len(rule.scenarios.all())}
+    survey_info = {'length':len(rule.scenarios.all()),'rule':rule}
 
     if rule.generative:
         check = SurveyGenerator.objects.filter(rule_id = parent_id)
@@ -309,18 +309,18 @@ def create_survey(request):
 # @csrf_exempt
 @login_required
 def submit_survey(request):
-    return redirect('/')
     if request.method == 'POST':
         # for now not storing scores
-        print(request.body)
-        print('scenario:',request.body[0])
-        print('scores:',request.body[1])
-        print('asd', request.body[10])
+        vals = json.loads(request.body)
+        vals['user'] = request.user
+        print(vals)
 
         #Submits the json
-        json_to_survey(request.body, request.user)
+        json_to_survey(**vals)
         # print(json.load(request.body))
-        return redirect("survey:surveyresult")
+        # return redirect("survey:surveyresult")
+        return redirect('/')
+
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')
