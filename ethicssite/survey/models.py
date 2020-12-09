@@ -465,7 +465,10 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
             curr_option.save()
 
             person_count += 1
-            
+
+            # Will trigger this if the options aren't strings.
+            # For now, the entire string is marked as an option.
+            # In the future, there should 
             if(isinstance(option,str) != True):
 
                 for attribute in option:
