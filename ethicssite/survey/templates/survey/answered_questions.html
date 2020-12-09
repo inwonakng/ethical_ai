@@ -44,29 +44,24 @@ $(document).ready(() => {
     <div class = "filter_options"></div>
 
   </div>
-  
-
-
-{% for a in ans %}
-<div class = "question_cards">
-  <div class = "over_view">
-    <div class = "title">
-      <a href="/loadsurvey/{{a.ruleset_id}}">{{a.prompt}}</a>
-      <p>Date Taken: {{a.date}}</p>
+  {% for a in ans %}
+    <div class = "question_cards">
+    <div class = "over_view">
+      <div class = "title">
+        <a href="/loadsurvey/{{a.ruleset_id}}">{{a.prompt}}</a>
+        <p>Date Taken: {{a.date}}</p>
+      </div>
+      <div class = "img" style="background-color: #3498db;"></div>
     </div>
-    <div class = "img" style="background-color: #3498db;"></div>
-  </div
-  <div class = "detail">
-    <p>Description:</p>
-    <dl>
-      {{a.desc}}
-    </dl>
+    <div class = "detail">
+      <p>Description:</p>
+      <dl>
+        {{a.desc}}
+      </dl>
+    </div>
   </div>
+  {% endfor %}
 </div>
-{% endfor %}
-
-</div>
-
 
 <div class = "side_col">
   <div class = "side_card first" style= "height:300px;">

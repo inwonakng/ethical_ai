@@ -437,6 +437,10 @@ Test scenario example:
 
 def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
+    # First, we need to translate the data from byte to the data structure above
+    survey_data = survey_data.decode('utf-8')
+    survey_data = json.loads(survey_data)
+
     curr_survey = Survey(prompt=prompt, desc=desc, user=user)
     curr_survey.save()
     scenarios = 0
@@ -461,15 +465,17 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
             curr_option.save()
 
             person_count += 1
+            
+            if(isinstance(option,str) != True):
 
-            for attribute in option:
-                value = option[attribute]
+                for attribute in option:
+                    value = option[attribute]
 
-                curr_attribute = Attribute(name=attribute, value=value)
-                curr_attribute.save()
+                    curr_attribute = Attribute(name=attribute, value=value)
+                    curr_attribute.save()
 
-                curr_option.attributes.add(curr_attribute)
-                curr_option.save()
+                    curr_option.attributes.add(curr_attribute)
+                    curr_option.save()
 
             curr_scenario.options.add(curr_option)
             curr_scenario.save()
@@ -489,7 +495,8 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
         curr_survey.feature_scores.add(curr_feature)
         curr_survey.save()
     
-
+    curr_survey.save()
+    print(curr_survey)
     return curr_survey
 
 '''

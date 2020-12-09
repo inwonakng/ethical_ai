@@ -24,8 +24,9 @@ def idx_view_all_questions(request):
         context = {'rules':RuleSet.objects.all()}
     return render(request, "survey/all_questions.html", context)
 
+# Should view all of the surveys that this user has answered
 def idx_view_answered_questions(request):
-    context = {}
+    context = {'ans':Survey.objects.filter(Q(user=request.user))}
     return render(request, "survey/answered_questions.html", context)
 
 def idx_view_result_analysis(request):
@@ -294,7 +295,7 @@ def create_survey(request):
 # @csrf_exempt
 @login_required
 def submit_survey(request):
-    return redirect('/')
+    #return redirect('/')
     if request.method == 'POST':
         # for now not storing scores
         print(request.body)
