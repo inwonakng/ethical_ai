@@ -12,7 +12,6 @@ $(document).ready(() => {
     $("#bad_text").show();
     $("#container4").hide();
     $("#container3").show();
-    $(".bad_cob2").hide();
     $(".bad_cob1").show();
   });
 
@@ -32,11 +31,10 @@ $(document).ready(() => {
     $("#container3").hide();
     $("#container4").show();
     $(".bad_cob1").hide();
-    $(".bad_cob2").show();
   });
 
   $('.custom_rules_card').on('click', event => {
-    var structure = $('<div class = "custom_rule_card"><p>Scenario</p><div class = "custom_option_container"><div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div></div><div class = "add_option custom_option_card"><p class="p_card_custom_option">Add more options</p></div><br/></div>');
+    var structure = $('<div class = "custom_rule_card"><p>Question</p><div class = "custom_option_container"><div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div></div><div class = "add_option custom_option_card"><p class="p_card_custom_option">Add more options</p></div><br/></div>');
     $("#container2").append(structure);
   });
 
@@ -90,7 +88,6 @@ $(document).on('click','.add_rules_card', function(){
       handle1.text( ui.values[0] );
       handle2.text( ui.values[1] );
     }
-
   });
 });
 
@@ -150,5 +147,4 @@ function parse_data() {
     }
     ,true
   )
-
 }

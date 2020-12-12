@@ -18,17 +18,25 @@ from django.db.models import Q
 from django import forms
 
 
+'''
+Returns a list of ID for all the 'RuleSet' the user has taken
+'''
+def check_taken(user):
+    surveys = Survey.objects.filter(Q(user=user))
+    return [s.ruleset_id for s in surveys]
+
 def idx_view_all_questions_trending(request):
-    if request.user.id: queryset = RuleSet.objects.filter(~Q(user=request.user))
+    if request.user.id: 
+        queryset = RuleSet.objects.filter(~Q(user=request.user)).exclude(id__in=check_taken(request.user))
     else: queryset = RuleSet.objects.all()
-    
+
     context = {'rules':queryset.order_by('-number_of_answers'), 'by':'trending'}
     print(context['by'])
     return render(request, "survey/all_questions.html", context)
 
 def idx_view_all_questions_latest(request):
-    print("asd")
-    if request.user.id: queryset = RuleSet.objects.filter(~Q(user=request.user))
+    if request.user.id: 
+        queryset = RuleSet.objects.filter(~Q(user=request.user)).exclude(id__in=check_taken(request.user))
     else: queryset = RuleSet.objects.all()
 
     context = {'rules':queryset.order_by('-creation_time'), 'by':'latest'}
@@ -160,126 +168,87 @@ def rules_view(request):
     context = {}
     return render(request, "survey/rules.html", context)
 
-# Start survey
+'''
+Survey taking section START
+'''
 
-# Collect user input from survey
-
-# page for user survey creation <-- ??
-    # get user defined rules back <-- ??
-
-
-# Function to grab new scenario
-    # start survey
-    # collect user input from survey
-    # page for user survey creation
-    # get user defined rules back
-    # function to grab new scenario
 def load_survey(request,parent_id):
-    # empty for now
+    # prepare generator if generative survey
     rule = RuleSet.objects.get(id=parent_id)
-    survey_info = {'length':len(rule.scenarios.all()),'rule':rule}
-
     if rule.generative:
         check = SurveyGenerator.objects.filter(rule_id = parent_id)
         if not check: build_generator(rule)
+    return redirect('survey:getscenario',parent_id=parent_id,scenario_num=0,is_review=0)
 
-    # hardcoded!!!!!
-    # grabbing default rule
-    # rule = RuleSet.objects.all()[0]
-    # check = SurveyGenerator.objects.filter(rule_id = rule.id)
-    # if not check: build_generator(rule)
-
-    # survey_info.update(csrf(request))
-    return render(request,'survey/survey-page.html',survey_info)
-
-def get_scenario(request,parent_id,scenario_num):
+def get_scenario(request,parent_id,scenario_num,is_review):
+    # if in review mode is_review == 1
 
     rule = RuleSet.objects.get(id=parent_id)
-    combos = 3
 
-    if request.method == "POST":
-        combos = request.POST['combo_count']
-
-
-    '''
-    Example of how a scenario object is created from the json.
-    For @Taras, when you work on this, convert this function to return the model 
-    rather than the json, so that the template can unpack the model instance there. 
-    '''
     # if the survey is generative
     if rule.generative:
-        # grabbing the sample json
-        story_gen = SurveyGenerator.objects.get(rule_id=parent_id)
-        # story_gen = SurveyGenerator.objects.get(rule_id=RuleSet.objects.all()[0].id)
-        ss = story_gen.get_scenario()
-        scen = Scenario()
-        scen.save()
-        for i,s in enumerate(ss):
-            op = Option()
-            op.name = 'Option '+ str(i)
-            op.save()
-            for k,v in s.items():
-                attr = Attribute()
-                attr.name = k
-                attr.value = v
-                attr.save()
-                op.attributes.add(attr)
-            op.save()
-            scen.options.add(op)
+        scen = SurveyGenerator.objects.get(rule_id=parent_id).get_scenario()
     else:
-        scen = rule.scenarios.all()[scenario_num]
-        ss = [o.text for o in scen.options.all()]
-    
+        # try getting it from an existing survey first
+        try:
+            surv = Survey.objects.get(Q(ruleset_id=parent_id,user=request.user))
+            scen = surv.scenarios.all()[scenario_num]
+        except:
+            # this creates a new scenario object with same values..
+            scen = rule.scenarios.all()[scenario_num].makecopy()
 
-    survey_information = json.dumps(ss)
-    # For frontend, check the html to
-    # see how the object is grabbed.
-    return HttpResponse(content=survey_information)
+    context = {
+        'rule':         rule,
+        'curr_index':   scenario_num,
+        'scenario':     scen,
+        'is_review':    is_review
+    }
 
-    # once you navigate to http://127.0.0.1:8000/survey/loadsurvey
-    # and press ctrl+shift+i and switch to console tab,
-    # you can see the json object printed on the console
+    return render(request,'survey/takesurvey.html',context)
+
+# review page for users to see their inputs
+def review_page(request,rule_id):
+    survey = Survey.objects.get(Q(user=request.user,ruleset_id=rule_id))
+    # only covering case for custom surveys
+    context = {'survey':survey}
+    return render(request,'survey/review_survey.html',context)
+
+def submit_survey(request):
+    return redirect('/')
 
 # Save individual scenario
-def save_scenario(request):
-    if request.method == "POST":
-        # user id, session id, ruleset id
-        user_id = request.post['user_id']
-        session_id = request.post['session_id']
-        ruleset_id = request.post['ruleset_id']
-        # used to implement trending of index page.
-        current_ruleset = RuleSet.objects.get(id=ruleset_id)
-        current_ruleset.number_of_answers += 1
-        current_ruleset.save()
+def save_scenario(request,scenario_id,rule_id,is_review):
+    # if in review mode is_review == 1
 
-        # prompt & description
-        prompt = request.post['prompt']
-        prompt_description = request.post['description']
+    if not request.method == "POST": return
+    # check if the survey exists for this combination already
+    try:
+        survey = Survey.objects.get(Q(user=request.user,ruleset_id=rule_id)) 
+    except:
+        survey = Survey(user=request.user,ruleset_id=rule_id)
+        survey.save()
 
-        # not too sure how I'd take in a dictionary, but the idea is I somehow get a dictionary
-        attribute_dictionary = request.post['dictionary']
-        json_attribute = json.loads(attribute_dictionary)
+    # copy over the input valeus from request
+    vals = list(request.POST.values())[1:]
 
-        # slider score
-        scenario_score = request.post['score']
+    scenario = Scenario.objects.get(id=scenario_id)
 
-        individual_scenario = Scenario()
-        individual_scenario.save()
-        individual_scenario.options.add(name=prompt, text=prompt_description)
+    for o,sco in zip(scenario.options.all(),vals):
+        o.score = sco
+        o.save()
+    scenario.save()
+    survey.scenarios.add(scenario)
+    survey.save()
 
-        # saving each attribute (from dictionary)
-        for key,value in json_attribute:
-            individual_scenario.options.attributes.add(name=key, value=value)
+    rule = RuleSet.objects.get(id = rule_id)
 
-        individual_scenario.options.score.add(value=scenario_score)
+    num_scenarios = len(survey.scenarios.all())
 
-        # at this point, we have successfully created an individual_scenario object
-
-        # now send that data to TempScenarios
-        all_scenarios = TempScenarios(user_id=user_id, session_id=session_id, ruleset_id=ruleset_id)
-        all_scenarios.save()
-        all_scenarios.scenarios.add(individual_scenario)
-
+    # if they are at the end of a survey
+    if num_scenarios == rule.scenario_size() or is_review==1:
+        return redirect('survey:review',rule_id=rule_id)
+    else: 
+        return redirect('survey:getscenario',parent_id=rule_id,scenario_num=num_scenarios,is_review=0)
 
 
 # From gigantic list of scenarios create a Survey object
@@ -305,23 +274,9 @@ def create_survey(request):
         for x in all_scenarios:
             saved_survey.scenarios.add(x)
 
-
-
-# @csrf_exempt
-@login_required
-def submit_survey(request):
-    if request.method == 'POST':
-        # for now not storing scores
-        vals = json.loads(request.body)
-        vals['user'] = request.user
-        print(vals)
-
-        #Submits the json
-        json_to_survey(**vals)
-        # print(json.load(request.body))
-        # return redirect("survey:surveyresult")
-        return redirect('/')
-
+'''
+Survey taking section END
+'''
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')
@@ -341,15 +296,7 @@ def save_rule(request):
     if request.method != 'POST':
         return HttpResponse(status=400)
     json_data = json.loads(request.body)
-    # json_rules_string = ''
-    
-    # not doing error checks but we shoul dhave this later, i dont wanna do it now
-    # try:
-    #     json_rules_string = json.dumps(json_data['rules'])
-    # except KeyError:
-    #     HttpResponseServerError('`rules` field not found in request body.')
 
-    
     json_to_ruleset(json_data['data'], request.user,json_data['title'],json_data['prompt'])
     HttpResponse(status=201)
     return redirect('/')

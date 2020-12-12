@@ -13,6 +13,7 @@ from itertools import combinations as comb
 from survey.generation import Generator as gen
 from django.db.models import Q
 import time
+from copy import deepcopy
 
 '''User Profile models'''
 class UserProfile(models.Model):
@@ -99,7 +100,23 @@ class SurveyGenerator(models.Model):
         for c in self.list_categs.all():
             selected = [c.translate(ss) for ss in selected]
         
-        return selected
+        # turning that into a Scenario object here
+        scen = Scenario()
+        scen.save()
+        for i,s in enumerate(selected):
+            op = Option()
+            op.name = 'Option '+ str(i)
+            op.save()
+            for k,v in s.items():
+                attr = Attribute()
+                attr.name = k
+                attr.value = v
+                attr.save()
+                op.attributes.add(attr)
+            op.save()
+            scen.options.add(op)
+        scen.save()
+        return scen
     
 def build_generator(rule):
     sg = SurveyGenerator()
@@ -143,22 +160,37 @@ class Survey(models.Model):
     feature_scores = models.ManyToManyField('FeatureScore')
     # user taking this survey
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def get_scenarios(self):
+        return self.scenarios.all()
+    def getlastindex(self):
+        return len(self.scenarios.all())-1
 
 class FeatureScore(models.Model):
     name = models.TextField(null=False,default='default_namee')
-    score = models.OneToOneField('SingleResponse',on_delete=models.CASCADE)
+    # score = models.OneToOneField('SingleResponse',on_delete=models.CASCADE)
+    score = models.IntegerField(null=True)
 
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
+
+    def get_options(self):
+        return self.options.all()
+
+    def makecopy(self):
+        new_copy = deepcopy(self)
+        new_copy.id = None
+        new_copy.save()
+        for o in self.options.all():
+            new_copy.options.add(o)
+        new_copy.save()
+        return new_copy
 
 class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute' , related_name='combo_attributes')
     text = models.CharField(max_length=50, null=False, default='')
-    score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE,null=True)
-
-class SingleResponse(models.Model):
-    value = models.CharField(max_length=50, null=False, default='')
+    score = models.IntegerField(null=True)
 
 # Holds ruleset ID and scenario model
 class TempScenarios(models.Model):
@@ -179,7 +211,6 @@ class RuleSet(models.Model):
     # # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
 
     same_categories = models.IntegerField(null=True, default=2)
-    scenario_size = models.IntegerField(null=True, default=2)
     creation_time = models.DateTimeField()
     number_of_answers = models.IntegerField(null=True, default=0)
 
@@ -193,6 +224,9 @@ class RuleSet(models.Model):
     scenarios = models.ManyToManyField("Scenario")    
 
     '''These accessor functions are for the generator to use'''
+
+    def scenario_size(self):
+        return len(self.scenarios.all())
 
     def get_sample(self):
         ss = self.scenarios.all()[0]
@@ -463,10 +497,7 @@ def json_to_survey(survey_data, scores, parent_id, user):
             curr_option = Option(name="Option " + str(i+1))
             
             # Saves option scores
-            curr_score = SingleResponse(value=onesco)
-            curr_score.save()
-
-            curr_option.score = curr_score
+            curr_option.score = onesco
             
             if not seed_rule.generative: curr_option.text = option
             curr_option.save()
@@ -490,11 +521,7 @@ def json_to_survey(survey_data, scores, parent_id, user):
 
     # loads feature scores into survey
     for feature in survey_data[2]:
-        
-        curr_score = SingleResponse(value=feature["value"])
-        curr_score.save()
-
-        curr_feature = FeatureScore(name=feature["key"], score=curr_score)
+        curr_feature = FeatureScore(name=feature["key"], score=int(feature["value"]))
         curr_feature.save()
 
         curr_survey.feature_scores.add(curr_feature)

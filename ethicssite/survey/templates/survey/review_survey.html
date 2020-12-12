@@ -1,0 +1,54 @@
+{% extends 'survey/my_base.html' %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../static/css/survey-page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% csrf_token %}
+</head>
+
+
+<div style="height: 30px;"></div>
+<div class="question">
+    <h2>Review your answers</h2>
+</div>
+{% for scenario in survey.get_scenarios%}
+<div class= "question_cards">
+    <div class = "over_view">
+        <div class = "title" style="font-size: large;">
+            Question {{forloop.counter}}
+        </div>
+        <div class="img" 
+        style="background-color: #c7db53;">
+        <!-- Check -->
+        </div>
+    </div>
+    <div class = "detail">
+        <table style="border: 0px white;">
+            {% for option in scenario.get_options%}
+                <tr style="height: 30px;">
+                <td style="border: 0px white;">{{option.text}}</td>
+                <td style="width: 30px;border: 0px white;">{{option.score}}</td>
+                </tr>
+                <!-- </dl> -->
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endfor %}
+
+<div class="question">
+    <form 
+    action="{% url 'survey:getscenario' parent_id=survey.ruleset_id scenario_num=survey.getlastindex is_review=0 %}" type="POST">
+        <button class="action-btn" type="submit">Prev</button>
+    </form>
+    <form
+    action="{% url 'survey:submitsurvey'%}">
+        <button class="action-btn" type="submit">Submit</button>
+    </form>
+</div>
+
+
+{% endblock %}

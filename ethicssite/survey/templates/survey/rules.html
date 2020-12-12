@@ -22,7 +22,11 @@
 
         <!-- <form action="/saverule" method='POST'>{% csrf_token %} -->
           <br>
+          Title:
+          <br>
           <input type="text" id="rule_name" placeholder="Title for your survey!">
+          <br>
+          Description:
           <br>
           <input type="text" id="rule_prompt" placeholder="Prompt (explanation) for your survey!">
           <br>
@@ -36,15 +40,15 @@
           <div class="add_rules_card card"><p class="p_card">Add more rules</p></div>
           <div class="custom_rules_card card"><p class="p_card">Add more rules</p></div>
 
-          <p id="bad_text">Forbidden Combinations</p>
           
           <div id = "container3">
           </div>
           <div id = "container4">
           </div>
           
-          <div class="bad_cob1 card"><p class="p_card">Set a new one</p></div>
-          <div class="bad_cob2 card"><p class="p_card">Set a new one</p></div>
+          <div class="bad_cob1 card">
+            <p id="bad_text">Forbidden Combinations</p>
+            <p class="p_card">Set a new one</p></div>
           <!-- i couldn't find a better way to format the data well, so here we go -->
           <input type="submit" onclick = "parse_data()" value="Save" />
           
