@@ -3,14 +3,13 @@
 
 {% load static %}
 <script type="text/javascript" src="{% static '/scripts/helper.js' %}"></script> 
-<script type="text/javascript" src="{% static '/scripts/rule_main_latest2.js' %}"></script>
+<script type="text/javascript" src="{% static '/scripts/rule_script.js' %}"></script>
 
 <div class = "bg">
   <div class = "col2">
     <div class = 'rules_container'>
       <div class = "prompt">
-        <div class="title">Rules</div>
-        <underline></underline>
+        <h3 class="title">Create your survey outline</h3>
       </div>
       
       <div class = "options">
@@ -24,11 +23,12 @@
           <br>
           Title:
           <br>
-          <input type="text" id="rule_name" placeholder="Title for your survey!">
+          <input type="text" id="rule_name" class="ruletitle" placeholder="Title for your survey">
+          <br>
           <br>
           Description:
           <br>
-          <input type="text" id="rule_prompt" placeholder="Prompt (explanation) for your survey!">
+          <textarea type="text" id="rule_prompt" class="ruleprompt" placeholder="Prompt (explanation) for your survey!"></textarea>
           <br>
           <input type="text" id="final_type" name="final_type" style="display: none;">
 
@@ -37,8 +37,8 @@
           <div id = "container2">
           </div>
           
-          <div class="add_rules_card card"><p class="p_card">Add more rules</p></div>
-          <div class="custom_rules_card card"><p class="p_card">Add more rules</p></div>
+          <div class="add_rules_card card"><p class="p_card">Add more questions</p></div>
+          <div class="custom_rules_card card"><p class="p_card">Add more questions</p></div>
 
           
           <div id = "container3">
@@ -50,6 +50,7 @@
             <p id="bad_text">Forbidden Combinations</p>
             <p class="p_card">Set a new one</p></div>
           <!-- i couldn't find a better way to format the data well, so here we go -->
+          <!-- this is easier than using a form, because the input size should be dynamic -->
           <input type="submit" onclick = "parse_data()" value="Save" />
           
         <!-- </form> -->

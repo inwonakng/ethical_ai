@@ -34,7 +34,19 @@ $(document).ready(() => {
   });
 
   $('.custom_rules_card').on('click', event => {
-    var structure = $('<div class = "custom_rule_card"><p>Question</p><div class = "custom_option_container"><div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div></div><div class = "add_option custom_option_card"><p class="p_card_custom_option">Add more options</p></div><br/></div>');
+    idx = $('.custom_rule_card').length + 1
+    var structure = $(
+      `<div class = "custom_rule_card">
+        <p>Question `+idx+`</p>
+        <div class="input_container">
+          <textarea id="custom_option" class="custom_option_card" type="text" placeholder="Custom option"></textarea>
+        </div>
+        <div class = "add_option custom_option_card">
+          Add another option
+        </div>
+        <br/>
+      </div>`
+    );
     $("#container2").append(structure);
   });
 
@@ -47,32 +59,17 @@ $(document).ready(() => {
     var structure = $('<div class = "card"><label>Rule:</label><input type="text" id="attribute_name" placeholder="Rule name"><br><label>Bad value:</label><input type="text" id="attribute_type" placeholder="Bad value"></div>');
     $("#container4").append(structure);
   });
-
-  // $('.add_one').on('click', event => {
-  //   var structure = $('<input type="text" name="rule_name" placeholder="Your rules"><input type="text" name="rule_type" placeholder="Type of your rule"><br>');
-  //   $(".rule_form").append(structure);
-  // });
-
-  // $('.add_option').on('click', event => {
-  //   var structure = $('<div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div>');
-  //   $(".custom_option_container").append(structure);
-  // });
-
-  // $('.add_option').live('click',function() {
-  //   var structure = $('<div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div>');
-  //   $(".custom_option_container").append(structure);
-  // });
-
 })
 
 $(document).on('click','.add_option', function(){
-  var structure = $('<div class = "custom_option_card"><textarea id="custom_rule" name = "custom" placeholder="Custom option"></textarea></div>');
+  var structure = $(
+    '<textarea id="custom_option" class="custom_option_card" type="text" placeholder="Custom option"></textarea>'
+  );
   var toAppend=$(this).parent().children().eq(1);
   toAppend.append(structure);
 });
 
 $(document).on('click','.add_rules_card', function(){
-  console.log("here");
   var handle1 = $( "#custom-handle1" );
   var handle2 = $( "#custom-handle2" );
   $( "#slider" ).slider({
@@ -118,18 +115,19 @@ function parse_data() {
   ttitle = byid('rule_name').value
   pprompt = byid('rule_prompt').value
 
+  // data_tosend will be a list of list of string
   data_tosend = []
   if (ttype === 'custom'){
-    cont = $('#container2')[0]
-    for(i of cont.children){
-      tmp = []
-      for (card of i.querySelectorAll('.custom_option_card')){
-        // add_option is the last child and it has no value so skip
-        if (card.classList.contains('add_option')){break}
-        tmp.push(card.children[0].value)
+    for(cont of $('.custom_rule_card')){
+      options = []
+      // first getting the div that contains the textareas
+      for (cc of $(cont).children().eq(1).children()){
+        options.push(cc.value)
       }
-      data_tosend.push(tmp)
+      data_tosend.push(options)
     }
+  }else{
+    // one day....
   }
 
   // nullchecks
@@ -137,6 +135,8 @@ function parse_data() {
     alert('title or survey content cannot be null!')
     return
   }
+
+  console.log(data_tosend)
 
   http_post('saverule',
     {
