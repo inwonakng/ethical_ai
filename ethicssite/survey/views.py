@@ -24,7 +24,7 @@ def idx_view_all_questions(request):
         context = {'rules':RuleSet.objects.all()}
     return render(request, "survey/all_questions.html", context)
 
-# Should view all of the surveys that this user has answered
+# Should view all of the surveys that this user has answered in the past.
 def idx_view_answered_questions(request):
     context = {'ans':Survey.objects.filter(Q(user=request.user))}
     return render(request, "survey/answered_questions.html", context)

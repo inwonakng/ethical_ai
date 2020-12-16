@@ -23,6 +23,7 @@ function writetopage(data, args) {
     question.appendChild(outli)
     addsurveytopage(question, scenarioNum);
     addsliderstopage(scenarioNum, data.length);
+    addstarstopage(scenarioNum, data.length);
 }
 // adds the generated scenario to the front-end web page.
 function addsurveytopage(element, index) {
@@ -33,12 +34,32 @@ function addsurveytopage(element, index) {
 // and the specific slider number (to mark the option that the
 // slider is measuring the preference for).
 function addsliderstopage(scen_idx, i) {
+    var elementWrapper = document.createElement('div');
+    elementWrapper.className = "rating";
+    elementWrapper.id = "sliders"
     var element = document.createElement('div');
     element.id = "slides" + scenarioNum;
     for (var j = 0; j < i; j++) {
         element.append(makeslider(String(scen_idx), String((j))));
     }
-    byid("scorecontainer").append(element);
+    elementWrapper.append(element);
+    byid("scorecontainer").append(elementWrapper);
+}
+// Dynamically adds the stars for the user to choose from,
+// given the scenario number (to mark the id of the stars rating)
+// and the specific stars rating number (to mark the option that the
+// stars are measuring the preference for).
+function addstarstopage(scen_idx, i) {
+    var elementWrapper = document.createElement('div');
+    elementWrapper.className = "rating";
+    elementWrapper.id = "stars"
+    var element = document.createElement('div');
+    element.id = "stars" + scenarioNum;
+    for (var j = 0; j < i; j++) {
+        element.append(makestars(String(scen_idx), String((j))));
+    }
+    elementWrapper.append(element);
+    byid("scorecontainer").append(elementWrapper);
 }
 // Delete the scenario currently being displayed.
 function clearCurrentScenario() {
@@ -156,6 +177,23 @@ function clearPage() {
         byid("scorecontainer").style.display = "none";
     }
 }
+
+// Changes different rating options available to the user.
+function changeRating(rating) {
+    var i;
+    var x = document.getElementsByClassName("rating");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";  
+    }
+    var tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < x.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace("activeTab", "");
+    }
+    document.getElementById(rating+"Tab").className += " activeTab"
+    document.getElementById(rating).style.display = "block";  
+  }
+
+
 function viewReviewPage() {
     clearPage();
     let element = byid("review_page");
@@ -258,6 +296,42 @@ function makeslider(scen_idx, index) {
     slidercontainer.appendChild(slider);
     scorecontainer.appendChild(title);
     scorecontainer.appendChild(slidercontainer);
+    return scorecontainer;
+}
+//  Creates a star rating system to represent a specific feature. 
+//  index:  the scenarioNumber of people in each scenario, since 
+//          we are rating on an option (person).
+function makestars(scen_idx, index) {
+    // Contains everything involved in creating a score.
+    let scorecontainer = make('div', 'option-score-container');
+    // Label for stars
+    let title = make('p');
+    title.className = "option-score";
+    title.innerHTML = "Option " + index;
+    // Container for each star rating. Used only in stylings
+    let starcontainer = make('div');
+    starcontainer.className = "starcontainer";
+    // The stars rating itself
+    var star = document.createElement('div');
+    star.id = 'p' + scen_idx + 'range' + index;
+    star.min = "0";
+    star.max = "10";
+    star.value = "1";
+    star.className = "star";
+    star.innerHTML="<span class='fa fa-star checked'></span>" + 
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>" +
+    "<span class='fa fa-star'></span>";
+    // Adding all of the elements within each other accordingly. 
+    starcontainer.appendChild(star);
+    scorecontainer.appendChild(title);
+    scorecontainer.appendChild(starcontainer);
     return scorecontainer;
 }
 // Monitors GUI-related changes based on given scenario.
