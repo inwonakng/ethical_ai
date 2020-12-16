@@ -7,8 +7,6 @@ function writetopage(data, args) {
         let table = maketable(data, args);
         question.appendChild(table);
     }
-    // super hardcoding time...
-    // html_text = ''
 
     var outli = make('table','listq'+args)
     var dd;
@@ -177,8 +175,8 @@ function clearPage() {
         byid("scorecontainer").style.display = "none";
     }
 }
-
-// Changes different rating options available to the user.
+// Changes the different rating options available to the user 
+// when they select a different tab.
 function changeRating(rating) {
     var i;
     var x = document.getElementsByClassName("rating");
@@ -192,8 +190,6 @@ function changeRating(rating) {
     document.getElementById(rating+"Tab").className += " activeTab"
     document.getElementById(rating).style.display = "block";  
   }
-
-
 function viewReviewPage() {
     clearPage();
     let element = byid("review_page");
@@ -318,6 +314,8 @@ function makestars(scen_idx, index) {
     star.max = "10";
     star.value = "1";
     star.className = "star";
+    // Initial rating is 1/10 stars. 
+    // FUTURE: Make a function to change the star's rating score.
     star.innerHTML="<span class='fa fa-star checked'></span>" + 
     "<span class='fa fa-star'></span>" +
     "<span class='fa fa-star'></span>" +
@@ -378,6 +376,9 @@ function prev() {
     guicheck();
 }
 // Grabs the user's scores from the survey scenarios.
+// FUTURE: Modify this to grab the user's scores from the 
+// appropriate score type (the last one they scores for that
+// question). So far, there are stars "p0.." and sliders "q0.."
 function grabscores() {
     let scores = [];
     for (let s in totalData) {

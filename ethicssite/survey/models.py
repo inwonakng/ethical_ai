@@ -434,7 +434,7 @@ Test scenario example:
 # This function will recieve a list of json scenarios and
 # load them into Django models.
 
-
+# FUTURE: Should be modified to store the survey's title, description, and prompt
 def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
     # First, we need to translate the data from byte to the data structure above
@@ -468,7 +468,8 @@ def json_to_survey(survey_data, user, prompt='empty', desc='empty'):
 
             # Will trigger this if the options aren't strings.
             # For now, the entire string is marked as an option.
-            # In the future, there should 
+            # In the future, should there be a way to parse the string
+            # to form attributes?
             if(isinstance(option,str) != True):
 
                 for attribute in option:

@@ -16,6 +16,8 @@ $(document).ready(() => {
 <div class = "questions_col">
   <div class = "question_nav">
     <div class = "basic_nav">
+      <!--FUTURE: This currently only sorts it by the earliest date. Should 
+      be implemented to sort it by the latest and alphabetically.-->
       <div class = "title">RANK BY:</div>
 
       <div class = "input_wrap">
@@ -63,6 +65,7 @@ $(document).ready(() => {
   {% endfor %}
 </div>
 
+<!--Side column-->
 <div class = "side_col">
   <div class = "side_card first" style= "height:300px;">
     <div class = "trend_title" style = "background-image: url({% static 'img/14035064.png' %});">
