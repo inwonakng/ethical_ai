@@ -18,6 +18,10 @@ from django.db.models import Q
 from django import forms
 
 
+# ====================
+# View functions start
+# ====================
+
 '''
 Returns a list of ID for all the 'RuleSet' the user has taken
 '''
@@ -55,6 +59,22 @@ def idx_view_result_analysis(request):
 def desicion_questions_view(request):
     context = {}
     return render(request, "survey/desicion_questions.html", context)
+
+
+'''
+Page for users to create their own view
+'''
+def rules_view(request):
+    context = {}
+    return render(request, "survey/rules.html", context)
+# ====================
+# View functions end
+# ====================
+
+
+# ====================
+# User functions start
+# ====================
 
 def register(request):
     registered = False
@@ -144,6 +164,14 @@ def user_logout(request):
     request.session.flush()
     return redirect('/')
 
+# ====================
+# User functions end
+# ====================
+
+# =============================
+# Rule creation functions start
+# =============================
+
 def lookup_view(request):
     queryset = ListCateg.objects.all()
     context = {
@@ -161,16 +189,26 @@ def dynamic_lookup_view(request,id):
     }
     return render(request, "survey/delete.html", context)
 
-'''
-Page for users to create their own view
-'''
-def rules_view(request):
-    context = {}
-    return render(request, "survey/rules.html", context)
+# Django endpoint to save rule to database from json post request body
+@login_required
+def save_rule(request):
+    
+    if request.method != 'POST':
+        return HttpResponse(status=400)
+    json_data = json.loads(request.body)
 
-'''
-Survey taking section START
-'''
+    json_to_ruleset(json_data['data'], request.user,json_data['title'],json_data['prompt'])
+    HttpResponse(status=201)
+    return redirect('/')
+
+# =============================
+# Rule creation functions end
+# =============================
+
+
+# =============================
+# Survey taking section START
+# =============================
 
 def load_survey(request,parent_id):
     # prepare generator if generative survey
@@ -184,14 +222,14 @@ def get_scenario(request,parent_id,scenario_num,is_review):
     # if in review mode is_review == 1
 
     rule = RuleSet.objects.get(id=parent_id)
-
+    user = request.user
     # if the survey is generative
     if rule.generative:
-        scen = SurveyGenerator.objects.get(rule_id=parent_id).get_scenario()
+        scen = SurveyGenerator.objects.get(rule_id=parent_id).get_scenario(user)
     else:
         # try getting it from an existing survey first
         try:
-            surv = Survey.objects.get(Q(ruleset_id=parent_id,user=request.user))
+            surv = Survey.objects.get(Q(ruleset_id=parent_id,user=user))
             scen = surv.scenarios.all()[scenario_num]
         except:
             # this creates a new scenario object with same values..
@@ -245,38 +283,19 @@ def save_scenario(request,scenario_id,rule_id,is_review):
     num_scenarios = len(survey.scenarios.all())
 
     # if they are at the end of a survey
-    if num_scenarios == rule.scenario_size() or is_review==1:
+    if num_scenarios == rule.num_scenarios() or is_review==1:
         return redirect('survey:review',rule_id=rule_id)
     else: 
         return redirect('survey:getscenario',parent_id=rule_id,scenario_num=num_scenarios,is_review=0)
 
+# =============================
+# Survey taking section END
+# =============================
 
-# From gigantic list of scenarios create a Survey object
-def create_survey(request):
-    pass
-    if request.method == "POST":
-        user_id = request.post['user_id']
-        session_id = request.post['session_id']
-        ruleset_id = request.post['ruleset_id']
-        # grab user id, session id, and ruleset id
-        # filter
-        # grab all objects of TempScenarios
-        # create big survey
-        # done!
 
-        # filter for all the scenarios that relate to the ruleset id (along with other ids too)
-        all_scenarios = TempScenarios.objects.filter(user_id=user_id).filter(session_id=session_id).filter(ruleset_id=ruleset_id)
-        
-        saved_survey = Scenario(prompt=prompt, desc=desc, user=user)
-        saved_survey.save()
-
-        # save scenario into survey
-        for x in all_scenarios:
-            saved_survey.scenarios.add(x)
-
-'''
-Survey taking section END
-'''
+# =============================
+# Extra endpoints start
+# =============================
 
 def rules_explain(request):
     return render(request,'survey/rules_explain.html')
@@ -288,18 +307,13 @@ def survey_result(request):
 def unknown_path(request, random):
     return render(request, 'survey/unknownpath.html')
 
-# Django endpoint to save rule to database from json post request body
+# =============================
+# Extra endpoints end
+# =============================
 
-@login_required
-def save_rule(request):
-    
-    if request.method != 'POST':
-        return HttpResponse(status=400)
-    json_data = json.loads(request.body)
-
-    json_to_ruleset(json_data['data'], request.user,json_data['title'],json_data['prompt'])
-    HttpResponse(status=201)
-    return redirect('/')
+# =============================
+# User created survey start
+# =============================
 
 @login_required
 def my_survey(request,user_id):
@@ -307,6 +321,8 @@ def my_survey(request,user_id):
     #besides the features and its values in each scenario, their should also be values
     #including poll create date and number of particiants
     context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time')}
-
-
     return render(request, 'survey/my_survey.html', context)
+
+# =============================
+# User created survey end
+# =============================

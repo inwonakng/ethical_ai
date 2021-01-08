@@ -1,20 +1,8 @@
 from survey.models import *
-from survey.generation import Generator as gen
-gg = gen.Generator(rule_model = RuleSet.objects.all()[0])
-sg = SurveyGenerator()
-dd = Dict(json = gg.config)
-dd.save()
-sg.config = dd
-sg.save()
-for c in gg.combos:
-    dd = Dict()
-    dd.json = c.getCombo()
-    dd.save() 
-    sg.combos.add(dd)
+import json
+# rule_inp = json.load(open('survey/generation/rule/rule.json'))
+# u = User.objects.all()[0]
+# rule = json_to_ruleset(rule_inp,u,'titletitle','prompttasdfasdf')
 
-rr = RuleSet.objects.all()[0]
-rcategs = rr.range_categs.all()
-
-from survey.models import *
-sg = SurveyGenerator.objects.get(id=4)
-sg.get_scenario()
+rule = RuleSet.objects.get(id=34)
+sg = build_generator(rule)

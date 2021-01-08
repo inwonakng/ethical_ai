@@ -4,7 +4,7 @@ from . import views
 app_name = 'survey'
 urlpatterns = [
     # this path is for mturk, where the random survey would be
-    path('',views.idx_view_all_questions_trending,name='index'),
+    path('',views.idx_view_all_questions_latest,name='index'),
     path('trending',views.idx_view_all_questions_trending,name='trending'),
     path('latest',views.idx_view_all_questions_latest,name='latest'),
     path('ans',views.idx_view_answered_questions),

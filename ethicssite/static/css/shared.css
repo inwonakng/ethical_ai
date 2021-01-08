@@ -439,6 +439,16 @@ th {
     border: 0px solid darkgray;
 }
 
+/* for form submit buttons */
+input[type=submit]{
+    background-color: #56A5EC;
+    color:#ffffff;
+    border-radius:7px;
+    border: 2px solid rgb(141, 194, 255);
+    padding:5px 15px;
+}
 
-
+input[type=submit]:hover{
+    cursor: pointer;
+}
 

@@ -61,7 +61,7 @@
                     <button id="prev" class="action-btn" disabled>Prev</button>
                 {% endif %}
             
-                {% if not curr_index == rule.scenario_size|add:"-1" %}
+                {% if not curr_index == rule.num_scenarios|add:"-1" %}
                     <button id="next" class="action-btn" type="submit">Next</button>
                 {% else %}
                     <button id="next" class="action-btn" type="submit">Review</button>
