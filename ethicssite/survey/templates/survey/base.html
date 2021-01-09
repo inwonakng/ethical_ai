@@ -19,28 +19,12 @@
   {% endblock %}
 </head>
 <body>
-  <div class = "consent_background"></div>
   <nav>
     <li><a href="http://127.0.0.1:8000/">Ethical Voting Platform</a></li>
     <li><a href="http://127.0.0.1:8000/about">About</a></li>
     <li><a href= "{% url 'survey:rules' %}" >Create</a></li>
   </nav>
-  <div class="consent consent_card">
-    <div class="consent_text">
-      <h1>Consent Form</h1>
-      Please read the consent form and indicate that you have knowingly consented to participate in the research.
-      <br/><br/>
-      <a href="https://drive.google.com/file/d/1JH3kVK2fftHV7oWuckYhGjwA_mWAhQtk/view?usp=sharing" target="blank">Click here to view the research consent form</a>
-      <br/><br/>
-      By clicking I Accept below, I confirm that I am at least 18 years of age and that I consent to participation in the research study described above.
-      <br/><br/>
-      After clicking accept, you will be presented with an optional demographic survey and a quick attention check before the actual survey starts.
-      Please note that if you fail the attention check, your response will be rejected.
-      <br/><br/>
-      <input type = "button" value = "I accept" class = "consent_input" onclick = "WriteCookie();"/>
-    </div>
-  </div>
-  <div class = 'page'>
+  <div class="main">
   {% block content %}
   {% endblock %}
   </div>

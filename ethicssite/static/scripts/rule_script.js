@@ -1,6 +1,7 @@
 $(document).ready(() => {
 
-  $('.test').show();
+  $('.add_rules_card').hide()
+  $('.custom_rules_card').hide()
 
   $('#generate_rules').on('click', event => {
     $("#container2").hide();
@@ -13,11 +14,6 @@ $(document).ready(() => {
     $("#container4").hide();
     $("#container3").show();
     $(".bad_cob1").show();
-  });
-
-  $('.add_rules_card').on('click', event => {
-    var structure = $('<div class = "rule_card card"><label>Rule name:</label><input type="text" id="attribute_name" placeholder="Rule name"><br><label>Rule type:</label><input type="text" id="attribute_type" placeholder="Rule type"><div id="slider"><div id="custom-handle1" class="ui-slider-handle"></div><div id="custom-handle2" class="ui-slider-handle"></div></div></div>');
-    $("#container1").append(structure);
   });
 
   $('#set_rules').on('click', event => {
@@ -50,15 +46,19 @@ $(document).ready(() => {
     $("#container2").append(structure);
   });
 
-  $('.bad_cob1').on('click', event => {
-    var structure = $('<div class = "card"><label>Rule:</label><input type="text" id="attribute_name" placeholder="Rule name"><br><label>Bad value:</label><input type="text" id="attribute_type" placeholder="Bad value"></div>');
-    $("#container3").append(structure);
-  });
+  // on file select
+  $('#rule_file').change(function(){
+    console.log('file detected!!')
+    fname = $('#rule_file').val().toString().split('\\')
+    $('#filename').html(fname[fname.length-1])
+    const reader = new FileReader()
+    reader.onload = function(event){
+      // var jsonVal = JSON.parse(event.target.result)
+      $('#hiddenjson').val(event.target.result)
+    }
+    reader.readAsText($('#rule_file')[0].files[0])
+  })
 
-  $('.bad_cob2').on('click', event => {
-    var structure = $('<div class = "card"><label>Rule:</label><input type="text" id="attribute_name" placeholder="Rule name"><br><label>Bad value:</label><input type="text" id="attribute_type" placeholder="Bad value"></div>');
-    $("#container4").append(structure);
-  });
 })
 
 $(document).on('click','.add_option', function(){
@@ -68,45 +68,6 @@ $(document).on('click','.add_option', function(){
   var toAppend=$(this).parent().children().eq(1);
   toAppend.append(structure);
 });
-
-$(document).on('click','.add_rules_card', function(){
-  var handle1 = $( "#custom-handle1" );
-  var handle2 = $( "#custom-handle2" );
-  $( "#slider" ).slider({
-    range: true,
-    min: 0,
-    max: 500,
-    values: [ 75, 300 ],
-    create: function() {
-      handle1.text( $( this ).slider( "values",0 ) );
-      handle2.text( $( this ).slider( "values",1 ) );
-    },
-    slide: function( event, ui ) {
-      handle1.text( ui.values[0] );
-      handle2.text( ui.values[1] );
-    }
-  });
-});
-
-$( function() {
-    var handle1 = $( "#custom-handle1" );
-    var handle2 = $( "#custom-handle2" );
-    $( "#slider" ).slider({
-      range: true,
-      min: 0,
-      max: 500,
-      values: [ 75, 300 ],
-      create: function() {
-        handle1.text( $( this ).slider( "values",0 ) );
-        handle2.text( $( this ).slider( "values",1 ) );
-      },
-      slide: function( event, ui ) {
-        handle1.text( ui.values[0] );
-        handle2.text( ui.values[1] );
-      }
-
-    });
-  });
 
 function parse_data() {
   // get type here
@@ -127,11 +88,20 @@ function parse_data() {
       data_tosend.push(options)
     }
   }else{
+    uploaded = $('#rule_file')[0].files
+    if(uploaded.length == 0){
+      alert('Input file must be present!')
+      return
+    }
+    
+    console.log('okayyy')
+    data_tosend = JSON.parse($('#hiddenjson').val())
+    console.log(data_tosend)
     // one day....
   }
 
   // nullchecks
-  if(ttitle.length==0 || data_tosend[0].length == 0){
+  if(ttitle.length==0 || Object.keys(data_tosend).length == 0){
     alert('title or survey content cannot be null!')
     return
   }

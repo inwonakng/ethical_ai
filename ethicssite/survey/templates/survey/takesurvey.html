@@ -14,21 +14,39 @@
         <p id="prompt">{{rule.prompt}}</p>
         <div id="survey" class="question">
             <div class="question">
-                <table style="border-color: white;">
-                    {% if rule.generative %}
-                        Not ready yet!
-                    {% else %}
-                        {% for option in scenario.get_options %}
-                            <tr style="font-size: large;">
-                                <td style="border-color: white;">
-                                    Option {{forloop.counter}}:
+                <table>
+                    <tr class="top">
+                        <td>Options</td>
+                        {% if rule.generative %}
+                            {% for attr in scenario.get_attr_names%}    
+                                <td>
+                                    {{attr}}
                                 </td>
-                                <td style="border-color: white;">
+                            {% endfor %}
+                        {% else %}
+                            <td>
+                                Explanation
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% for option in scenario.get_options %}
+                        <tr>
+                            <td>
+                                Option {{forloop.counter}}:
+                            </td>
+                            {% if rule.generative %}
+                                {% for attr in option.get_attributes%}    
+                                    <td>
+                                        {{attr.value}}
+                                    </td>
+                                {% endfor %}
+                            {% else %}
+                                <td>
                                     {{option.text}}
                                 </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
                 </table>
             </div>
         </div>

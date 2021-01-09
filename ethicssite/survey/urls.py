@@ -1,6 +1,13 @@
-from django.urls import path
+from django.urls import path,include
 from django.conf.urls import url
 from . import views
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register('survey',views.SurveyViewSet)
+router.register('user',views.UserViewSet)
+router.register('scenario',views.ScenarioViewSet)
+
 app_name = 'survey'
 urlpatterns = [
     # this path is for mturk, where the random survey would be
@@ -27,4 +34,7 @@ urlpatterns = [
     path('mysurvey/<int:user_id>', views.my_survey, name='mysurvey'),
     path('<random>', views.unknown_path),
 
+    # this is for REST api with react?
+    path('api/',include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

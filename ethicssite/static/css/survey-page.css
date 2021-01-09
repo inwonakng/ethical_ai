@@ -15,16 +15,17 @@ table, td {
     border-collapse: collapse;
 }
 
-table{
-    width:50%;
+tr{
+    height:40px;
 }
 
-tr{
-    height:60px;
+tr.top{
+  font-weight: bold;
 }
 
 td{
-    text-align:left;
+    padding:0px 10px;
+    text-align:center;
 }
 
 div .question{
@@ -42,7 +43,6 @@ div .slidecontainer{
   margin-top:8px;
   margin-bottom: 8px;
 }
-
 
 #scorecontainer{
     margin:auto;

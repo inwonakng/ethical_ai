@@ -5,7 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from django_mysql.models import JSONField
 from random import sample
 from random import randint as rint
@@ -110,7 +110,7 @@ class SurveyGenerator(models.Model):
             # if such a survey does not exist, we are good to go 
             # since that means this will be the first scenario of that survey
             return True
-        scenarios = s.get_scenarios()
+        scenarios = s[0].get_scenarios()
         for s in scenarios:
             # compare against each scenario in here
             # This list should be empty if there are no matches.
@@ -141,7 +141,7 @@ class SurveyGenerator(models.Model):
                 if adaptive_fn:
                     # should do something to use the adaptive heuristic
                     pass
-                
+
                 # If it failes the check here gonna have to create something else
                 if self.check_outputs(user,selected):
                     selected = outputs
@@ -223,6 +223,10 @@ class FeatureScore(models.Model):
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
 
+    def object_form(self):
+        return [o.object_form()
+                    for o in self.options.all()]
+
     def get_options(self):
         return self.options.all()
 
@@ -235,6 +239,10 @@ class Scenario(models.Model):
         new_copy.save()
         return new_copy
 
+    # sample attribute types to use in the view table
+    def get_attr_names(self):
+        return [a.name for a in self.get_options()[0].get_attributes()]
+
 class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute' , related_name='combo_attributes')
@@ -243,10 +251,13 @@ class Option(models.Model):
     
     def object_form(self):
         # if composed of options
-        if not self.attributes.all():
+        if self.attributes.all():
             return dict([(a.name,a.value)
                     for a in self.attributes.all()])
         return self.text
+    
+    def get_attributes(self):
+        return self.attributes.all()
  
 # Holds ruleset ID and scenario model
 class TempScenarios(models.Model):

@@ -16,7 +16,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django import forms
-
+# for REST framework
+from .serializers import *
+from rest_framework import viewsets
+from rest_framework import permissions
 
 # ====================
 # View functions start
@@ -107,6 +110,14 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'survey/register.html', {'form': form, 'registered': registered})
+
+# function for creating an account for mturk users
+def make_mturk_user(request,turk_id):
+    query = Group.objects.filter(name='mturk')
+    if not query: group = query[0]
+    else: group = Group.objects.get(name='mturk') 
+    user = User(password='',username=turk_id,is_active=True,groups=group)
+    user.save()
 
 def confirm_user(request, userid):
     user = get_object_or_404(User, pk=userid)
@@ -326,3 +337,30 @@ def my_survey(request,user_id):
 # =============================
 # User created survey end
 # =============================
+
+
+# =============================
+# REST API functions start
+# =============================
+
+class SurveyViewSet(viewsets.ModelViewSet):
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+    permission_classes = [permissions.AllowAny]
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
+
+class ScenarioViewSet(viewsets.ModelViewSet):
+    queryset = Scenario.objects.all()
+    serializer_class = ScenarioSerializer
+    # [q.object_form() for q in queryset]
+    permission_classes = [permissions.AllowAny]
+
+# =============================
+# REST API functions end
+# =============================
+
+

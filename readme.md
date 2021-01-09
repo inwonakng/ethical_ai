@@ -1,3 +1,32 @@
+# Spring Semester TODO:
+### Convert the app to frontend/backend separate!
+- After some tries with the views, I came to the conclusion that it would be easier to turn the django backend to provide the json for the javascript frontend to consume.
+- learning from last semester, we will discuss this early on, and make a decision and stick to it.
+- already the django template is getting messy, and our application needs to be able to display more complex analysis screens in the future, which will result in a lot of bloated code.
+- We can do this parellely, if anyone wants to take a crack at setting up a react/vue frontend application.
+## Pages to finish:
+- My survey
+- My taken survey
+
+
+# CODING STYLE GUIDE
+### Overall
+- Some parts were written in a rush, so they are misssing documentation. If you encounter any such method, try to write a simple comment on top. If unclear, please contact Inwon. We should strive to have all the methods commented at the end of the semester.
+
+### Backend
+- Every time you write a query, explain what the conditions are explicitly
+- Try to avoid redundant loops, use pythonic code if possible (list comprehension, negative indexing, etc...)
+
+### Frontend (Django template)
+- We should strive to have as little js as possible in the frontend when using django templates.
+- If necessary we use jquery, BUT please explicitly document what the function is doing.
+- more concise/modular code is better. If you have to copy and paste a function, think about where that code should be placed so that you can avoid that. 
+
+### Refactoring
+- Anytime you find a piece of css or file that is never called (good way to check is ctrl+shift+F in vscode to search entire project), please remove it. Obviously don't do this if you are not sure. However if it doesn't appear anywhere on the project search, it is safe to remove.
+
+
+
 # Ethical AI Platform
 
 # Development setup

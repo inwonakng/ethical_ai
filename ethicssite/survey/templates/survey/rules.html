@@ -6,7 +6,7 @@
 <script type="text/javascript" src="{% static '/scripts/rule_script.js' %}"></script>
 
 <div class = "bg">
-  <div class = "rule-col2">
+  <div class = "rule-col">
     <div class = 'rules_container'>
       <div class = "prompt">
         <h3 class="title">Create your survey outline</h3>
@@ -33,23 +33,31 @@
           <br>
           <input type="text" id="final_type" name="final_type" style="display: none;">
 
-          <div id = "container1">
+          <div class="card-input">            
+              <div class="add_rules_card card">
+                <!-- <input class="box__file" type="file" name="files[]" id="rule_file" accept=".json"/> -->
+                <input type="file" name="files[]" class="box__file" id="rule_file">
+                <label for="rule_file"><strong>Click to choose a file</strong></label>
+                <input id="hiddenjson" style="display: none;" type="text">
+                <a id="filename"></a>
+              </div>
           </div>
-          <div id = "container2">
+
+
+          <div class="card-input">
+            <div id = "container2">
+            </div>
+            <div class="custom_rules_card card"><p class="p_card">Add more questions</p></div>
           </div>
           
-          <div class="add_rules_card card"><p class="p_card">Add more questions</p></div>
-          <div class="custom_rules_card card"><p class="p_card">Add more questions</p></div>
-
+          
           
           <div id = "container3">
           </div>
           <div id = "container4">
           </div>
           
-          <div class="bad_cob1 card">
-            <p id="bad_text">Forbidden Combinations</p>
-            <p class="p_card">Set a new one</p></div>
+          <br>
           <!-- i couldn't find a better way to format the data well, so here we go -->
           <!-- this is easier than using a form, because the input size should be dynamic -->
           <input type="submit" onclick = "parse_data()" value="Save" />
