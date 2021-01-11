@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpRequest, HttpResponseServerError, HttpResponseRedirect
+from django.http import HttpResponse,JsonResponse, HttpRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .generation.Generator import Generator
 from django.shortcuts import render
@@ -20,6 +20,9 @@ from django import forms
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework import permissions
+
+
+import os
 
 # ====================
 # View functions start
@@ -110,14 +113,6 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'survey/register.html', {'form': form, 'registered': registered})
-
-# function for creating an account for mturk users
-def make_mturk_user(request,turk_id):
-    query = Group.objects.filter(name='mturk')
-    if not query: group = query[0]
-    else: group = Group.objects.get(name='mturk') 
-    user = User(password='',username=turk_id,is_active=True,groups=group)
-    user.save()
 
 def confirm_user(request, userid):
     user = get_object_or_404(User, pk=userid)
@@ -227,7 +222,7 @@ def load_survey(request,parent_id):
     if rule.generative:
         check = SurveyGenerator.objects.filter(rule_id = parent_id)
         if not check: build_generator(rule)
-    return redirect('survey:getscenario',parent_id=parent_id,scenario_num=0,is_review=0)
+    return redirect('survey:takesurvey',parent_id=parent_id,scenario_num=0,is_review=0)
 
 def get_scenario(request,parent_id,scenario_num,is_review):
     # if in review mode is_review == 1
@@ -297,7 +292,7 @@ def save_scenario(request,scenario_id,rule_id,is_review):
     if num_scenarios == rule.num_scenarios() or is_review==1:
         return redirect('survey:review',rule_id=rule_id)
     else: 
-        return redirect('survey:getscenario',parent_id=rule_id,scenario_num=num_scenarios,is_review=0)
+        return redirect('survey:takesurvey',parent_id=rule_id,scenario_num=num_scenarios,is_review=0)
 
 # =============================
 # Survey taking section END
@@ -339,6 +334,7 @@ def my_survey(request,user_id):
 # =============================
 
 
+
 # =============================
 # REST API functions start
 # =============================
@@ -359,6 +355,76 @@ class ScenarioViewSet(viewsets.ModelViewSet):
     # [q.object_form() for q in queryset]
     permission_classes = [permissions.AllowAny]
 
+# this is for the mturk 
+# function for creating an account for mturk users
+def make_mturk_user(turk_id):
+    query = Group.objects.filter(name='mturk')
+    if query.exists(): group = query[0]
+    else: 
+        group = Group(name='mturk')
+        group.save() 
+
+    User.objects.filter(Q(username=turk_id)&Q(groups=group))
+
+    user = User(password='',username=turk_id,is_active=True)
+    user.save()
+    user.groups.add(group)
+    user.save()
+
+    return user
+
+@csrf_exempt 
+def mturk_get_scenario(request):
+    
+    rpair_path = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule2.json')
+    rtrip_path = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule3.json')
+
+    content = json.loads(request.body)
+
+    # make rulesets
+    r_pair_query = RuleSet.objects.filter(rule_title='Mturk Pair')
+    if r_pair_query.exists(): rule_pair = r_pair_query[0]
+    else: rule_pair = json_to_ruleset(  json.load(open(rpair_path)),
+                                        User.objects.get(username='admin'),
+                                        'Mturk Pair',
+                                        'pair options for mturk')
+
+    r_trip_query = RuleSet.objects.filter(rule_title='Mturk Triple')
+    if r_trip_query.exists(): rule_trip = r_trip_query[0]
+    else: rule_trip = json_to_ruleset(  json.load(open(rtrip_path)),
+                                        User.objects.get(username='admin'),
+                                        'Mturk Triple',
+                                        'triple options for mturk')
+
+
+
+    uid = content['unique_id']
+    survtype = content['survey_type']
+    user_q = User.objects.filter(username=uid)
+    if user_q.exists(): user = user_q[0]
+    else: user = make_mturk_user(uid)
+
+    if survtype == 'pair': rule = rule_pair
+    else: rule = rule_trip
+
+    survey_q = SurveyGenerator.objects.filter(Q(rule = rule))    
+
+    '''
+    Need to record user response to past questions
+    '''
+
+
+
+    if survey_q.exists(): 
+        survey = survey_q[0]
+    else:
+        survey = build_generator(rule)
+
+    # print(request.POST['unique_id'])
+
+    survey.get_scenario()
+
+    return JsonResponse({'hi':'lol'})
 # =============================
 # REST API functions end
 # =============================

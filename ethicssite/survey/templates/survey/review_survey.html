@@ -41,7 +41,7 @@
 
 <div class="question">
     <form 
-    action="{% url 'survey:getscenario' parent_id=survey.ruleset_id scenario_num=survey.getlastindex is_review=0 %}" type="POST">
+    action="{% url 'survey:takesurvey' parent_id=survey.ruleset_id scenario_num=survey.getlastindex is_review=0 %}" type="POST">
         <button class="action-btn" type="submit">Prev</button>
     </form>
     <form

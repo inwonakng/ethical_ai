@@ -7,6 +7,8 @@
 ## Pages to finish:
 - My survey
 - My taken survey
+- Survey Review page at the end
+
 
 
 # CODING STYLE GUIDE
@@ -21,6 +23,7 @@
 - We should strive to have as little js as possible in the frontend when using django templates.
 - If necessary we use jquery, BUT please explicitly document what the function is doing.
 - more concise/modular code is better. If you have to copy and paste a function, think about where that code should be placed so that you can avoid that. 
+- (almost) Everything should use flex! if you do not know how to use this, look up flex, flex-direction, display:flex. If you encounter examples of html elements breaking because of fixed length (width:XXXpx and such) please take the time to convert everything to flex. Using flex will help us have everything modular and scale accordingly to different screen sizes.
 
 ### Refactoring
 - Anytime you find a piece of css or file that is never called (good way to check is ctrl+shift+F in vscode to search entire project), please remove it. Obviously don't do this if you are not sure. However if it doesn't appear anywhere on the project search, it is safe to remove.

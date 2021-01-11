@@ -21,7 +21,7 @@ urlpatterns = [
     path('login', views.user_login, name='login'),
     path('logout', views.user_logout, name='logout'),
     path('loadsurvey/<int:parent_id>', views.load_survey, name='loadsurvey'),
-    path('getscenario/<int:parent_id>/<int:scenario_num>/<int:is_review>', views.get_scenario, name='getscenario'),
+    path('takesurvey/<int:parent_id>/<int:scenario_num>/<int:is_review>', views.get_scenario, name='takesurvey'),
     path('savescenario/<int:scenario_id>/<int:rule_id>/<int:is_review>', views.save_scenario, name='savescenario'),
     path('review/<int:rule_id>',views.review_page,name='review'),
     path('submitsurvey',views.submit_survey,name='submitsurvey'),
@@ -33,8 +33,11 @@ urlpatterns = [
     path('surveyresult', views.survey_result, name="surveyresult"),
     path('mysurvey/<int:user_id>', views.my_survey, name='mysurvey'),
     path('<random>', views.unknown_path),
+    # path('mturk',views.make_mturk_user,name='makemturk'),
 
     # this is for REST api with react?
     path('api/',include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    path('api/survey',views.mturk_get_scenario,name='mturk_survey')
 ]

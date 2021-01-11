@@ -72,7 +72,7 @@
         <div class="question">
             {% if is_review == 0%}
                 {% if not curr_index == 0 %}
-                    <a href="{% url 'survey:getscenario' parent_id=rule.id scenario_num=curr_index|add:-1 is_review=0%}">
+                    <a href="{% url 'survey:takesurvey' parent_id=rule.id scenario_num=curr_index|add:-1 is_review=0%}">
                         <button id="prev" class="action-btn" type="button">Prev</button>
                     </a>
                 {% else %}
