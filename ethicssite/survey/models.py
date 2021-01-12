@@ -517,3 +517,8 @@ def json_to_ruleset(d,user,title,prompt):
     rule_set.save()
     return rule_set
 
+# This model is specifically for the MTurk experiments, where we have varied 
+# class TripSetCounter(models.Model):
+#     # 
+#     totalcount = models.IntegerField()
+#     num_per_idx = models.IntegerField()

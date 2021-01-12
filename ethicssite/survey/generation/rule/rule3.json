@@ -40,17 +40,17 @@
       "4": "4",
       "5": "5"
     },
-    "survival without": {
+    "survival without jacket": {
       "range": [
-        20,
-        50
+        1,
+        40
       ],
       "unit": "%"
     },
     "survival difference": {
       "range": [
-        50,
-        80
+        1,
+        50
       ],
       "unit": "%"
     }

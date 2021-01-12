@@ -375,56 +375,66 @@ def make_mturk_user(turk_id):
 
 @csrf_exempt 
 def mturk_get_scenario(request):
-    
-    rpair_path = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule2.json')
-    rtrip_path = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule3.json')
-
     content = json.loads(request.body)
-
-    # make rulesets
-    r_pair_query = RuleSet.objects.filter(rule_title='Mturk Pair')
-    if r_pair_query.exists(): rule_pair = r_pair_query[0]
-    else: rule_pair = json_to_ruleset(  json.load(open(rpair_path)),
-                                        User.objects.get(username='admin'),
-                                        'Mturk Pair',
-                                        'pair options for mturk')
-
-    r_trip_query = RuleSet.objects.filter(rule_title='Mturk Triple')
-    if r_trip_query.exists(): rule_trip = r_trip_query[0]
-    else: rule_trip = json_to_ruleset(  json.load(open(rtrip_path)),
-                                        User.objects.get(username='admin'),
-                                        'Mturk Triple',
-                                        'triple options for mturk')
-
-
 
     uid = content['unique_id']
     survtype = content['survey_type']
+    last_response = content['last_response']
+
     user_q = User.objects.filter(username=uid)
     if user_q.exists(): user = user_q[0]
     else: user = make_mturk_user(uid)
 
-    if survtype == 'pair': rule = rule_pair
-    else: rule = rule_trip
+    if survtype == 'pair': 
+        rulefile = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule2.json')
+        title = 'Mturk Pair'
+        prompt = 'pair options for mturk'
+    else:
+        rulefile = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule3.json')
+        title = 'Mturk Triple'
+        prompt = 'triple options for mturk'
+        
+    r_query = RuleSet.objects.filter(rule_title=title)
+    if r_query.exists(): rule = r_query[0]
+    else: rule = json_to_ruleset(  json.load(open(rulefile)),
+                                        User.objects.get(username='admin'),
+                                        title,
+                                        prompt)
 
-    survey_q = SurveyGenerator.objects.filter(Q(rule = rule))    
-
+    survgen_q = SurveyGenerator.objects.filter(Q(rule = rule))    
+    survey_q = Survey.objects.filter(Q(ruleset_id = rule.id) & Q(user = user))
     '''
     Need to record user response to past questions
     '''
 
+    if survgen_q.exists(): survgen = survgen_q[0]
+    else: survgen = build_generator(rule)
 
+    if survey_q.exists(): survey = survey_q[0]
+    else: 
+        survey = Survey(prompt = 'mturk survey',
+                        desc = 'for mturk',
+                        ruleset_id = rule.id,
+                        user = user)
+        survey.save()
+    
+    scen = survgen.get_scenario(user)
+    survey.scenarios.add(scen)
+    survey.save()
 
-    if survey_q.exists(): 
-        survey = survey_q[0]
-    else:
-        survey = build_generator(rule)
+    # fix formatting
+    formatted = []
+    for s in scen.object_form():
+        dif_val = int(s.pop('survival difference').split('%')[0])
+        wout_val = int(s['survival without jacket'].split('%')[0])
+        # with_val = dif_val+wout_val
+        s['survival with jacket'] = '{}%'.format(dif_val+wout_val)
+        formatted.append(s)
 
-    # print(request.POST['unique_id'])
+    print('sending back...')
+    print(formatted)
 
-    survey.get_scenario()
-
-    return JsonResponse({'hi':'lol'})
+    return JsonResponse(formatted,safe=False)
 # =============================
 # REST API functions end
 # =============================
