@@ -9,19 +9,6 @@ function WriteCookie() {
 }
 
 $(document).ready(() => {
-  console.log(document.cookie);
-
-  // consent not needed
-  // if (typeof getCookie('consent') == 'undefined') {
-  //   $(".consent").show();
-  //   $(".consent_background").show();
-  // }
-
-  // $('.consent_input').on('click', event => {
-  //   $(".consent").hide();
-  //   $(".consent_background").hide();
-  // });
-
 	$('.question_nav .filter').on('click', event => {
     $('.question_nav .filter_options').toggle("10")
 		

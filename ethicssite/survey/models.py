@@ -5,7 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from django_mysql.models import JSONField
 from random import sample
 from random import randint as rint
@@ -13,6 +13,7 @@ from itertools import combinations as comb
 from survey.generation import Generator as gen
 from django.db.models import Q
 import time
+from copy import deepcopy
 
 '''User Profile models'''
 class UserProfile(models.Model):
@@ -57,13 +58,25 @@ class UserForm(forms.ModelForm):
 class Dict(models.Model):
     json = JSONField()
 
+
+'''
+Survey Generator model.
+This model contains the pre-generated surveys from a given ruleset.
+This is the model that should be referenced when grabbing new scenarios, if the ruleset.is_gen == True
+'''
+
 class SurveyGenerator(models.Model):
-    rule_id = models.ForeignKey('RuleSet',on_delete=models.CASCADE,null=True)
+    rule = models.ForeignKey('RuleSet',on_delete=models.CASCADE,null=True)
     combos = models.ManyToManyField('Dict',related_name='combo_dict')
     config = models.OneToOneField('Dict',related_name='config_dict',on_delete=models.CASCADE)
     list_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
 
+    '''
+    Function for checking duplicate options in a scenario.
+    Returns TRUE if all the constraints are satisfied.
+    Returns FALSE if any of the constraints are violated.
+    '''
     def check_duplicates(self, scenario):
         # get all possible pairs to compare duplicates
         tocheck = list(comb(scenario, 2))
@@ -77,9 +90,37 @@ class SurveyGenerator(models.Model):
                     found[d] += 1
         numfound = list(found.values())
         numlen = len(numfound)
-        return numlen == 0 or (max(numfound) < self.config.json['same_categories'] + 1 and numfound.count(self.config.json['same_categories']) < len(scenario) - 1)
+        return  (numlen == 0 
+                    or 
+                    (max(numfound) < self.config.json['same_categories'] + 1 
+                        and 
+                    numfound.count(self.config.json['same_categories']) < len(scenario) - 1))
 
-    def get_scenario(self):
+    '''
+    Function to check if the scenario has been outputed to this user in the past
+    This function strictly checks for EXACT matches. Since that is how the old survey worked.
+    Returns: True if the prepped scenario is not a duplicate. False if it is a duplicate
+    '''
+    def check_outputs(self,user,prepped_scen):
+        # querying a survey from this ruleset/user combination first
+
+        s = Survey.objects.filter(Q(ruleset_id = self.rule.id) & Q(user = user))
+        
+        if not s:
+            # if such a survey does not exist, we are good to go 
+            # since that means this will be the first scenario of that survey
+            return True
+        scenarios = s[0].get_scenarios()
+        for s in scenarios:
+            # compare against each scenario in here
+            # This list should be empty if there are no matches.
+            anyeqal = [1 for ps,o in zip(prepped_scen,s.get_options())
+                            if o.object_form() == ps]
+            # if there is any match return False
+            if anyeqal: return False
+        return True 
+
+    def get_scenario(self,user,adaptive_fn = None):
         '''
             random pick
             @TODO we need to record what we have already
@@ -94,16 +135,41 @@ class SurveyGenerator(models.Model):
                 for r in self.range_categs.all(): ss[r.name] = r.get_range()
                 outputs.append(ss)
             if self.check_duplicates(outputs):
-                selected = outputs
-                break
+                # if it hits here, that means the duplicate requirement is satisfied.
+                # Now need to check to make sure the exact combo has not been returned
+                
+                if adaptive_fn:
+                    # should do something to use the adaptive heuristic
+                    pass
+
+                # If it failes the check here gonna have to create something else
+                if self.check_outputs(user,selected):
+                    selected = outputs
+                    break
         for c in self.list_categs.all():
             selected = [c.translate(ss) for ss in selected]
         
-        return selected
+        # turning that into a Scenario object here
+        scen = Scenario()
+        scen.save()
+        for i,s in enumerate(selected):
+            op = Option()
+            op.name = 'Option '+ str(i)
+            op.save()
+            for k,v in s.items():
+                attr = Attribute()
+                attr.name = k
+                attr.value = v
+                attr.save()
+                op.attributes.add(attr)
+            op.save()
+            scen.options.add(op)
+        scen.save()
+        return scen
     
 def build_generator(rule):
     sg = SurveyGenerator()
-    sg.rule_id = rule
+    sg.rule = rule
 
     gg = gen.Generator(rule)
     dd = Dict(json = gg.config)
@@ -143,23 +209,56 @@ class Survey(models.Model):
     feature_scores = models.ManyToManyField('FeatureScore')
     # user taking this survey
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def get_scenarios(self):
+        return self.scenarios.all()
+    def getlastindex(self):
+        return len(self.scenarios.all())-1
 
 class FeatureScore(models.Model):
     name = models.TextField(null=False,default='default_namee')
-    score = models.OneToOneField('SingleResponse',on_delete=models.CASCADE)
+    # score = models.OneToOneField('SingleResponse',on_delete=models.CASCADE)
+    score = models.IntegerField(null=True)
 
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
+
+    def object_form(self):
+        return [o.object_form()
+                    for o in self.options.all()]
+
+    def get_options(self):
+        return self.options.all()
+
+    def makecopy(self):
+        new_copy = deepcopy(self)
+        new_copy.id = None
+        new_copy.save()
+        for o in self.options.all():
+            new_copy.options.add(o)
+        new_copy.save()
+        return new_copy
+
+    # sample attribute types to use in the view table
+    def get_attr_names(self):
+        return [a.name for a in self.get_options()[0].get_attributes()]
 
 class Option(models.Model):
     name = models.CharField(max_length=50, null=False, default='')
     attributes = models.ManyToManyField('Attribute' , related_name='combo_attributes')
     text = models.CharField(max_length=50, null=False, default='')
-    score = models.OneToOneField("SingleResponse", on_delete=models.CASCADE,null=True)
-
-class SingleResponse(models.Model):
-    value = models.CharField(max_length=50, null=False, default='')
-
+    score = models.IntegerField(null=True)
+    
+    def object_form(self):
+        # if composed of options
+        if self.attributes.all():
+            return dict([(a.name,a.value)
+                    for a in self.attributes.all()])
+        return self.text
+    
+    def get_attributes(self):
+        return self.attributes.all()
+ 
 # Holds ruleset ID and scenario model
 class TempScenarios(models.Model):
     user_id = models.IntegerField(null=False, blank=False)
@@ -179,9 +278,9 @@ class RuleSet(models.Model):
     # # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
 
     same_categories = models.IntegerField(null=True, default=2)
-    scenario_size = models.IntegerField(null=True, default=2)
-    creation_time = models.DateTimeField()
+    creation_time = models.DateTimeField(auto_now = True)
     number_of_answers = models.IntegerField(null=True, default=0)
+    scenario_size = models.IntegerField(null=True,default=2)
 
     # ruleset creator
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -193,6 +292,9 @@ class RuleSet(models.Model):
     scenarios = models.ManyToManyField("Scenario")    
 
     '''These accessor functions are for the generator to use'''
+
+    def num_scenarios(self):
+        return len(self.scenarios.all())
 
     def get_sample(self):
         ss = self.scenarios.all()[0]
@@ -339,172 +441,6 @@ class RangeCateg(models.Model):
 
 
 '''
-Currently this function receives the survey data as in a format of [Scenario1,scenario2,...].
-Then it creates the all the submodels accordingly and links the foreign keys
-Before this function is called, the Survey model should be instantiated and saved beforehand
-
-ex)
-ss = Survey(prompt='test',desc='hi')
-ss.save()
-ss.create_survey([[{'alt1':2,'alt2':3}]])
-After this, ss will be the complete survey object
-(does not carry user scores yet)
-
-Test scenario example:
-[
-    [
-        [
-            {
-            "age": "61",
-            "health": "terminally ill(less than 3 years left)",
-            "gender": "male",
-            "income level": "low",
-            "number of dependents": "2",
-            "survival without": "42%",
-            "survival difference": "79%",
-            },
-            {
-            "age": "12",
-            "health": "small health problems",
-            "gender": "female",
-            "income level": "low",
-            "number of dependents": "0",
-            "survival without": "23%",
-            "survival difference": "66%",
-            },
-        ],
-        [
-            {
-            "age": "5",
-            "health": "small health problems",
-            "gender": "female",
-            "income level": "low",
-            "number of dependents": "3",
-            "survival without": "31%",
-            "survival difference": "59%",
-            },
-            {
-            "age": "23",
-            "health": "moderate health problems",
-            "gender": "male",
-            "income level": "high",
-            "number of dependents": "0",
-            "survival without": "30%",
-            "survival difference": "58%",
-            },
-            {
-            "age": "23",
-            "health": "moderate health problems",
-            "gender": "male",
-            "income level": "high",
-            "number of dependents": "0",
-            "survival without": "30%",
-            "survival difference": "58%",
-            },
-        ],
-        [
-            {
-            "age": "5",
-            "health": "small health problems",
-            "gender": "female",
-            "income level": "low",
-            "number of dependents": "3",
-            "survival without": "31%",
-            "survival difference": "59%",
-            },
-            {
-            "age": "23",
-            "health": "moderate health problems",
-            "gender": "male",
-            "income level": "high",
-            "number of dependents": "0",
-            "survival without": "30%",
-            "survival difference": "58%",
-            },
-        ],
-    ],
-    [
-        ["0", "1"],
-        ["2", "3", "5"],
-        ["4", "5"],
-    ],
-    [
-        { "key": "age", "value": "0"},
-        { "key": "gender", "value": "5"},
-        { "key": "health", "value": "3"},
-        { "key": "income level", "value": "6"},
-        { "key": "number of dependents", "value": "8"},
-        { "key": "survival without", "value": "2"},
-        { "key": "survival difference", "value": "9"},
-    ],
-]
-'''
-# This function will recieve a list of json scenarios and
-# load them into Django models.
-
-
-def json_to_survey(survey_data, scores, parent_id, user):
-    
-    seed_rule = RuleSet.objects.get(id=int(parent_id))
-    # incrementing the num here
-    seed_rule.number_of_answers  += 1
-    seed_rule.save()
-    
-    curr_survey = Survey(prompt=seed_rule.prompt, desc=seed_rule.rule_title, user=user,ruleset_id=int(parent_id))
-    curr_survey.save()
-
-    for scenario,scen_scores in zip(survey_data,scores):
-        
-        curr_scenario = Scenario()
-        curr_scenario.save()
-
-        for i,(option,onesco) in enumerate(zip(scenario,scen_scores)):
-            
-            curr_option = Option(name="Option " + str(i+1))
-            
-            # Saves option scores
-            curr_score = SingleResponse(value=onesco)
-            curr_score.save()
-
-            curr_option.score = curr_score
-            
-            if not seed_rule.generative: curr_option.text = option
-            curr_option.save()
-
-            # do only if generative! 
-            if seed_rule.generative:
-                for attribute in option:
-                    value = option[attribute]
-
-                    curr_attribute = Attribute(name=attribute, value=value)
-                    curr_attribute.save()
-
-                    curr_option.attributes.add(curr_attribute)
-                    curr_option.save()
-
-            curr_scenario.options.add(curr_option)
-            curr_scenario.save()
-
-        curr_survey.scenarios.add(curr_scenario)
-        curr_survey.save()
-
-    # loads feature scores into survey
-    for feature in survey_data[2]:
-        
-        curr_score = SingleResponse(value=feature["value"])
-        curr_score.save()
-
-        curr_feature = FeatureScore(name=feature["key"], score=curr_score)
-        curr_feature.save()
-
-        curr_survey.feature_scores.add(curr_feature)
-        curr_survey.save()
-    
-    curr_survey.save()
-    print(curr_survey)
-    return curr_survey
-
-'''
 type(d) must be dict()
 some hardcoding stuff:
 If the user is passing in a 'custom' ruleset, then the dictionary must take this form:
@@ -524,9 +460,7 @@ def json_to_ruleset(d,user,title,prompt):
     rule_set.user = user
     rule_set.generative = generative
     rule_set.prompt = prompt
-    rule_set.creation_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
 
-    print(rule_set.creation_time)
     rule_set.save()
     if generative:
         for categ, obj in d['categories'].items():
@@ -583,3 +517,8 @@ def json_to_ruleset(d,user,title,prompt):
     rule_set.save()
     return rule_set
 
+# This model is specifically for the MTurk experiments, where we have varied 
+# class TripSetCounter(models.Model):
+#     # 
+#     totalcount = models.IntegerField()
+#     num_per_idx = models.IntegerField()

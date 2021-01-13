@@ -1,64 +1,11 @@
-body {
-  background-color: none;
-  margin:0px;
-}
-
-nav {
-  position: fixed;
-  top: 0;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: white;
-  /* border-style: solid;
-  border-width: 0px 0px 1px 0px;
-  border-color: black; */
-  height:50px;
-  width:100vw;
-  box-shadow: 0px 1px 8px 0px rgba(0,0,0,0.12), 0px 1px 0px 0px rgba(232,232,232,1);
-}
-
-li {
-  float: left;
-}
-
-li a {
-  display: block;
-  color: Black;
-  text-align: center;
-  height:50px;
-  width:200px;
-  padding-top: 13px;
-  text-decoration: none;
-}
-
-li a:hover {
-  background-color: rgb(218,218,218);
-}
-
-.page {
-  margin: 50px 0px 0px 0px;
-  width:100vw;
-  height:calc(100vh - 51px);
-  overflow:visible;
-}
-
-vl {
-  display: block;
-  float:left;
-  border-left: 1px solid rgba(0,0,0,0.12);
-  height: 100%;
-}
-
 .bg {
   width: 100%;
   height:100%;
   background-color: rgb(246,244,242);
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
-.col2 {
+.rule-col {
   display: block;
   margin:30px 25%;
   float:left;
@@ -69,7 +16,12 @@ vl {
 
 }
 
-.col2:hover{
+.card-input{
+  display:flex;
+  flex-direction: column;
+}
+
+.rule-col:hover{
   box-shadow: 3px 3px 0px 1px rgb(67,132,244);
 }
 
@@ -92,26 +44,14 @@ vl {
   font-size: 35px;
 }
 
-underline {
-  display: block;
-  float:left;
-  width:80px;
-  border-bottom: 2px solid red;
-
+h3.title{
+  text-decoration: underline red;
+  text-underline-offset: 10px;
 }
 
 h1 {
   margin:10px 10px;
 }
-
-#container1 {
-
-}
-
-#container2 {
-
-}
-
 
 .add_rules {
   margin: 5px;
@@ -176,10 +116,6 @@ h1 {
   background-color: green;
 }
 
-label {
-  margin-left: 5px;
-}
-
 input[type=text] {
   margin:7px;
   padding:2px;
@@ -188,33 +124,61 @@ input[type=text] {
   transition: .3s;
 }
 
+input.ruletitle {
+  margin:0px;
+  height:50px;
+  width:350px;
+  font-size: 16px;
+}
+
+textarea[type=text] {
+  display: block;
+  padding:2px;
+  border-radius:5px;
+  border: 2px solid #eee;
+  transition: .3s;
+}
+
+textarea.ruleprompt {
+  width:350px;
+  height:100px;
+}
+
 input[type=text]:hover {
   border: 1px solid #aaa;
 }
 
-#custom_rule {
-  margin-top: 1px;
-  width:330px;
-  height:50px;
-  resize: none;
+textarea[type=text]:hover{
+  border: 1px solid #aaa;
 }
 
 .p_card {
+  display: flex;
   margin-left: 10px;
   margin-top: 25px;
 }
 
-.p_card_custom_option {
-  margin-left: 10px;
-  margin-top: 18px;
+.box__file{
+  width:0.1px;
+  height:0.1px;
 }
 
+/* .box__file+label{
+  width:100%;
+  height: 80%;
+} */
+
 .card {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   width:350px;
   height:120px;
   padding:5px;
   transition: 0.3s;
   border:1px 2px;
+  border-radius: 5px;
   border:2px solid #eee;
 }
 
@@ -228,6 +192,7 @@ input[type=text]:hover {
   padding:5px;
   transition: 0.3s;
   border:1px 2px;
+  border-radius: 5px;
   border:2px solid #eee;
 }
 
@@ -237,10 +202,14 @@ input[type=text]:hover {
 }
 
 .custom_option_card {
+  margin-left: auto;
+  margin-right: auto;
   height:60px;
   padding:5px;
+  width:330px;
   transition: 0.3s;
   border:1px 2px;
+  border-radius: 5px;
   border:2px solid #eee;
 }
 
@@ -249,22 +218,10 @@ input[type=text]:hover {
   border:2px solid grey;
 }
 
-.add_rules_card {
-  display: none;
+.add_option {
+  font-size: 20px;
+  align-items: center;
 }
-
-.custom_rules_card {
-  display: none;
-}
-
-.bad_cob1 {
-  display: none;
-}
-
-.bad_cob2 {
-  display: none;
-}
-
 
 hl {
   color:red;
@@ -305,4 +262,16 @@ hl {
 
   width:300px;
   margin:15px;
+}
+
+button[type=button]{
+  background-color: white;
+  color: #616161; 
+  border-radius:7px;
+  padding:5px 15px;
+
+}
+
+button[type=button]:hover{
+  cursor: pointer;
 }

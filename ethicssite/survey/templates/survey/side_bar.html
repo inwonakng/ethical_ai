@@ -1,9 +1,8 @@
-{% extends 'survey/my_base.html' %}
+{% extends 'survey/base.html' %}
 
 {% block content %}
 
-<div class = "q2_pg">
-
+<div class = "content">
   <div class="col1">
     <div class = "user_area">
 
@@ -44,17 +43,18 @@
       {% endif %}
     </div>
   </div>
-
   <div class="col2">
     {% block main_content %}
     {% endblock %}
   <!-- end of col2 -->
   </div>
-  <div class = "foot_note">
-    <li class="first"><a href="asdf">About</a></li>
-    <li><a href="asdf">Acceptable Use</a></li>
-    <li><a href="asdf">Privacy</a></li>
-  </div>
 </div>
+
+<footer>
+  <li><a href="asdf">About</a></li>
+  <li><a href="asdf">Acceptable Use</a></li>
+  <li><a href="asdf">Privacy</a></li>
+</footer>
+<!-- </div> -->
 
 {% endblock %}

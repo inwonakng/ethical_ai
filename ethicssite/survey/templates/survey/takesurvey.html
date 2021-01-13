@@ -1,10 +1,95 @@
 {% extends 'survey/base.html' %}
-{% if scenarios %}
-    <ul>
-    {% for s in scenarios %}
-        <li><a href="/survey/{{ s.id }}/">{{ s.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>This is where the user will be able to take the survey.</p>
-{% endif %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/css/survey-page.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <form id="savescenario" action="{% url 'survey:savescenario' scenario_id=scenario.id rule_id=rule.id is_review=is_review%}" method="POST">
+        {% csrf_token %}
+        <p id="prompt">{{rule.prompt}}</p>
+        <div id="survey" class="question">
+            <div class="question">
+                <table>
+                    <tr class="top">
+                        <td>Options</td>
+                        {% if rule.generative %}
+                            {% for attr in scenario.get_attr_names%}    
+                                <td>
+                                    {{attr}}
+                                </td>
+                            {% endfor %}
+                        {% else %}
+                            <td>
+                                Explanation
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% for option in scenario.get_options %}
+                        <tr>
+                            <td>
+                                Option {{forloop.counter}}:
+                            </td>
+                            {% if rule.generative %}
+                                {% for attr in option.get_attributes%}    
+                                    <td>
+                                        {{attr.value}}
+                                    </td>
+                                {% endfor %}
+                            {% else %}
+                                <td>
+                                    {{option.text}}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="question">
+            <p>Assign your scores: </p>
+            <div class="tab">
+                <button class="tablinks" onclick="">Sliders</button>
+            </div>
+        </div>
+        <div class="question">
+            {% for option in scenario.get_options %}
+                <div class="question">
+                    <p class="option-score">Option {{forloop.counter}}</p>
+                    <div class="slidecontainer">
+                        <input type="range" id="slider{{forloop.counter0}}" name="slider{{forloop.counter0}}" 
+                            min="0" max="10" class="slider" value=0>
+                    </div>
+                </div>
+                <!-- passing back the review boolean in hidden form -->
+                <input name="is_review" value={{is_review}} style="display: none;">
+            {% endfor %}
+        </div>
+        <div class="question">
+            {% if is_review == 0%}
+                {% if not curr_index == 0 %}
+                    <a href="{% url 'survey:takesurvey' parent_id=rule.id scenario_num=curr_index|add:-1 is_review=0%}">
+                        <button id="prev" class="action-btn" type="button">Prev</button>
+                    </a>
+                {% else %}
+                    <button id="prev" class="action-btn" disabled>Prev</button>
+                {% endif %}
+            
+                {% if not curr_index == rule.num_scenarios|add:"-1" %}
+                    <button id="next" class="action-btn" type="submit">Next</button>
+                {% else %}
+                    <button id="next" class="action-btn" type="submit">Review</button>
+                {% endif %}
+            {% else %}
+            <!-- if review send back to review page -->
+                <button id="prev" class="action-btn" style="display: none;">Prev</button>
+                <button id="next" class="action-btn" type="submit">Return</button>
+            {% endif %}
+        </div>
+    </form>
+</body>
+{% endblock %}

@@ -70,7 +70,7 @@ function callNextScenario() {
     else {
         console.log(scenarioNum)
         // Create a new scenario if one is needed.
-        http_get('/getscenario/' + parent_id +'/'+scenarioNum ,writetopage, scenarioNum);
+        http_get('/oldget/' + parent_id +'/'+scenarioNum ,writetopage, scenarioNum);
     }
 }
 // Changes the page from the final survey page to the initial surveys
@@ -366,5 +366,5 @@ var dataFeatures = [];
 var totalData = [];
 var parent_id = byid('parent_id').innerHTML;
 var isgen = byid('is_gen').innerHTML === "True"
-http_get('/getscenario/' + parent_id+'/0', writetopage, scenarioNum);
+http_get('/oldget/' + parent_id+'/0', writetopage, scenarioNum);
 //# sourceMappingURL=surveyscript.js.map
