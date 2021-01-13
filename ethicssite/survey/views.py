@@ -373,18 +373,29 @@ def make_mturk_user(turk_id):
 
     return user
 
+'''
+This is the function that is first accessed by the survey script when starting
+it prepares all the necessary models for the functions later on (user,rule,surveygenerator)
+'''
 @csrf_exempt 
-def mturk_get_scenario(request):
+def mturk_build_generator(request):
     content = json.loads(request.body)
 
     uid = content['unique_id']
     survtype = content['survey_type']
-    last_response = content['last_response']
 
+    tripcounter_q = TripSetCounter.objects.filter(name='Mturk Survey')
+    if tripcounter_q.exists(): tripcounter = tripcounter_q[0]
+    else: 
+        tripcounter = TripSetCounter()
+        tripcounter.save()
+
+    # create User object for mturk user using unique id
     user_q = User.objects.filter(username=uid)
     if user_q.exists(): user = user_q[0]
     else: user = make_mturk_user(uid)
 
+    # load rule/create new if not already in database
     if survtype == 'pair': 
         rulefile = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule2.json')
         title = 'Mturk Pair'
@@ -393,23 +404,46 @@ def mturk_get_scenario(request):
         rulefile = os.path.join(settings.BASE_DIR,'survey/generation/rule/rule3.json')
         title = 'Mturk Triple'
         prompt = 'triple options for mturk'
-        
+
     r_query = RuleSet.objects.filter(rule_title=title)
     if r_query.exists(): rule = r_query[0]
     else: rule = json_to_ruleset(  json.load(open(rulefile)),
                                         User.objects.get(username='admin'),
                                         title,
                                         prompt)
+    survgen_q = SurveyGenerator.objects.filter(Q(rule = rule))
+    if not survgen_q.exists(): build_generator(rule)
 
-    survgen_q = SurveyGenerator.objects.filter(Q(rule = rule))    
-    survey_q = Survey.objects.filter(Q(ruleset_id = rule.id) & Q(user = user))
+    trip_idx = tripcounter.get_index()
+    
+    return JsonResponse({'tripset_idx':trip_idx}, safe=False)
+
+'''
+This is the endpoint that is accessed when grabbing the next question to ask the user.
+
+TODO: 
+make cases for last_response.
+if last
+'''
+@csrf_exempt 
+def mturk_get_scenario(request):
+    content = json.loads(request.body)
+
+    uid = content['unique_id']
+    survtype = content['survey_type']
+    last_response = content['last_response']
+
+    user = User.objects.get(username=uid)
+    
+    if survtype == 'pair': rule = RuleSet.objects.get(rule_title='Mturk Pair')
+    else: rule = RuleSet.objects.get(rule_title='Mturk Triple')
+
+    survgen = SurveyGenerator.objects.get(rule = rule)    
+    
     '''
     Need to record user response to past questions
     '''
-
-    if survgen_q.exists(): survgen = survgen_q[0]
-    else: survgen = build_generator(rule)
-
+    survey_q = Survey.objects.filter(Q(ruleset_id = rule.id) & Q(user = user))
     if survey_q.exists(): survey = survey_q[0]
     else: 
         survey = Survey(prompt = 'mturk survey',
@@ -417,7 +451,7 @@ def mturk_get_scenario(request):
                         ruleset_id = rule.id,
                         user = user)
         survey.save()
-    
+
     scen = survgen.get_scenario(user)
     survey.scenarios.add(scen)
     survey.save()

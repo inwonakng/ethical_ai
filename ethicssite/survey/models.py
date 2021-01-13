@@ -517,8 +517,21 @@ def json_to_ruleset(d,user,title,prompt):
     rule_set.save()
     return rule_set
 
-# This model is specifically for the MTurk experiments, where we have varied 
-# class TripSetCounter(models.Model):
-#     # 
-#     totalcount = models.IntegerField()
-#     num_per_idx = models.IntegerField()
+# This model is specifically for the MTurk experiments, where we have varied the ground truth questiosn 
+class TripSetCounter(models.Model):
+    '''
+    default setup: 800 participants with 8 varying ground truth questions
+    '''
+    name=models.TextField(default='Mturk Survey')
+    totalcount = models.IntegerField(default=800)
+    num_idx = models.IntegerField(default=8)
+    current_count = models.IntegerField(default=0)
+
+    def get_index(self):
+        self.current_count += 1
+        self.save()
+        return (self.current_count-1) % self.num_idx
+        
+
+
+

@@ -39,5 +39,6 @@ urlpatterns = [
     path('api/',include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-    path('api/survey',views.mturk_get_scenario,name='mturk_survey')
+    path('api/setup',views.mturk_build_generator,name='build_generator'),
+    path('api/survey',views.mturk_get_scenario,name='mturk_survey'),
 ]
