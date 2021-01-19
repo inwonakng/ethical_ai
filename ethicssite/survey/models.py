@@ -1,7 +1,6 @@
 import json
 from django import forms
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
@@ -191,8 +190,6 @@ def build_generator(rule):
     sg.save()
     return sg
 
-# Question model
-@python_2_unicode_compatible
 # Model for a generic attribute for some combination (e.g. age or health)
 class Attribute(models.Model):
     # attribute name (e.g. age or health)

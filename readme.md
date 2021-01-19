@@ -103,21 +103,8 @@ FLUSH PRIVILEGES;
 CREATE DATABASE mysqldb
 ```
 
-### Hotfix to run db with django 2.2
-
-`python3 -m site`
-to find your site packages directory
-
-Then go locate the file in django directory
-`django/db/backends/mysql/operations.py`
-
-Find the line with `query = query.decode(errors='replace')`
-
-Remove the line and put `query = errors='replace'`
-
-### If you intended to install on global field, please ignore `venv` part
-
-## venv
+## venv 
+### You should always use venv! This will help us isolate the dependencies of our project to make for easier installation
 
 ```bash
 python3 -m venv venv
