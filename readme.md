@@ -118,6 +118,16 @@ The above command will generate `venv` under current directory
 source venv/bin/activate
 ```
 
+```cmd.exe
+<venv>\Scripts\activate.bat
+```
+
+```PowerShell
+<venv>\Scripts\Activate.ps1
+```
+
+#### On windows, try to stick to powershell, which is the default vscode terminal.
+
 You should now see `(venv)` in front of your command ine
 
 ### Exit Virtualenv
