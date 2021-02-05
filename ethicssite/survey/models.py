@@ -5,7 +5,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, validate_email
 from django.contrib.auth.models import User,Group
-from django_mysql.models import JSONField
+from django.db.models import JSONField
 from random import sample
 from random import randint as rint
 from itertools import combinations as comb
@@ -513,6 +513,34 @@ def json_to_ruleset(d,user,title,prompt):
             rule_set.scenarios.add(scen)
     rule_set.save()
     return rule_set
+
+class MturkUser(models.Model):
+    name = models.CharField(null=False,max_length=30)
+
+class CommentAnnotatation(models.Model):
+    value = JSONField()
+
+class OneComment(models.Model):
+    dataset_index = models.IntegerField(null=False)
+    comment_index = models.IntegerField(null=False)
+    taken_users = models.ManyToManyField('MturkUser')
+    current = models.IntegerField(default=0)
+    # limit = models.IntegerField(default=3)
+    responses = models.ManyToManyField('CommentAnnotatation')
+
+    def get_usernames(self):
+        return [u.name for u in list(self.taken_users.all())]
+
+    def add_user(self,name):
+        user = MturkUser(name)
+        self.taken_users.add(user)
+        current += 1
+        self.save()
+    
+
+    # taken_users = models.ManyToManyField('MturkUser') 
+
+
 
 # This model is specifically for the MTurk experiments, where we have varied 
 # class TripSetCounter(models.Model):

@@ -435,6 +435,33 @@ def mturk_get_scenario(request):
     print(formatted)
 
     return JsonResponse(formatted,safe=False)
+
+def NLPSurvey(request):
+    return render(request,'survey/NLPsurvey.html')
+
+@csrf_exempt
+# This is a hardcoded function for NLP classification task
+def NLPSurvey_setup(request):
+    username = request.body.decode()
+    comments = OneComment.objects.filter(current__lt=3)
+
+    # need to choose 2 datasets
+    chosen = {
+        'comments':[6],
+        'datasets':[177],
+        'entities':[2]
+    }
+    # for c in comments:
+    #     if len(chosen == 20): break
+    #     if not username in c.get_usernames():
+    #         chosen.append({
+    #             'dataset': c.dataset_index,
+    #             'comment': c.comment_index,
+    #         })
+    #         c.add_user(username)
+
+    return JsonResponse(chosen,safe=False)
+
 # =============================
 # REST API functions end
 # =============================
