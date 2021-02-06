@@ -10,7 +10,6 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" />
   <link rel="stylesheet" type="text/css" href="{% static 'css/my_polls.css' %}" />
   <link rel="stylesheet" type="text/css" href="{% static 'css/rule_creation.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'css/register_login.css' %}">
 
   <!-- let's stick with the updated bootstrap version -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -24,14 +23,24 @@
   {% endblock %}
 </head>
 <body>
+  
   <nav>
     <li><a href="http://127.0.0.1:8000/">Ethical Voting Platform</a></li>
     <li><a href="http://127.0.0.1:8000/about">About</a></li>
-    <li><a href= "{% url 'survey:rules' %}" >Create</a></li>
+    <li><a href="{% url 'survey:rules' %}">Create</a></li>
+    {% if not request.user.is_authenticated %}
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerPopUp">Register</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginPopUp">Login</button>
+    {% else %}
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+    {% endif %}
   </nav>
   <div class="main">
   {% block content %}
   {% endblock %}
   </div>
+
+  {% include 'survey/register.html' %}
+  {% include 'survey/login.html' %}
 </body>
 </html>
