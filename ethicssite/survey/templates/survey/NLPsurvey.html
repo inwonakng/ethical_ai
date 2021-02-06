@@ -1,0 +1,86 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://inwonakng.github.io/survey-scripts/survey.css">
+    <!-- You must include this JavaScript file -->
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+    {% load static %}
+    <script src="{% static '/scripts/NLPscript.js' %}"></script>
+
+</head>
+
+<body id="mybody">
+
+    <div id="startloading" class="loadingpage" style="display:none">
+        <img src="https://inwonakng.github.io/airplane-script/loading.gif">
+        <p>
+        Loading survey...
+        </p>
+    </div>
+    <crowd-form style="display: block;margin:15px">        
+        <div id="turk_id">
+            <div class="flex-container">
+                Please input your mturk user id here
+            </div>
+            <input id="mturk-user" name="username">
+            <crowd-button id="user-continue">Continue</crowd-button>
+        </div>
+        <div id="practice" style="display:none">
+            <div class="flex-container">
+                Sample here
+            </div>
+            <crowd-button id="continue">Continue</crowd-button>
+        </div>
+        
+        <!-- one page of the survey -->
+         <!-- hiding the good stuff here -->
+        <!-- <input style="display:none;" name="comment-index" id="comment-idx" value=${text}> -->
+        {% comment %} <input style="display: none;" name="comment-index" id="comment-idx" value="[6,8,9,10]">
+        <input style="display: none;" name="dataset-index" id="dataset-idx" value="[177,177,167,167]">
+        <input style="display: none;" name="num-entities" id="num-entities" value="[2,2,3,3]"> {% endcomment %}
+
+        <div class="one-comment" style="display: none;">
+            <div class="flex-container main">
+                <div class="flex-left" id="reloadhere">
+                    <br>
+                    <b class="type-tag">Title of the original post:</b>
+                    <h3 id="post-title"> </h3>
+                    Below is the <b>original post</b> from a user asking for advice on which university to choose.
+                    <br>
+                    <br>
+                    <div id="original-comment" class="text-block">
+                    </div>
+                    <div id="context-container"></div>
+                    <h4>
+                        Please analyze the comment in the blue outline. Click the 'Show more' button to show more comments from the same thread, and 'Show less' to hide them again.
+                    </h4>
+                    <crowd-button id="show-less" disabled>Show less</crowd-button>
+                    <crowd-button id="show-more">Show more</crowd-button>
+                    <br>
+                    <br>
+                    <div id="main-text" class="text-block"></div>
+                    <!-- The text you want classified will be substituted for the "text" variable when you 
+                        publish a batch with a CSV input file containing multiple text items  -->
+                    
+                    <div id="all-inputs">
+                    </div>
+    
+                </div>
+                <div class="flex-right">
+                    <!-- gonna have the category pickers here -->
+                    <div id="entities-labels"></div>
+    
+                    <h4>Context information about each entity:</h4>
+                    <div id="info-section"></div>
+                </div>
+            </div>
+            <!-- <input style="display: none;" name="q_num" id="page-index"></input> -->
+            <br>
+            Question: <a id="scenario-index"></a>
+            <br>
+            <crowd-button id="prevbtn">Prev</crowd-button>
+            <crowd-button id="nextbtn">Next</crowd-button>
+        </div>
+        
+        <br><br><br>
+    </crowd-form>
+</body>

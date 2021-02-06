@@ -39,5 +39,7 @@ urlpatterns = [
     path('api/',include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-    path('api/survey',views.mturk_get_scenario,name='mturk_survey')
+    path('api/survey',views.mturk_get_scenario,name='mturk_survey'),
+    path('api/NLPsurvey',views.NLPSurvey,name='nlp_survey'),
+    path('api/NLPsurvey_setup',views.NLPSurvey_setup,name='nlp_survey_setup'),
 ]

@@ -67,12 +67,5 @@ rsa==4.6
 scipy==1.5.2
 six==1.15.0
 sqlparse==0.4.1
-TatSu==4.4.0
-toml==0.10.1
-typed-ast==1.4.1
-typing-extensions==3.7.4.3
-uritemplate==3.0.1
-urllib3==1.26.2
-whitenoise==5.2.0
-wrapt==1.12.1
-yarl==1.5.1
+requests==2.25.1
+tqdm==4.56.0
