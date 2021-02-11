@@ -29,12 +29,21 @@
     <li><a href="http://127.0.0.1:8000/about">About</a></li>
     <li><a href="{% url 'survey:rules' %}">Create</a></li>
     {% if not request.user.is_authenticated %}
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerPopUp">Register</button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginPopUp">Login</button>
+    <li><a href="" data-bs-toggle="modal" data-bs-target="#registerPopUp">Register</a></li>
+    <li><a href="" data-bs-toggle="modal" data-bs-target="#loginPopUp">Login</a></li>
     {% else %}
     <li><a href="{% url 'logout' %}">Logout</a></li>
     {% endif %}
   </nav>
+
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  
   <div class="main">
   {% block content %}
   {% endblock %}
