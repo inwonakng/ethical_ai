@@ -111,6 +111,7 @@ def register(request):
             """
     else:
         form = UserCreationForm()
+        messages.error("Invalid fields!")
     return HttpResponseRedirect('/')
     # return render(request, 'survey/base.html', {'form': form, 'registered': registered})
 
@@ -143,6 +144,7 @@ def user_login(request):
                 request.session['user_name'] = username
                 user_id = User.objects.filter(username = username).values('id').first()
                 request.session['user_id'] = user_id['id']
+                messages.success(request, "Logged in!")
                 # redirect to previous page if sent from @login_required
                 # else redirect to index
                 if request.GET.get('next', False):
@@ -154,13 +156,14 @@ def user_login(request):
                 # TODO: figure out how to actually determine if a user has confirmed email, inactive users don't show up in authenticate()
                 # resend activation email
                 html_msg = f"<p><a href='{request.build_absolute_uri('/register/confirm/')}{user.id}'>Click here to activate your account</a></p>"
-                mail.send_mail("Account Confirmation", "Please confirm your account registration.",
-                                settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
-                return render(request, 'survey/login.html', {'error': 'Account was not activated. An activation link was resent to your email address.'})
+                mail.send_mail("Account Confirmation", "Please confirm your account registration.", settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
+                messages.error(request, "Account was not activated. An activation link was resent to your email address!")
+                return HttpResponseRedirect('/')
         else:
-            return render(request, 'survey/login.html', {'error': 'Invalid login details.'})
+            messages.error(request, "Invalid login details!")
+            return HttpResponseRedirect('/')
     else:
-        return render(request, 'survey/login.html', {})
+        return HttpResponseRedirect('/')
 
 def user_logout(request):
     # the id is none if not logged in
@@ -168,7 +171,8 @@ def user_logout(request):
         return redirect("/")
     logout(request)
     request.session.flush()
-    return redirect('/')
+    messages.success(request, "Logged out!")
+    return HttpResponseRedirect('/')
 
 # ====================
 # User functions end
