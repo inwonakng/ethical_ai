@@ -58,6 +58,9 @@ def idx_view_answered_questions(request):
     context = {'ans':Survey.objects.filter(Q(user=request.user))}
     return render(request, "survey/answered_questions.html", context)
 
+def idx_view_answered_questions_earliest(request):
+    context = {'ans':Survey.objects.filter(Q(user=request.user).order_by(''))}
+
 def idx_view_result_analysis(request):
     context = {}
     return render(request, "survey/result_analysis.html", context)
