@@ -2,8 +2,7 @@ from django.http import HttpResponse,JsonResponse, HttpRequest, HttpResponseServ
 from django.shortcuts import render, redirect
 from .generation.Generator import Generator
 from django.shortcuts import render
-import yaml
-import json
+from django.contrib import messages
 from django.conf import settings
 from .models import *
 from django import views
@@ -20,8 +19,8 @@ from django import forms
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework import permissions
-
-
+import yaml
+import json
 import os
 
 # ====================
@@ -101,8 +100,8 @@ def register(request):
             registered = True
 
             html_msg = f"<p><a href='{request.build_absolute_uri('/register/confirm/')}{user.id}'>Click here to activate your account</a></p>"
-            mail.send_mail("Account Confirmation", "Please confirm your account registration.",
-                            settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
+            mail.send_mail("Account Confirmation", "Please confirm your account registration.", settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
+            messages.info(request, "Success, you were sent an email with an account confirmation link!")
         else:
             # fall through to rerendering register html with form.errors filled
             pass
@@ -112,7 +111,9 @@ def register(request):
             """
     else:
         form = UserCreationForm()
-    return render(request, 'survey/register.html', {'form': form, 'registered': registered})
+        messages.error("Invalid fields!")
+    return HttpResponseRedirect('/')
+    # return render(request, 'survey/base.html', {'form': form, 'registered': registered})
 
 def confirm_user(request, userid):
     user = get_object_or_404(User, pk=userid)
@@ -143,6 +144,7 @@ def user_login(request):
                 request.session['user_name'] = username
                 user_id = User.objects.filter(username = username).values('id').first()
                 request.session['user_id'] = user_id['id']
+                messages.success(request, "Logged in!")
                 # redirect to previous page if sent from @login_required
                 # else redirect to index
                 if request.GET.get('next', False):
@@ -154,13 +156,14 @@ def user_login(request):
                 # TODO: figure out how to actually determine if a user has confirmed email, inactive users don't show up in authenticate()
                 # resend activation email
                 html_msg = f"<p><a href='{request.build_absolute_uri('/register/confirm/')}{user.id}'>Click here to activate your account</a></p>"
-                mail.send_mail("Account Confirmation", "Please confirm your account registration.",
-                                settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
-                return render(request, 'survey/login.html', {'error': 'Account was not activated. An activation link was resent to your email address.'})
+                mail.send_mail("Account Confirmation", "Please confirm your account registration.", settings.EMAIL_HOST_USER, [user.email], html_message=html_msg)
+                messages.error(request, "Account was not activated. An activation link was resent to your email address!")
+                return HttpResponseRedirect('/')
         else:
-            return render(request, 'survey/login.html', {'error': 'Invalid login details.'})
+            messages.error(request, "Invalid login details!")
+            return HttpResponseRedirect('/')
     else:
-        return render(request, 'survey/login.html', {})
+        return HttpResponseRedirect('/')
 
 def user_logout(request):
     # the id is none if not logged in
@@ -168,7 +171,8 @@ def user_logout(request):
         return redirect("/")
     logout(request)
     request.session.flush()
-    return redirect('/')
+    messages.success(request, "Logged out!")
+    return HttpResponseRedirect('/')
 
 # ====================
 # User functions end
