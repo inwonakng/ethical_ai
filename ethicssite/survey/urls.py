@@ -14,7 +14,7 @@ urlpatterns = [
     path('',views.idx_view_all_questions_latest,name='index'),
     path('trending',views.idx_view_all_questions_trending,name='trending'),
     path('latest',views.idx_view_all_questions_latest,name='latest'),
-    path('ans',views.idx_view_answered_questions),
+    path('ans',views.idx_view_answered_questions_latest, name='latest'),
     path('earliest',views.idx_view_answered_questions_earliest, name='earliest'),
     path('ans-latest', views.idx_view_answered_questions_latest, name='latest'),
     path('res',views.idx_view_result_analysis),

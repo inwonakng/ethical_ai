@@ -67,7 +67,7 @@ def idx_view_answered_questions_earliest(request):
 def idx_view_answered_questions_latest(request):
     queryset = Survey.objects.filter(Q(user=request.user))
 
-    context = {'ans':queryset.order_by('-date'), 'by': 'latest'}
+    context = {'ans':queryset.order_by('-date'), 'by': 'ans-latest'}
     return render(request, "survey/answered_questions.html", context)
 
 def idx_view_result_analysis(request):
