@@ -53,11 +53,6 @@ def idx_view_all_questions_latest(request):
     print(context['by'])
     return render(request, "survey/all_questions.html", context)
 
-# Should view all of the surveys that this user has answered
-def idx_view_answered_questions(request):
-    context = {'ans':Survey.objects.filter(Q(user=request.user))}
-    return render(request, "survey/answered_questions.html", context)
-
 def idx_view_answered_questions_earliest(request):
     queryset = Survey.objects.filter(Q(user=request.user))
 
@@ -66,7 +61,6 @@ def idx_view_answered_questions_earliest(request):
 
 def idx_view_answered_questions_latest(request):
     queryset = Survey.objects.filter(Q(user=request.user))
-
     context = {'ans':queryset.order_by('-date'), 'by': 'ans-latest'}
     return render(request, "survey/answered_questions.html", context)
 
