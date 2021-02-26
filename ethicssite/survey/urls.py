@@ -15,6 +15,8 @@ urlpatterns = [
     path('trending',views.idx_view_all_questions_trending,name='trending'),
     path('latest',views.idx_view_all_questions_latest,name='latest'),
     path('ans',views.idx_view_answered_questions),
+    path('earliest',views.idx_view_answered_questions_earliest, name='earliest'),
+    path('ans-latest', views.idx_view_answered_questions_latest, name='latest'),
     path('res',views.idx_view_result_analysis),
     path('register', views.register, name='register'),
     url(r'^register/confirm/(?P<userid>\w+)/$', views.confirm_user, name='confirm_user'),

@@ -39,16 +39,6 @@ $(document).ready(() => {
             <label for="ans-latest">Latest</label>
           </form>
         </div>
-        <div class = "input_wrap">
-          <form action="alphabetical">
-            {% if by == 'alphabetical' %}
-            <input type="radio" id = "alphabetical" name="ranking" checked onClick="javascript:this.parentNode.submit()">
-            {% else %}
-            <input type="radio" id = "alphabetical" name="ranking" onClick="javascript:this.parentNode.submit()">
-            {% endif %}
-            <label for="alphabetical">Alphabetical</label>
-          </form>
-        </div>
       </div>
       <div class = "second_line">
         <div class = "title">LAYOUT:</div>
