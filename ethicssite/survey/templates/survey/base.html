@@ -60,7 +60,12 @@
   {% endblock %}
   </div>
 
-  {% include 'survey/register.html' %}
-  {% include 'survey/login.html' %}
+  {% if not request.user.is_authenticated %}
+    {% include 'survey/register.html' %}
+    {% include 'survey/login.html' %}
+  {% else %}
+    {% include 'survey/survey_details.html'%}
+  {% endif %}
+
 </body>
 </html>

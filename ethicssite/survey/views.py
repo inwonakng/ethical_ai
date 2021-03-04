@@ -330,7 +330,7 @@ def my_survey(request,user_id):
     #the list of rule sets by the parent_id
     #besides the features and its values in each scenario, their should also be values
     #including poll create date and number of participants
-    print(RuleSet.objects.filter(user_id=user_id)[0].prompt)
+    # print(RuleSet.objects.filter(user_id=user_id)[0].prompt)
     context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time')}
     return render(request, 'survey/my_survey.html', context)
 
