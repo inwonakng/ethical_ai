@@ -21,6 +21,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 import yaml
 import json
+import csv
 import os
 
 # ====================
@@ -329,9 +330,37 @@ def unknown_path(request, random):
 def my_survey(request,user_id):
     #the list of rule sets by the parent_id
     #besides the features and its values in each scenario, their should also be values
-    #including poll create date and number of particiants
-    context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time')}
+    #including poll create date and number of participants
+    # print(RuleSet.objects.filter(user_id=user_id)[0].prompt)
+
+    user_surveys = RuleSet.objects.filter(user_id=user_id)
+    folder_path = "survey/user_surveys/" + "User " + str(user_id) + "_survey "
+    for x in user_surveys:
+        if (os.path.exists(folder_path+str((x.id)+1)) != True):
+            with open(os.path.join(settings.BASE_DIR, folder_path+str((x.id))), 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(["ID", "Survey Title", "Prompt", "Number of responses", "Average time to complete survey", "Data created"])
+                writer.writerow([str(x.id), str(x.rule_title), str(x.prompt), str(x.number_of_answers), str(7), str(x.creation_time)])
+
+    context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'), 'user_id': user_id}
     return render(request, 'survey/my_survey.html', context)
+
+# @login_required
+# def survey_exporter(request,user_id):
+#     # exports all individual survey data to a folder called user_surveys
+#     user_surveys = RuleSet.objects.filter(user_id=user_id)
+#     file_name = "User " + str(user_id) + "_survey_"
+#     for x in user_surveys:
+#         if (os.path.exists(str(file_name)))
+#     # if (os.path.exists())
+#     folder_path = "survey/user_surveys/" + file_name
+
+#     with open(os.path.join(settings.BASE_DIR, folder_path, 'w', newline='')) as file:
+#         writer = csv.writer(file)
+#         writer.writerow(["ID", "Survey Title", "Prompt", "Number of responses", "Average time to complete survey", "Data created"])
+#         for x in user_surveys:
+#             writer.writerow([str(x.id), str(x.rule_title), str(x.prompt), str(x.number_of_answers), str(7), str(x.creation_time)])
+        
 
 # =============================
 # User created survey end
