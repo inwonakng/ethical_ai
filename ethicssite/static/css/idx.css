@@ -267,6 +267,16 @@
   background-color: rgb(240,240,240);
 }
 
+.user_area .my_survey {
+  border-top: 1px solid rgb(232,232,232);
+  padding: 11px;
+  cursor: pointer;
+}
+
+.user_area .my_survey:hover {
+  background-color: rgb(240,240,240);
+}
+
 .user_area .selected {
   background-color: rgb(230,230,230);
   font-weight: bold;

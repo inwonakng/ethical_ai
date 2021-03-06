@@ -227,7 +227,7 @@ def load_survey(request,parent_id):
     if rule.generative:
         check = SurveyGenerator.objects.filter(rule_id = parent_id)
         if not check: build_generator(rule)
-    return redirect('survey:takesurvey',parent_id=parent_id,scenario_num=0,is_review=0)
+    return redirect('survey:takesurvey', parent_id=parent_id, scenario_num=0, is_review=0)
 
 def get_scenario(request,parent_id,scenario_num,is_review):
     # if in review mode is_review == 1
