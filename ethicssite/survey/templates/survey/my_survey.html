@@ -1,22 +1,114 @@
-{% extends 'survey/base.html' %}
+{% extends 'survey/side_bar.html' %}
 
-{% block content %}
-  {% for r in rules %}
-    <div class="poll_div">
-      <div class = 'my_poll_title'>
-        <span class='my_poll_subject'>{{r.rule_title}}</span> 
+{% block script %}
+<script>
+  $(document).ready(() => {
+    if (!$(".user_area .my_survey").hasClass("selected")) {
+      $(".user_area .option").removeClass("selected");
+      $(".user_area .my_survey").addClass("selected");
+    }
+  })
+ 
+ $('#myModal').appendTo("body")
+</script>
+{% endblock %}
+
+{% block main_content %}
+{% load static %}
+
+  <!-- main content should go here -->
+  <div class="questions_col">
+    <div class="question_nav">
+      <div class="basic_nav">
+        <div class="first_line">
+          <div class="title">RANK BY:</div>
+          <div class="input_wrap">
+            <form action="trending">
+              {% if by == 'trending' %}
+              <input type="radio" id="trending" name="ranking" checked onClick="javascript:this.parentNode.submit()">
+              {% else %}
+              <input type="radio" id="trending" name="ranking" onClick="javascript:this.parentNode.submit()">
+              {% endif %}
+              <label for="trending">Trending</label>
+            </form>
+          </div>
+          <div class="input_wrap">
+            <form action="latest">
+              {% if by == 'latest' %}
+              <input type="radio" id="latest" name="ranking" checked onClick="javascript:this.parentNode.submit()">
+              {% else %}
+              <input type="radio" id="latest" name="ranking" onClick="javascript:this.parentNode.submit()">
+              {% endif %}
+              <label for="Latest">Latest</label>
+            </form>
+          </div>
+  
+        </div>
+        <div class="second_line">
+          <div class="title">LAYOUT:</div>
+          <div class="input_wrap">
+            <input type="radio" id="method1" name="layout" checked>
+            <label for="method1">Cards</label>
+          </div>
+          <div class="title filter">FILTER</div>
+        </div>
       </div>
-      <span class='my_poll_date'>Created at: {{r.creation_time}}</span>
-      <div class='my_poll_information'>
-        <p>Number of participant: {{r.number_of_answers}}</p>
-        {% if r.gernative %}
-        <p>Highest ranked features: </p>
-        {% endif %}
-        <p>Average time to complete: {{7}}</p>
-      </div>
-      <button class="download_button"><a>Click to download</a></button>
-      <button class="detail_button">See Details</button>
+      <div class="filter_options"></div>
+  
     </div>
+     
+    {% for r in rules %}
+      <div class="question_cards">
+        <div class="over_view">
+          <div class="title">
+            <h1>{{ r.rule_title }}</h1>
+          </div>
+          <div class="img" class="open-modal" data-bs-toggle="modal" data-bs-target="#surveyDetailPopUp{{r.id}}" style="background-color: rgb(28, 145, 255)"></div>
+        </div>
+        <div class="detail">
+          <p>Prompt of the survey:</p>
+          <dl>
+            {{ r.prompt }}
+          </dl>
+          <p>Number of responses to the survey:</p>
+          <dl>
+            {{ r.number_of_answers }}
+          </dl>
+          <p>Date created:</p>
+          <dl>
+            {{ r.creation_time }}
+          </dl>
+        </div>
+      </div>
     {% endfor %}
+
+  </div>
+
+  <!-- right column -->
+  <div class="side_col">
+    <div class="side_card first" style="height:300px;">
+      <div class="trend_title" style="background-image: url({% static 'img/14035064.png' %});">
+        Most Viewed Question
+      </div>
+      <div class="content"></div>
+    </div>
+  
+    <div class="side_card" style="height:500px;">
+      <div class="title">
+        Ask Your Questions
+      </div>
+      <div class="content"></div>
+    </div>
+  
+    <div class="side_card last" style="height:200px;">
+      <div class="title">
+        Help Us Improve
+      </div>
+      <div class="content"></div>
+    </div>
+  </div>
+
+  
         
 {% endblock %}
+
