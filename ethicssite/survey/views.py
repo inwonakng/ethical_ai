@@ -226,7 +226,7 @@ def load_survey(request,parent_id):
     if rule.generative:
         check = SurveyGenerator.objects.filter(rule_id = parent_id)
         if not check: build_generator(rule)
-    return redirect('survey:takesurvey',parent_id=parent_id,scenario_num=0,is_review=0)
+    return redirect('survey:takesurvey', parent_id=parent_id, scenario_num=0, is_review=0)
 
 def get_scenario(request,parent_id,scenario_num,is_review):
     # if in review mode is_review == 1
@@ -331,7 +331,7 @@ def my_survey(request,user_id):
     #besides the features and its values in each scenario, their should also be values
     #including poll create date and number of participants
     # print(RuleSet.objects.filter(user_id=user_id)[0].prompt)
-    context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time')}
+    context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'), 'user_id': user_id}
     return render(request, 'survey/my_survey.html', context)
 
 # =============================

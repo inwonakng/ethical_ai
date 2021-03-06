@@ -8,9 +8,8 @@
       $(".user_area .my_survey").addClass("selected");
     }
   })
-  $('.open-modal').click(function (e) {
-      $('#surveyDetailPopUp .modal-body').html($(this).prev().clone());
-    });
+ 
+ $('#myModal').appendTo("body")
 </script>
 {% endblock %}
 
@@ -77,43 +76,12 @@
       <div class="filter_options"></div>
   
     </div>
-  
-    <!-- {% for r in rules %}
-  
-    <div class="question_cards">
-      <div class="over_view">
-        <div class="title">
-          <a href="/loadsurvey/{{r.id}}">{{r.rule_title}}</a>
-        </div>
-        <div class="img" style="background-color: #3498db;"></div>
-      </div>
-      <div class="detail">
-        <p>Prompt of the survey:</p>
-        <dl>
-          {{r.prompt}}
-        </dl>
-  
-        <p>Number of responses to the survey:</p>
-        <dl>
-          {{r.number_of_answers}}
-        </dl>
-  
-        <p>Date created:</p>
-        <dl>
-          {{r.creation_time}}
-        </dl>
-  
-      </div>
-    </div>
-  
-    {% endfor %} -->
-    
+     
     {% for r in rules %}
       <div class="question_cards">
         <div class="over_view">
           <div class="title">
-            <li><a href="" class="open-modal" data-bs-toggle="modal" data-bs-target="#surveyDetailPopUp">{{ r.rule_title }}</a></li>
-            <!-- <a href="/loadsurvey/{{r.id}}">{{ r.rule_title }}</a> -->
+            <a href="#" class="open-modal" data-bs-toggle="modal" data-bs-target="#surveyDetailPopUp{{r.id}}">{{ r.rule_title }}</a>
           </div>
           <div class="img" style="background-color: #3498db;"></div>
         </div>
@@ -159,6 +127,8 @@
       <div class="content"></div>
     </div>
   </div>
+
+  
         
 {% endblock %}
 
