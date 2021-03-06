@@ -16,24 +16,6 @@
 {% block main_content %}
 {% load static %}
 
-  <!-- {% for r in rules %}
-    <div class="poll_div">
-      <div class = 'my_poll_title'>
-        <span class='my_poll_subject'>{{r.rule_title}}</span> 
-      </div>
-      <span class='my_poll_date'>Created at: {{r.creation_time}}</span>
-      <div class='my_poll_information'>
-        <p>Number of participant: {{r.number_of_answers}}</p>
-        {% if r.gernative %}
-        <p>Highest ranked features: </p>
-        {% endif %}
-        <p>Average time to complete: {{7}}</p>
-      </div>
-      <button class="download_button"><a>Click to download</a></button>
-      <button class="detail_button">See Details</button>
-    </div>
-    {% endfor %} -->
-
   <!-- main content should go here -->
   <div class="questions_col">
     <div class="question_nav">
@@ -71,8 +53,6 @@
           <div class="title filter">FILTER</div>
         </div>
       </div>
-  
-  
       <div class="filter_options"></div>
   
     </div>
@@ -81,9 +61,9 @@
       <div class="question_cards">
         <div class="over_view">
           <div class="title">
-            <a href="#" class="open-modal" data-bs-toggle="modal" data-bs-target="#surveyDetailPopUp{{r.id}}">{{ r.rule_title }}</a>
+            <h1>{{ r.rule_title }}</h1>
           </div>
-          <div class="img" style="background-color: #3498db;"></div>
+          <div class="img" class="open-modal" data-bs-toggle="modal" data-bs-target="#surveyDetailPopUp{{r.id}}" style="background-color: rgb(28, 145, 255)"></div>
         </div>
         <div class="detail">
           <p>Prompt of the survey:</p>
