@@ -19,6 +19,7 @@ from django import forms
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework import permissions
+from wsgiref.util import FileWrapper
 import yaml
 import json
 import csv
@@ -331,36 +332,22 @@ def my_survey(request,user_id):
     #the list of rule sets by the parent_id
     #besides the features and its values in each scenario, their should also be values
     #including poll create date and number of participants
-    # print(RuleSet.objects.filter(user_id=user_id)[0].prompt)
-
-    user_surveys = RuleSet.objects.filter(user_id=user_id)
-    folder_path = "survey/user_surveys/" + "User " + str(user_id) + "_survey "
-    for x in user_surveys:
-        if (os.path.exists(folder_path+str((x.id)+1)) != True):
-            with open(os.path.join(settings.BASE_DIR, folder_path+str((x.id))), 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(["ID", "Survey Title", "Prompt", "Number of responses", "Average time to complete survey", "Data created"])
-                writer.writerow([str(x.id), str(x.rule_title), str(x.prompt), str(x.number_of_answers), str(7), str(x.creation_time)])
-
+    
     context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'), 'user_id': user_id}
     return render(request, 'survey/my_survey.html', context)
 
-# @login_required
-# def survey_exporter(request,user_id):
-#     # exports all individual survey data to a folder called user_surveys
-#     user_surveys = RuleSet.objects.filter(user_id=user_id)
-#     file_name = "User " + str(user_id) + "_survey_"
-#     for x in user_surveys:
-#         if (os.path.exists(str(file_name)))
-#     # if (os.path.exists())
-#     folder_path = "survey/user_surveys/" + file_name
+@login_required
+def survey_exporter(request,user_id,parent_id):
+    # create a response with an attached csv file that gets written, inserting the survey information
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="survey_{id}.csv"'.format(id=parent_id)
+    user_surveys = RuleSet.objects.filter(user_id=user_id)[parent_id-1]
+    
+    writer = csv.writer(response)
+    writer.writerow(["ID", "Survey Title", "Prompt", "Number of responses", "Average time to complete survey", "Data created"])
+    writer.writerow([str(user_surveys.id), str(user_surveys.rule_title), str(user_surveys.prompt), str(user_surveys.number_of_answers), str(7), str(user_surveys.creation_time)])
 
-#     with open(os.path.join(settings.BASE_DIR, folder_path, 'w', newline='')) as file:
-#         writer = csv.writer(file)
-#         writer.writerow(["ID", "Survey Title", "Prompt", "Number of responses", "Average time to complete survey", "Data created"])
-#         for x in user_surveys:
-#             writer.writerow([str(x.id), str(x.rule_title), str(x.prompt), str(x.number_of_answers), str(7), str(x.creation_time)])
-        
+    return response
 
 # =============================
 # User created survey end
