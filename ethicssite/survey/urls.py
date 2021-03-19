@@ -24,7 +24,7 @@ urlpatterns = [
     path('logout', views.user_logout, name='logout'),
     path('loadsurvey/<int:parent_id>', views.load_survey, name='loadsurvey'),
     path('takesurvey/<int:parent_id>/<int:scenario_num>/<int:is_review>', views.get_scenario, name='takesurvey'),
-    path('savescenario/<int:scenario_id>/<int:rule_id>/<int:is_review>', views.save_scenario, name='savescenario'),
+    path('savescenario/<int:scenario_id>/<int:rule_id>/<int:is_review>/<str:survey_desc>/<str:survey_title>', views.save_scenario, name='savescenario'),
     path('review/<int:rule_id>',views.review_page,name='review'),
     path('submitsurvey',views.submit_survey,name='submitsurvey'),
     path('rules/lookup/',views.lookup_view),

@@ -267,7 +267,7 @@ def submit_survey(request):
     return redirect('/')
 
 # Save individual scenario
-def save_scenario(request,scenario_id,rule_id,is_review):
+def save_scenario(request,scenario_id,rule_id,is_review,survey_desc,survey_title):
     # if in review mode is_review == 1
 
     if not request.method == "POST": return
@@ -276,6 +276,10 @@ def save_scenario(request,scenario_id,rule_id,is_review):
         survey = Survey.objects.get(Q(user=request.user,ruleset_id=rule_id)) 
     except:
         survey = Survey(user=request.user,ruleset_id=rule_id)
+        survey.save()
+        survey.prompt = survey_title
+        survey.save()
+        survey.desc = survey_desc
         survey.save()
 
     # copy over the input valeus from request
