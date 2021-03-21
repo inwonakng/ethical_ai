@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <form id="savescenario" action="{% url 'survey:savescenario' scenario_id=scenario.id rule_id=rule.id is_review=is_review%}" method="POST">
+    <form id="savescenario" action="{% url 'survey:savescenario' scenario_id=scenario.id rule_id=rule.id is_review=is_review survey_desc=rule.prompt survey_title=rule.rule_title%}" method="POST">
         {% csrf_token %}
         <p id="prompt">{{rule.prompt}}</p>
         <div id="survey" class="question">

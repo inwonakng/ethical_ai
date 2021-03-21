@@ -54,9 +54,15 @@ def idx_view_all_questions_latest(request):
     print(context['by'])
     return render(request, "survey/all_questions.html", context)
 
-# Should view all of the surveys that this user has answered
-def idx_view_answered_questions(request):
-    context = {'ans':Survey.objects.filter(Q(user=request.user))}
+def idx_view_answered_questions_earliest(request):
+    queryset = Survey.objects.filter(Q(user=request.user))
+
+    context = {'ans':queryset.order_by('date'), 'by': 'earliest'}
+    return render(request, "survey/answered_questions.html", context)
+
+def idx_view_answered_questions_latest(request):
+    queryset = Survey.objects.filter(Q(user=request.user))
+    context = {'ans':queryset.order_by('-date'), 'by': 'ans-latest'}
     return render(request, "survey/answered_questions.html", context)
 
 def idx_view_result_analysis(request):
@@ -267,7 +273,7 @@ def submit_survey(request):
     return redirect('/')
 
 # Save individual scenario
-def save_scenario(request,scenario_id,rule_id,is_review):
+def save_scenario(request,scenario_id,rule_id,is_review,survey_desc,survey_title):
     # if in review mode is_review == 1
 
     if not request.method == "POST": return
@@ -276,6 +282,10 @@ def save_scenario(request,scenario_id,rule_id,is_review):
         survey = Survey.objects.get(Q(user=request.user,ruleset_id=rule_id)) 
     except:
         survey = Survey(user=request.user,ruleset_id=rule_id)
+        survey.save()
+        survey.prompt = survey_title
+        survey.save()
+        survey.desc = survey_desc
         survey.save()
 
     # copy over the input valeus from request

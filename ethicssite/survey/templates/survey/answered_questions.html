@@ -16,34 +16,43 @@ $(document).ready(() => {
 <div class = "questions_col">
   <div class = "question_nav">
     <div class = "basic_nav">
-      <div class = "title">RANK BY:</div>
+      <div class = "first_line">
+        <div class = "title">RANK BY:</div>
 
-      <div class = "input_wrap">
-        <input type="radio" id = "method1" name="ranking" checked>
-        <label for="method1">Earliest</label>
+        <div class = "input_wrap">
+          <form action="earliest">
+            {% if by == 'earliest' %}
+            <input type="radio" id = "earliest" name="ranking" checked onClick="javascript:this.parentNode.submit()">
+            {% else %}
+            <input type="radio" id = "earliest" name="ranking" onClick="javascript:this.parentNode.submit()">
+            {% endif %}
+            <label for="earliest">Earliest</label>
+          </form>
+        </div>
+        <div class = "input_wrap">
+          <form action="ans-latest">
+            {% if by == 'ans-latest' %}
+            <input type="radio" id = "ans-latest" name="ranking" checked onClick="javascript:this.parentNode.submit()">
+            {% else %}
+            <input type="radio" id = "ans-latest" name="ranking" onClick="javascript:this.parentNode.submit()">
+            {% endif %}
+            <label for="ans-latest">Latest</label>
+          </form>
+        </div>
       </div>
-      <div class = "input_wrap">
-        <input type="radio" id = "method2" name="ranking">
-        <label for ="method2">Latest</label>
-      </div>
-      <div class = "input_wrap">
-        <input type="radio" id = "method3" name="ranking">
-        <label for ="method3">Alphabetical</label>
-      </div>
-
-      <div class = "layout_wrap">
+      <div class = "second_line">
         <div class = "title">LAYOUT:</div>
         <div class = "input_wrap">
           <input type="radio" id = "method1" name="layout" checked>
           <label for ="method1">Cards</label>
         </div>
+        <div class = "title filter">FILTER</div>
       </div>
-
-      <div class = "title filter">FILTER</div>
     </div>
     <div class = "filter_options"></div>
 
   </div>
+  
   {% for a in ans %}
     <div class = "question_cards">
     <div class = "over_view">
