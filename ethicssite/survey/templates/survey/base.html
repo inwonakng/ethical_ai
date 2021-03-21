@@ -64,57 +64,7 @@
     {% include 'survey/register.html' %}
     {% include 'survey/login.html' %}
   {% else %}
-    {% for r in rules %}
-      <div class="modal fade text-wrap" id="surveyDetailPopUp{{r.id}}" data-bs-keyboard="false" tabindex="-1"
-          aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text-center" id="staticBackdropLabel">{{ r.rule_title }}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-break">
-              <!-- <span class='my_poll_date'>Created at: {{r.creation_time}}</span> -->
-              <div class="modal-body">
-                <div class="container-fluid">
-                  <div class="row">
-                    <div><b>Prompt:</b></div>
-                    <span>{{ r.prompt }}</span>
-                  </div>
-                  <div class="row">
-                    <div><b>Number of responses to the survey:</b></div>
-                    <span>{{ r.number_of_answers }}</span>
-                  </div>
-                  {% if r.gernative %}
-                  <div class="row">
-                    <div><b>Highest ranked features:</b></div>
-                    <span>{{ r.creation_time }}</span>
-                  </div>
-                  {% endif %}
-                  <div class="row">
-                    <div><b>Average time to complete:</b></div>
-                    <span>{{ 7 }}</span>
-                  </div>
-                  <div class="row">
-                    <div><b>Date created:</b></div>
-                    <span>{{ r.creation_time }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <a href="{% url 'survey:survey_info' user_id=r.user.id parent_id=r.id|add:"-1" %}">
-                <button type="button" class="btn btn-dark">More Info</button>
-              </a>
-              <a href="{% url 'survey:survey_exporter' user_id=r.user.id parent_id=r.id|add:"-1" %}">
-                <button type="button" class="btn btn-primary">Download Data</button>
-              </a>
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
+    
   {% endif %}
 
 </body>
