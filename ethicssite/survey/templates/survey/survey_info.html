@@ -1,0 +1,112 @@
+{% extends 'survey/side_bar.html' %}
+
+{% block script %}
+<script>
+    $(document).ready(() => {
+        if (!$(".user_area .my_survey").hasClass("selected")) {
+            $(".user_area .option").removeClass("selected");
+            $(".user_area .my_survey").addClass("selected");
+        }
+    })
+
+    $('#myModal').appendTo("body")
+</script>
+{% endblock %}
+
+{% block main_content %}
+{% load static %}
+
+<!-- main content should go here -->
+<div class="questions_col">
+    <div class="question_nav">
+        <div class="basic_nav">
+            <div class="first_line">
+                <div class="title">{{rules.rule_title}}:</div>
+                <div class="input_wrap">
+                    <form action="trending">
+                        {% if by == 'trending' %}
+                        <input type="radio" id="trending" name="ranking" checked
+                            onClick="javascript:this.parentNode.submit()">
+                        {% else %}
+                        <input type="radio" id="trending" name="ranking" onClick="javascript:this.parentNode.submit()">
+                        {% endif %}
+                        <label for="trending">Trending</label>
+                    </form>
+                </div>
+                <div class="input_wrap">
+                    <form action="latest">
+                        {% if by == 'latest' %}
+                        <input type="radio" id="latest" name="ranking" checked
+                            onClick="javascript:this.parentNode.submit()">
+                        {% else %}
+                        <input type="radio" id="latest" name="ranking" onClick="javascript:this.parentNode.submit()">
+                        {% endif %}
+                        <label for="Latest">Latest</label>
+                    </form>
+                </div>
+
+            </div>
+            <div class="second_line">
+                <div class="title">LAYOUT:</div>
+                <div class="input_wrap">
+                    <input type="radio" id="method1" name="layout" checked>
+                    <label for="method1">Cards</label>
+                </div>
+                <div class="title filter">FILTER</div>
+            </div>
+        </div>
+        <div class="filter_options"></div>
+
+    </div>
+
+    <div class="question_cards">
+        <div class="over_view">
+            <div class="title">
+                title
+            </div>
+        </div>
+        <div class="detail">
+            <p>Prompt of the survey:</p>
+            <dl>
+                prompt
+            </dl>
+            <p>Number of responses to the survey:</p>
+            <dl>
+                answer
+            </dl>
+            <p>Date created:</p>
+            <dl>
+                creation
+            </dl>
+        </div>
+    </div>
+
+</div>
+
+<!-- right column -->
+<div class="side_col">
+    <div class="side_card first" style="height:300px;">
+        <div class="trend_title" style="background-image: url({% static 'img/14035064.png' %});">
+            Most Viewed Question
+        </div>
+        <div class="content"></div>
+    </div>
+
+    <div class="side_card" style="height:500px;">
+        <div class="title">
+            Ask Your Questions
+        </div>
+        <div class="content"></div>
+    </div>
+
+    <div class="side_card last" style="height:200px;">
+        <div class="title">
+            Help Us Improve
+        </div>
+        <div class="content"></div>
+    </div>
+</div>
+
+
+
+{% endblock %}

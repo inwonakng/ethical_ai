@@ -103,6 +103,9 @@
               </div>
             </div>
             <div class="modal-footer">
+              <a href="{% url 'survey:survey_info' user_id=r.user.id parent_id=r.id|add:"-1" %}">
+                <button type="button" class="btn btn-dark">More Info</button>
+              </a>
               <a href="{% url 'survey:survey_exporter' user_id=r.user.id parent_id=r.id|add:"-1" %}">
                 <button type="button" class="btn btn-primary">Download Data</button>
               </a>

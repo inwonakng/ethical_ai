@@ -364,6 +364,16 @@ def survey_exporter(request,user_id,parent_id):
 
     return response
 
+def survey_info(request,user_id,parent_id):
+    print("gets here")
+    # print(RuleSet.objects.all())
+    # user_surveys = RuleSet.objects.all()[0]
+    
+    context = {'rules':RuleSet.objects.all()[0]}
+    
+    return render(request, 'survey/survey_info.html', context)
+    # return HttpResponseRedirect(request, 'survey/survey_info.html', context)
+
 # =============================
 # User created survey end
 # =============================
