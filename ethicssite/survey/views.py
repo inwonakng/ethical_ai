@@ -332,8 +332,13 @@ def my_survey(request,user_id):
     #the list of rule sets by the parent_id
     #besides the features and its values in each scenario, their should also be values
     #including poll create date and number of participants
-    
-    context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'), 'user_id': user_id}
+    user_specific_rules = []
+    for x in RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'):
+        user_specific_rules.append(x)
+
+    print(user_specific_rules)
+
+    context = {'rules': user_specific_rules, 'user_id': user_id}
     return render(request, 'survey/my_survey.html', context)
 
 @login_required
@@ -341,8 +346,8 @@ def survey_exporter(request,user_id,parent_id):
     # create a response with an attached csv file that gets written, inserting the survey information
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="survey_{id}.csv"'.format(id=parent_id)
-    user_surveys = RuleSet.objects.filter(user_id=user_id)[parent_id-1]
-    
+    user_surveys = RuleSet.objects.all()[parent_id]
+
     writer = csv.writer(response)
     writer.writerow(["ID", "Survey Title", "Prompt", "Number of responses", "Average time to complete survey", "Data created"])
     writer.writerow([str(user_surveys.id), str(user_surveys.rule_title), str(user_surveys.prompt), str(user_surveys.number_of_answers), str(7), str(user_surveys.creation_time)])
