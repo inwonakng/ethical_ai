@@ -2,14 +2,13 @@
 
 {% block script %}
 <script>
+    { { script | safe } }
     $(document).ready(() => {
         if (!$(".user_area .my_survey").hasClass("selected")) {
             $(".user_area .option").removeClass("selected");
             $(".user_area .my_survey").addClass("selected");
         }
     })
-
-    $('#myModal').appendTo("body")
 </script>
 {% endblock %}
 
@@ -18,69 +17,14 @@
 
 <!-- main content should go here -->
 <div class="questions_col">
-    <div class="question_nav">
-        <div class="basic_nav">
-            <div class="first_line">
-                <div class="title">{{rules.rule_title}}:</div>
-                <div class="input_wrap">
-                    <form action="trending">
-                        {% if by == 'trending' %}
-                        <input type="radio" id="trending" name="ranking" checked
-                            onClick="javascript:this.parentNode.submit()">
-                        {% else %}
-                        <input type="radio" id="trending" name="ranking" onClick="javascript:this.parentNode.submit()">
-                        {% endif %}
-                        <label for="trending">Trending</label>
-                    </form>
-                </div>
-                <div class="input_wrap">
-                    <form action="latest">
-                        {% if by == 'latest' %}
-                        <input type="radio" id="latest" name="ranking" checked
-                            onClick="javascript:this.parentNode.submit()">
-                        {% else %}
-                        <input type="radio" id="latest" name="ranking" onClick="javascript:this.parentNode.submit()">
-                        {% endif %}
-                        <label for="Latest">Latest</label>
-                    </form>
-                </div>
-
-            </div>
-            <div class="second_line">
-                <div class="title">LAYOUT:</div>
-                <div class="input_wrap">
-                    <input type="radio" id="method1" name="layout" checked>
-                    <label for="method1">Cards</label>
-                </div>
-                <div class="title filter">FILTER</div>
-            </div>
-        </div>
-        <div class="filter_options"></div>
-
+    <h1>{{ rules.rule_title }}</h1>
+    <div class="container-fluid">
+        <b>Prompt:</b><br>{{rules.prompt}}<br><br>
+        <b>Generative:</b><br>{{rules.generative}}<br><br>
+        <b>Number of responses:</b><br>{{rules.number_of_answers}}<br><br>
+        <b>Data created:</b><br>{{rules.creation_time}}<br><br>
+        <b>Download Data</b><br><a href="{% url 'survey:survey_exporter' parent_id=rules.id|add:"-1" %}">Click here to download all of the data from this survey!</a><br><br>
     </div>
-
-    <div class="question_cards">
-        <div class="over_view">
-            <div class="title">
-                title
-            </div>
-        </div>
-        <div class="detail">
-            <p>Prompt of the survey:</p>
-            <dl>
-                prompt
-            </dl>
-            <p>Number of responses to the survey:</p>
-            <dl>
-                answer
-            </dl>
-            <p>Date created:</p>
-            <dl>
-                creation
-            </dl>
-        </div>
-    </div>
-
 </div>
 
 <!-- right column -->
