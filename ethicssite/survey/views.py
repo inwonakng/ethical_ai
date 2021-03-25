@@ -339,17 +339,21 @@ def unknown_path(request, random):
 
 @login_required
 def my_survey(request,user_id):
-    #the list of rule sets by the parent_id
-    #besides the features and its values in each scenario, their should also be values
-    #including poll create date and number of participants
-    user_specific_rules = []
-    for x in RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'):
-        user_specific_rules.append(x)
+    if request.user.id != user_id:
+        messages.error(request, "You can't access someone else's survey data!")
+        return HttpResponseRedirect('/')
+    else:
+        #the list of rule sets by the parent_id
+        #besides the features and its values in each scenario, their should also be values
+        #including poll create date and number of participants
+        user_specific_rules = []
+        for x in RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'):
+            user_specific_rules.append(x)
 
-    print(user_specific_rules)
+        print(user_specific_rules)
 
-    context = {'rules': user_specific_rules, 'user_id': user_id}
-    return render(request, 'survey/my_survey.html', context)
+        context = {'rules': user_specific_rules, 'user_id': user_id}
+        return render(request, 'survey/my_survey.html', context)
 
 @login_required
 def survey_exporter(request,parent_id):
