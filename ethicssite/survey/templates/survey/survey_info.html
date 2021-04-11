@@ -1,0 +1,73 @@
+{% extends 'survey/side_bar.html' %}
+
+{% block script %}
+<script>
+    $(document).ready(() => {
+        if (!$(".user_area .my_survey").hasClass("selected")) {
+            $(".user_area .option").removeClass("selected");
+            $(".user_area .my_survey").addClass("selected");
+        }
+    });
+    $(document).ready(function() {
+       var ctx = document.getElementById('totalResponses').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Total Users', 'Total Responses'],
+                datasets: [{
+                    data: {{numberOfResponses|safe}},
+                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                    borderWidth: 1
+                }]
+            },
+        });
+    });
+</script>
+{% endblock %}
+
+{% block main_content %}
+{% load static %}
+
+<!-- main content should go here -->
+<div class="questions_col">
+    <h1>{{ rules.rule_title }}</h1>
+    <div class="container-fluid">
+        <b>Prompt:</b><br>{{rules.prompt}}<br><br>
+        <b>Generative:</b><br>{{rules.generative}}<br><br>
+        <b>Number of responses:</b><br>{{rules.number_of_answers}}<br><br>
+        <b>Data created:</b><br>{{rules.creation_time}}<br><br>
+        <b>Visualization of Data:</b><br>{{rules.creation_time}}<br>
+        <canvas id="totalResponses"></canvas>
+        <br>
+        <b>Download Data</b><br><a href="{% url 'survey:survey_exporter' parent_id=rules.id|add:"-1" %}">Click here to download all of the data from this survey!</a><br><br>
+    </div>
+</div>
+
+<!-- right column -->
+<div class="side_col">
+    <div class="side_card first" style="height:300px;">
+        <div class="trend_title" style="background-image: url({% static 'img/14035064.png' %});">
+            Most Viewed Question
+        </div>
+        <div class="content"></div>
+    </div>
+
+    <div class="side_card" style="height:500px;">
+        <div class="title">
+            Ask Your Questions
+        </div>
+        <div class="content"></div>
+    </div>
+
+    <div class="side_card last" style="height:200px;">
+        <div class="title">
+            Help Us Improve
+        </div>
+        <div class="content"></div>
+    </div>
+</div>
+
+
+
+{% endblock %}

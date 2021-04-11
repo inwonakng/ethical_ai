@@ -2,6 +2,7 @@ from django.http import HttpResponse,JsonResponse, HttpRequest, HttpResponseServ
 from django.shortcuts import render, redirect
 from .generation.Generator import Generator
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
 from .models import *
@@ -19,8 +20,10 @@ from django import forms
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework import permissions
+from wsgiref.util import FileWrapper
 import yaml
 import json
+import csv
 import os
 
 # ====================
@@ -337,12 +340,61 @@ def unknown_path(request, random):
 
 @login_required
 def my_survey(request,user_id):
-    #the list of rule sets by the parent_id
-    #besides the features and its values in each scenario, their should also be values
-    #including poll create date and number of participants
-    # print(RuleSet.objects.filter(user_id=user_id)[0].prompt)
-    context = {'rules':RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'), 'user_id': user_id}
-    return render(request, 'survey/my_survey.html', context)
+    if (user_id != request.user.id):
+        messages.error(request, "You can't access survey data that you do not own!")
+        return HttpResponseRedirect('/')
+    if request.user.id != user_id:
+        messages.error(request, "You can't access someone else's survey data!")
+        return HttpResponseRedirect('/')
+    else:
+        #the list of rule sets by the parent_id
+        #besides the features and its values in each scenario, their should also be values
+        #including poll create date and number of participants
+        user_specific_rules = []
+        for x in RuleSet.objects.filter(user_id = user_id).order_by('-creation_time'):
+            user_specific_rules.append(x)
+
+        print(user_specific_rules)
+
+        context = {'rules': user_specific_rules, 'user_id': user_id}
+        return render(request, 'survey/my_survey.html', context)
+
+@login_required
+def survey_exporter(request,parent_id):
+    # Check if user who's trying to download data owns that survey
+    if (parent_id >= len(RuleSet.objects.all()) or parent_id <= 0):
+        messages.error(request, "You can't download surveys that don't exist!")
+        return HttpResponseRedirect('/')
+    if (RuleSet.objects.all()[parent_id].user.id != request.user.id):
+        messages.error(request, "You can't access someone else's survey data!")
+        return HttpResponseRedirect('/')
+    else:
+        # create a response with an attached csv file that gets written, inserting the survey information
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="survey_{id}.csv"'.format(id=parent_id)
+        user_surveys = RuleSet.objects.all()[parent_id]
+
+        writer = csv.writer(response)
+        writer.writerow(["ID", "Survey Title", "Prompt", "Number of responses", "Average time to complete survey", "Data created"])
+        writer.writerow([str(user_surveys.id), str(user_surveys.rule_title), str(user_surveys.prompt), str(user_surveys.number_of_answers), str(7), str(user_surveys.creation_time)])
+
+        return response
+
+@login_required
+def survey_info(request,parent_id):
+    if (parent_id >= len(RuleSet.objects.all())+1 or parent_id <= 0):
+        messages.error(request, "You can't access surveys that don't exist!")
+        return HttpResponseRedirect('/')
+    if (RuleSet.objects.all()[parent_id-1].user.id != request.user.id):
+        messages.error(request, "You can't access someone else's survey data!")
+        return HttpResponseRedirect('/')
+    else:
+        user_surveys = RuleSet.objects.all()[parent_id-1]
+        numberOfResponses = []
+        numberOfResponses.append(len(User.objects.all()))
+        numberOfResponses.append(user_surveys.number_of_answers)
+        context = {'rules': user_surveys, 'numberOfResponses': numberOfResponses}
+        return render(request, 'survey/survey_info.html', context)
 
 # =============================
 # User created survey end

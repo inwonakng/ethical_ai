@@ -14,11 +14,15 @@
   <!-- let's stick with the updated bootstrap version -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-  
 
   <script type="text/javascript" src="{% static '/scripts/jquery-3.5.1.min.js' %}"></script>
   <script type="text/javascript" src="{% static '/scripts/jquery-ui.min.js' %}"></script>
-  
+
+  <!-- CDNs for ChartJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+
+  <!-- CDNs for toast notifications -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'css/toastr.min.css' %}">
 
@@ -33,10 +37,10 @@
     <li><a href="http://127.0.0.1:8000/about">About</a></li>
     <li><a href="{% url 'survey:rules' %}">Create</a></li>
     {% if not request.user.is_authenticated %}
-    <li><a href="" data-bs-toggle="modal" data-bs-target="#registerPopUp">Register</a></li>
-    <li><a href="" data-bs-toggle="modal" data-bs-target="#loginPopUp">Login</a></li>
+      <li><a href="" data-bs-toggle="modal" data-bs-target="#registerPopUp">Register</a></li>
+      <li><a href="" data-bs-toggle="modal" data-bs-target="#loginPopUp">Login</a></li>
     {% else %}
-    <li><a href="{% url 'survey:logout' %}">Logout</a></li>
+      <li><a href="{% url 'survey:logout' %}">Logout</a></li>
     {% endif %}
   </nav>
 
@@ -64,52 +68,7 @@
     {% include 'survey/register.html' %}
     {% include 'survey/login.html' %}
   {% else %}
-    {% for r in rules %}
-      <div class="modal fade text-wrap" id="surveyDetailPopUp{{r.id}}" data-bs-keyboard="false" tabindex="-1"
-          aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text-center" id="staticBackdropLabel">{{ r.rule_title }}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-break">
-              <!-- <span class='my_poll_date'>Created at: {{r.creation_time}}</span> -->
-              <div class="modal-body">
-                <div class="container-fluid">
-                  <div class="row">
-                    <div><b>Prompt:</b></div>
-                    <span>{{ r.prompt }}</span>
-                  </div>
-                  <div class="row">
-                    <div><b>Number of responses to the survey:</b></div>
-                    <span>{{ r.number_of_answers }}</span>
-                  </div>
-                  {% if r.gernative %}
-                  <div class="row">
-                    <div><b>Highest ranked features:</b></div>
-                    <span>{{ r.creation_time }}</span>
-                  </div>
-                  {% endif %}
-                  <div class="row">
-                    <div><b>Average time to complete:</b></div>
-                    <span>{{ 7 }}</span>
-                  </div>
-                  <div class="row">
-                    <div><b>Date created:</b></div>
-                    <span>{{ r.creation_time }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Download Data</button>
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
+    
   {% endif %}
 
 </body>

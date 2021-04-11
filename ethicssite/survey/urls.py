@@ -34,6 +34,8 @@ urlpatterns = [
     path('rulessample',views.rules_explain,name='rulessample'),
     path('surveyresult', views.survey_result, name="surveyresult"),
     path('mysurvey/<int:user_id>', views.my_survey, name='mysurvey'),
+    path(r'^survey_exporter/<int:parent_id>', views.survey_exporter, name="survey_exporter"),
+    path('mysurvey/info/<int:parent_id>', views.survey_info, name="survey_info"),
     path('<random>', views.unknown_path),
     # path('mturk',views.make_mturk_user,name='makemturk'),
 
