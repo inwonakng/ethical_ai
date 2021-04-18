@@ -122,7 +122,7 @@ def register(request):
         form = UserCreationForm()
         messages.error("Invalid fields!")
     return HttpResponseRedirect('/')
-    # return render(request, 'survey/base.html', {'form': form, 'registered': registered})
+    # return render(request, 'base.html', {'form': form, 'registered': registered})
 
 def confirm_user(request, userid):
     user = get_object_or_404(User, pk=userid)

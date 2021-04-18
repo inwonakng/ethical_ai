@@ -7,6 +7,7 @@ from django.conf import settings
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ethicssite.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'votingsim.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

@@ -19,5 +19,6 @@ if path not in sys.path:
     sys.path.append(path)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ethicssite.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'votingsim.settings')
 
 application = get_wsgi_application()
