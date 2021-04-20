@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="voting-result">
+    
+    <h4> Output</h4>
+    <table>
+        <tr class="theader">
+            <th>Voting Rules</th>
+            <th>Concorcet Efficiency</th>
+            <th>Group Fairness</th>
+        </tr>
+        {% for r,c,g,s in result %}
+        <tr>
+            <td>{{ r }}</td>
+            <td>{{ c }}</td>
+            <td>{{ g }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <p>
+        <b>Remark:</b> {{ comment }}
+    </p>
+    <b>Save a voting rule</b>
+    <table>
+        {% for r,c,g,s in result %}
+        {% if s %}
+        <tr>
+            <td>{{ r }}</td>
+            <td>{{ c }}</td>
+            <td>{{ g }}</td>
+            <td><a class="button">Save</a></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}

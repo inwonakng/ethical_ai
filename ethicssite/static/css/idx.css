@@ -237,43 +237,13 @@
   text-align:left;
 }
 
-.user_area .all_questions {
+.user_area .option{
   border-top: 1px solid rgb(232,232,232);
   padding: 11px;
   cursor: pointer;
 }
 
-.user_area .all_questions:hover {
-  background-color: rgb(240,240,240);
-}
-
-.user_area .continue {
-  border-top: 1px solid rgb(232,232,232);
-  padding: 11px;
-  cursor: pointer;
-}
-
-.user_area .continue:hover {
-  background-color: rgb(240,240,240);
-}
-
-.user_area .my_result {
-  border-top: 1px solid rgb(232,232,232);
-  padding: 11px;
-  cursor: pointer;
-}
-
-.user_area .my_result:hover {
-  background-color: rgb(240,240,240);
-}
-
-.user_area .my_survey {
-  border-top: 1px solid rgb(232,232,232);
-  padding: 11px;
-  cursor: pointer;
-}
-
-.user_area .my_survey:hover {
+.user_area .option:hover{
   background-color: rgb(240,240,240);
 }
 

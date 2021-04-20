@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="voting-setup">
+    
+    <h4>Input</h4>
+    <form action= "{% url 'votingsim:run_sim' %}" method="POST">{% csrf_token %}
+        <table>
+            <tr>
+                <td>
+                    <label for="no_candidates">Number of Candidates: </label>
+                </td>
+                <td>
+                    <input id="no_candidates" type="text" name="no_candidates" maxlength="100" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="group_sizes">Group Sizes (comma separated): </label>
+                </td>
+                <td>
+                    <input id="group_sizes" type="text" name="group_sizes" maxlength="100" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="sim_data_size">Simluated Data Size: </label>
+                </td>
+                <td>
+                    <input id="sim_data_size" type="text" name="sim_data_size" maxlength="100" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="conc_eff_req">Condorcet Efficiency Requirement: </label>
+                </td>
+                <td>
+                    <input id="conc_eff_req" type="text" name="conc_eff_req" maxlength="100" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="gr_fair_req">Group Fairness Requirement: </label>
+                </td>
+                <td>
+                    <input id="gr_fair_req" type="text" name="gr_fair_req" maxlength="100" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="privacy">Privacy Requirement: </label>
+                </td>
+                <td>
+                    <select name="privacy" id="privacy">
+                        <option value="low">low</option>
+                        <option value="mid">mid</option>
+                        <option value="high">high</option>
+                    </select>
+                </td>
+            </tr>
+            <tr></tr>
+        </table>
+        <input type="submit" value="Find Voting Rule"/>
+
+    </form>
+
+</div>
+
+
+
+{% endblock %}

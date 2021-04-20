@@ -1,0 +1,77 @@
+/* SETUP PAGE */
+
+div.voting-setup{
+    margin:10px 50px;
+    border:solid black;
+    border-radius: 10px;
+    min-height:400px;
+    display:flex;
+    padding:20px;
+    background-color: lightgrey;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.voting-setup form{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.voting-setup form input[type=submit]{
+    margin: 0 auto;
+}
+
+.voting-setup form a.info:hover{
+    cursor:pointer;
+}
+
+.voting-setup tr {
+    height:50px;
+}
+
+.voting-setup select{
+    width: 95%;
+    border-radius:5px;
+    height:30px;
+    background-color: white;
+}
+
+/* SETUP PAGE END */
+
+/* RESULT PAGE */
+
+.voting-result{
+    margin:10px 50px;
+    border:solid black;
+    border-radius: 10px;
+    min-height:400px;
+    display:flex;
+    padding:20px;
+    background-color: lightgrey;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.voting-result table,tr{
+    border: solid black;
+    width:70%;
+    text-align: center;
+    table-layout: fixed;
+}
+
+.voting-result .theader{
+    background-color: skyblue;
+    font-weight: bold;
+}
+
+.voting-result tr{
+    background-color: white;
+    border:solid grey;
+}
+
+.voting-result .button:hover{
+    cursor:pointer;
+}
