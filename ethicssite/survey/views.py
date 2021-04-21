@@ -217,7 +217,6 @@ def save_rule(request):
     json_data = json.loads(request.body)
 
     json_to_ruleset(json_data['data'], request.user,json_data['title'],json_data['prompt'])
-    HttpResponse(status=201)
     return redirect('/')
 
 # =============================

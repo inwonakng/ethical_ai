@@ -16,7 +16,7 @@
             <div class="question">
                 <table>
                     <tr class="top">
-                        <td>Options</td>
+                        <td>Qustion: </td>
                         {% if rule.generative %}
                             {% for attr in scenario.get_attr_names%}    
                                 <td>
@@ -25,14 +25,14 @@
                             {% endfor %}
                         {% else %}
                             <td>
-                                Explanation
+                                {{ scenario.question }}
                             </td>
                         {% endif %}
                     </tr>
                     {% for option in scenario.get_options %}
                         <tr>
                             <td>
-                                Option {{forloop.counter}}:
+                                Option {{forloop.counter}}
                             </td>
                             {% if rule.generative %}
                                 {% for attr in option.get_attributes%}    

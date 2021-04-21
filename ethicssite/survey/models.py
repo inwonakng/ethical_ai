@@ -219,6 +219,7 @@ class FeatureScore(models.Model):
 
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
+    question = models.CharField(max_length=500,default="Assign scores to the options")
 
     def object_form(self):
         return [o.object_form()
@@ -501,9 +502,9 @@ def json_to_ruleset(d,user,title,prompt):
             rule_set.badcombos.add(bad_combo)
     else:
         for v in d:
-            scen = Scenario()
+            scen = Scenario(question=v['question'])
             scen.save()
-            for i,s in enumerate(v):
+            for i,s in enumerate(v['options']):
                 op = Option()
                 op.name = 'Option '+ str(i)
                 op.text = s

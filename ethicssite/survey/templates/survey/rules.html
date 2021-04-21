@@ -9,15 +9,15 @@
   <div class = "rule-col">
     <div class = 'rules_container'>
       <div class = "prompt">
-        <h3 class="title">Create your survey outline</h3>
+        <h3 class="title">Create your survey</h3>
       </div>
       
       <div class = "options">
         {% csrf_token %} 
-        <form action="/rules/lookup"><input type="submit" value="View existing rules"></form>
+        <!-- <form action="/rules/lookup"><input type="submit" value="View existing rules"></form>
         <p>Would you like to set your own options or generate them?</p>
         <button id = "generate_rules" type="button">Generate options</button>
-        <button id = "set_rules" type="button">Set my own options</button>
+        <button id = "set_rules" type="button">Set my own options</button> -->
 
         <!-- <form action="/saverule" method='POST'>{% csrf_token %} -->
           <br>
@@ -32,17 +32,6 @@
           <textarea type="text" id="rule_prompt" class="ruleprompt" placeholder="Prompt (explanation) for your survey!"></textarea>
           <br>
           <input type="text" id="final_type" name="final_type" style="display: none;">
-
-          <div class="card-input">            
-              <div class="add_rules_card card">
-                <!-- <input class="box__file" type="file" name="files[]" id="rule_file" accept=".json"/> -->
-                <input type="file" name="files[]" class="box__file" id="rule_file">
-                <label for="rule_file"><strong>Click to choose a file</strong></label>
-                <input id="hiddenjson" style="display: none;" type="text">
-                <a id="filename"></a>
-              </div>
-          </div>
-
 
           <div class="card-input">
             <div id = "container2">

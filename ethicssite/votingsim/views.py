@@ -28,7 +28,6 @@ def show_result(request):
                         'comment':comment,
                     })
 
-
 def compute_votingrules():
     result= {'v_rules':[ 'Copeland',
                         'Maximin',
