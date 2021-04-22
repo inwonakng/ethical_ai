@@ -14,7 +14,7 @@
         </div>
 
         <form method="GET" action="/">
-          <div class = "all_questions option" onClick="javascript:this.parentNode.submit();">
+          <div class = "all_questions option" onClick="javascript:this.parentNode.submit();" style="color: #000000">
             All Questions
           </div>
         </form>
@@ -37,11 +37,11 @@
           </div>
         </form>
         <div class="option">
-          <a href="{% url 'survey:logout' %}">Log out</a>
+          <a href="{% url 'survey:logout' %}" style="color: #000000">Log out</a>
         </div>
       {% else %}
         <div class="option">
-          <a href="" data-bs-toggle="modal" data-bs-target="#loginPopUp"">Log in</a>
+          <a data-bs-toggle="modal" data-bs-target="#loginPopUp" style="color: #144261;">Log in</a>
         </div>
       {% endif %}
     </div>
