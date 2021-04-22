@@ -14,7 +14,7 @@
       
       <div class = "options">
         {% csrf_token %} 
-        <form action="/rules/lookup"><input type="submit" value="View existing rules"></form>
+        <form action="/rules/lookup"><input type="submit" style="color: #0F0F0F" value="View existing rules"></form>
         <p>Would you like to set your own options or generate them?</p>
         <button id = "generate_rules" type="button">Generate options</button>
         <button id = "set_rules" type="button">Set my own options</button>
@@ -60,7 +60,7 @@
           <br>
           <!-- i couldn't find a better way to format the data well, so here we go -->
           <!-- this is easier than using a form, because the input size should be dynamic -->
-          <input type="submit" onclick = "parse_data()" value="Save" />
+          <input type="submit" onclick = "parse_data()" style="color: #0F0F0F;" value="Save" />
           
         <!-- </form> -->
       </div>
