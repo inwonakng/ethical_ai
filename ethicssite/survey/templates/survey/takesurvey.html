@@ -11,7 +11,7 @@
 <body>
     <form id="savescenario" action="{% url 'survey:savescenario' scenario_id=scenario.id rule_id=rule.id is_review=is_review survey_desc=rule.prompt survey_title=rule.rule_title%}" method="POST">
         {% csrf_token %}
-        <p id="prompt">{{rule.prompt}}</p>
+        <p id="prompt" style="background-color: #609CE2; color: #000000">{{rule.prompt}}</p>
         <div id="survey" class="question">
             <div class="question">
                 <table>
