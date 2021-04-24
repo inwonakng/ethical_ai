@@ -22,15 +22,16 @@
         <!-- <form action="/saverule" method='POST'>{% csrf_token %} -->
           <br>
           <br>
-          Title:
+          <label for="rule_name">Title:</label>
           <br>
-          <input type="text" id="rule_name" class="ruletitle" placeholder="Title for your survey">
+          <input type="text" id="rule_name" class="ruletitle" placeholder="Title for your survey"></input>
           <br>
           <br>
-          Description:
+          <label for="rule_prompt">Description:</label>
           <br>
           <textarea type="text" id="rule_prompt" class="ruleprompt" placeholder="Prompt (explanation) for your survey!"></textarea>
           <br>
+          <label for="final_type">If I remove this, saving fails</label>
           <input type="text" id="final_type" name="final_type" style="display: none;">
 
           <div class="card-input">            
@@ -38,7 +39,6 @@
                 <!-- <input class="box__file" type="file" name="files[]" id="rule_file" accept=".json"/> -->
                 <input type="file" name="files[]" class="box__file" id="rule_file">
                 <label for="rule_file"><strong>Click to choose a file</strong></label>
-                <input id="hiddenjson" style="display: none;" type="text">
                 <a id="filename"></a>
               </div>
           </div>
