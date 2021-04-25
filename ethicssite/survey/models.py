@@ -12,7 +12,6 @@ from itertools import combinations as comb
 from survey.generation import Generator as gen
 from django.db.models import Q
 import time
-from copy import deepcopy
 
 '''User Profile models'''
 class UserProfile(models.Model):
@@ -224,16 +223,21 @@ class Scenario(models.Model):
     def object_form(self):
         return [o.object_form()
                     for o in self.options.all()]
-
+    
+    def get_scores(self):
+        return [o.score for o in self.options.all()]
+        
     def get_options(self):
         return self.options.all()
-
-    def makecopy(self):
-        new_copy = deepcopy(self)
+    
+    # There are definitely better ways of doing this. 
+    # For now, we do it manually because of the foreignkey relations
+    def copy(self):
+        new_copy = Scenario(question=self.question)
         new_copy.id = None
         new_copy.save()
         for o in self.options.all():
-            new_copy.options.add(o)
+            new_copy.options.add(o.copy())
         new_copy.save()
         return new_copy
 
@@ -256,6 +260,12 @@ class Option(models.Model):
     
     def get_attributes(self):
         return self.attributes.all()
+
+    def copy(self):
+        new_option = Option(name=self.name,text=self.text)
+        new_option.save()
+        return new_option
+
  
 # Holds ruleset ID and scenario model
 class TempScenarios(models.Model):
@@ -287,7 +297,8 @@ class RuleSet(models.Model):
     prompt = models.TextField(null=False,default='Default prompt!')
     # this field is only populated if not generative
 
-    scenarios = models.ManyToManyField("Scenario")    
+    scenarios = models.ManyToManyField("Scenario")
+
 
     '''These accessor functions are for the generator to use'''
 

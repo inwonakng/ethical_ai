@@ -14,21 +14,9 @@
         <p id="prompt">{{rule.prompt}}</p>
         <div id="survey" class="question">
             <div class="question">
+                <b>Question: {{scenario.question}}</b>
+                <br><br>
                 <table>
-                    <tr class="top">
-                        <td>Qustion: </td>
-                        {% if rule.generative %}
-                            {% for attr in scenario.get_attr_names%}    
-                                <td>
-                                    {{attr}}
-                                </td>
-                            {% endfor %}
-                        {% else %}
-                            <td>
-                                {{ scenario.question }}
-                            </td>
-                        {% endif %}
-                    </tr>
                     {% for option in scenario.get_options %}
                         <tr>
                             <td>

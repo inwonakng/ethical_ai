@@ -12,6 +12,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/rule_creation.css' %}">
 
   <link rel="stylesheet" type="text/css" href="{% static 'css/votingsim.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/survey-info.css' %}"/>
 
   <!-- let's stick with the updated bootstrap version -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -24,13 +25,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
 
+  <!-- palette.js for use in chart -->
+  <script type="text/javascript" src="{% static '/scripts/palette.js' %}" crossorigin="anonymous"></script>
+
   <!-- CDNs for toast notifications -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'css/toastr.min.css' %}">
 
   <script type="text/javascript" src="{% static '/scripts/idx_main2.js' %}"></script>
-  {% block script %}
-  {% endblock %}
 </head>
 <body>
   

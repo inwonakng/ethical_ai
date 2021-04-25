@@ -16,6 +16,13 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django import forms
+
+# for ML analysis
+from .pref_pl.egmm_mixpl import egmm_mixpl as mixpl
+from scipy.stats import rankdata
+from collections import Counter
+import numpy as np
+
 # for REST framework
 from .serializers import *
 from rest_framework import viewsets
@@ -251,7 +258,7 @@ def get_scenario(request,parent_id,scenario_num,is_review):
             scen = surv.scenarios.all()[scenario_num]
         except:
             # this creates a new scenario object with same values..
-            scen = rule.scenarios.all()[scenario_num].makecopy()
+            scen = rule.scenarios.all()[scenario_num].copy()
 
     context = {
         'rule':         rule,
@@ -287,6 +294,9 @@ def save_scenario(request,scenario_id,rule_id,is_review,survey_desc,survey_title
         survey.save()
         survey.desc = survey_desc
         survey.save()
+        seed = RuleSet.objects.get(id=rule_id)
+        seed.number_of_answers += 1
+        seed.save()
 
     # copy over the input valeus from request
     vals = list(request.POST.values())[1:]
@@ -381,25 +391,45 @@ def survey_exporter(request,parent_id):
 
 @login_required
 def survey_info(request,parent_id):
-    if (parent_id >= len(RuleSet.objects.all())+1 or parent_id <= 0):
+    bag = RuleSet.objects.filter(id=parent_id)
+    if not bag:
         messages.error(request, "You can't access surveys that don't exist!")
         return HttpResponseRedirect('/')
-    if (RuleSet.objects.all()[parent_id-1].user.id != request.user.id):
+    if bag[0].user.id != request.user.id:
         messages.error(request, "You can't access someone else's survey data!")
         return HttpResponseRedirect('/')
     else:
-        user_surveys = RuleSet.objects.all()[parent_id-1]
-        numberOfResponses = []
-        numberOfResponses.append(len(User.objects.all()))
-        numberOfResponses.append(user_surveys.number_of_answers)
-        context = {'rules': user_surveys, 'numberOfResponses': numberOfResponses}
+
+        seed_rule = bag[0]
+        score_per_scen = [[] for _ in seed_rule.scenarios.all()]
+        
+        for s in Survey.objects.filter(ruleset_id=seed_rule.id):
+            for i,scen in enumerate(s.scenarios.all()):
+                score_per_scen[i].append(scen.get_scores())
+
+        # also store the scores as rankings. high values are preferred
+        # returns ranks inside of each vote [9,2,5,0] => [1,3,2,4]
+        ranks_per_scen = rankdata(10-np.array(score_per_scen),'ordinal',axis=2)
+
+        # this is where the learned values are stored
+        gammas_per_scen = [ mixpl(s,len(s[0]),1)[0][1:].tolist()
+                            for s in score_per_scen
+                            ]
+
+        op_rank_per_scen = []
+        for s in ranks_per_scen:
+            per_scen = []
+            for i,_ in enumerate(s[0]):
+                votes = Counter(np.array(s)[:,i])
+                ranks = [votes[i+1] for i,_ in enumerate(s[0])]
+                per_scen.append(ranks)
+            op_rank_per_scen.append(per_scen)
+        context = {'rules': seed_rule, 'answer_dist': op_rank_per_scen, 'pl_gammas':gammas_per_scen}
         return render(request, 'survey/survey_info.html', context)
 
 # =============================
 # User created survey end
 # =============================
-
-
 
 # =============================
 # REST API functions start
