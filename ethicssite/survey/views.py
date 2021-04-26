@@ -424,7 +424,7 @@ def survey_info(request,parent_id):
                 ranks = [votes[i+1] for i,_ in enumerate(s[0])]
                 per_scen.append(ranks)
             op_rank_per_scen.append(per_scen)
-        context = {'rules': seed_rule, 'answer_dist': op_rank_per_scen, 'pl_gammas':gammas_per_scen}
+        context = {'rule': seed_rule, 'answer_dist': op_rank_per_scen, 'pl_gammas':gammas_per_scen}
         return render(request, 'survey/survey_info.html', context)
 
 # =============================

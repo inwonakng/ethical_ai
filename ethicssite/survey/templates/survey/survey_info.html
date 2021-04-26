@@ -11,60 +11,48 @@
 </script>
 <!-- main content should go here -->
 <div class="questions_col">
-    <h1>{{ rules.rule_title }}</h1>
+    <h1>{{ rule.rule_title }}</h1>
     <div class="container-fluid">
-        <b>Prompt:</b><br>{{rules.prompt}}<br><br>
-        <b>Generative:</b><br>{{rules.generative}}<br><br>
-        <b>Number of responses:</b><br>{{rules.number_of_answers}}<br><br>
-        <b>Data created:</b><br>{{rules.creation_time}}<br><br>
-        <b>Visualization of Data:</b><br>{{rules.creation_time}}<br>
+        <b>Prompt:</b><br>{{rule.prompt}}<br><br>
+        <b>Generative:</b><br>{{rule.generative}}<br><br>
+        <b>Number of responses:</b><br>{{rule.number_of_answers}}<br><br>
+        <b>Data created:</b><br>{{rule.creation_time}}<br><br>
+        <b>Visualization of Data:</b><br>{{rule.creation_time}}<br>
         
-        <div class="charts-container">
-            <div id="survey-results" class="chartblock">
-                <div class="chart-title">
-                    <a>Looking at distribution for Question 1 Option 1</a>
-                </div>
-                <div>
-                    <label for="question">Question: </label>
-                    <select name="question" class="question">
-                        {% for r in answer_dist %}
-                        <option value="{{forloop.counter}}">{{forloop.counter}}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="option">Option: </label>
+        <div class="display-results">
+            <div class="showoptions">
+                <b>Select question: </b>
+                <select name="question" class="question">
                     {% for r in answer_dist %}
-                        {% if forloop.counter0 == 0 %}
-                    <select name="option" class="option">
-                        {% else %}
-                    <select name="option" style="display:none" class="option">
-                        {% endif %}
-                        {% for rr in r %}
-                        <option value="{{forloop.counter}}">{{forloop.counter}}</option>
-                        {% endfor %}
-                    </select>
-                    
+                    <option value="{{forloop.counter}}">{{forloop.counter}}</option>
                     {% endfor %}
-                    
-                </div>
-                <canvas style="height:50%;"></canvas>
-            </div>
-            <div id="ml-results" class="chartblock">
-                <div class="chart-title">
-                    <a>Looking at distribution of Question 1</a>
-                </div>
-                <div>
-                    <label for="question">Question: </label>
-                    <select name="question" class="question">
-                        {% for r in pl_gammas %}
-                        <option value="{{forloop.counter}}">{{forloop.counter}}</option>
+                </select>
+                {% for q in rule.get_scenarios %}
+                <div style="display:none" class="onequestion">
+                    <b class="quesion-text">Q: {{ q.question }}</b>
+                    <ol class="options">
+                        {% for o in q.get_options %}
+                        <li>{{ o.text }}</li>
                         {% endfor %}
-                    </select>
+                    </ol>
                 </div>
-                <canvas style="height:50%;"></canvas>
+                {% endfor %}
+            </div>
+            <div class="charts-container">
+                <div id="survey-results" class="chartblock">
+                    <b>Survey data</b>
+                    <div class="manycharts"></div>
+                </div>
+                <div id="ml-results" class="chartblock">
+                    <b>ML model output</b>
+                    <div class="onechart">
+                        <canvas></canvas>
+                    </div>
+                </div>
             </div>
         </div>
         <br>
-        <b>Download Data</b><br><a href="{% url 'survey:survey_exporter' parent_id=rules.id|add:"-1" %}">Click here to download all of the data from this survey!</a><br><br>
+        <b>Download Data</b><br><a href="{% url 'survey:survey_exporter' parent_id=rule.id|add:"-1" %}">Click here to download all of the data from this survey!</a><br><br>
     </div>
 </div>
 
