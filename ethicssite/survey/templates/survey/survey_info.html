@@ -8,13 +8,16 @@
 <script>
     const survey_output = JSON.parse("{{ answer_dist }}")
     const ml_output = JSON.parse("{{ pl_gammas }}")
+    // oof... json doesn't like single quotes
+    // but can't use single quotes for django template so we have to do this
+    const voting_buf = "{{ voting_results|safe }}"
+    const voting_results = JSON.parse(voting_buf.replaceAll('\'','"'))
 </script>
 <!-- main content should go here -->
 <div class="questions_col">
     <h1>{{ rule.rule_title }}</h1>
     <div class="container-fluid">
         <b>Prompt:</b><br>{{rule.prompt}}<br><br>
-        <b>Generative:</b><br>{{rule.generative}}<br><br>
         <b>Number of responses:</b><br>{{rule.number_of_answers}}<br><br>
         <b>Data created:</b><br>{{rule.creation_time}}<br><br>
         <b>Visualization of Data:</b><br>{{rule.creation_time}}<br>
@@ -40,11 +43,12 @@
             </div>
             <div class="charts-container">
                 <div id="survey-results" class="chartblock">
-                    <b>Survey data</b>
+                    <b>Ranking distribution for Survey data</b>
                     <div class="manycharts"></div>
                 </div>
                 <div id="ml-results" class="chartblock">
-                    <b>ML model output</b>
+                    <b>Top rank prediction from ML</b>
+                    <b>PL model output</b>
                     <div class="onechart">
                         <canvas></canvas>
                     </div>

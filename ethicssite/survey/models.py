@@ -208,6 +208,10 @@ class Survey(models.Model):
     
     def get_scenarios(self):
         return self.scenarios.all()
+    
+    def num_scenarios(self):
+        return len(self.scenarios.all())
+
     def getlastindex(self):
         return len(self.scenarios.all())-1
 

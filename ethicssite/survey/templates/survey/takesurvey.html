@@ -47,15 +47,17 @@
         <div class="question">
             {% for option in scenario.get_options %}
                 <div class="question">
-                    <p class="option-score">Option {{forloop.counter}}</p>
+                    <b class="option-score">Option {{forloop.counter}}</b>
+                    <a>0</a>
                     <div class="slidecontainer">
                         <input type="range" id="slider{{forloop.counter0}}" name="slider{{forloop.counter0}}" 
-                            min="0" max="10" class="slider" value=0>
+                        min="0" max="10" class="slider" value=0>
                     </div>
+                    <a>10</a>
                 </div>
                 <!-- passing back the review boolean in hidden form -->
-                <input name="is_review" value={{is_review}} style="display: none;">
             {% endfor %}
+            <input name="is_review" value={{is_review}} style="display: none;">
         </div>
         <div class="question">
             {% if is_review == 0%}

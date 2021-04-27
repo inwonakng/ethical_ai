@@ -6,6 +6,8 @@ from joblib import load,dump
 from survey.pref_pl.egmm_mixpl import egmm_mixpl as mixpl
 from tqdm import tqdm
 import numpy as np
+from scipy.stats import rankdata
+from collections import Counter
 
 
 data = {
@@ -13,10 +15,9 @@ data = {
     'password2': 'XJLK2@dX'
 }
 
-
 '''
-Code for nuking db
-ONLY USE THIS FOR CLEANING ENTIRE SURVEY
+# Code for nuking db
+# ONLY USE THIS FOR CLEANING ENTIRE SURVEY
 
 for s in Survey.objects.all():
     s.delete()
@@ -30,6 +31,8 @@ for s in Scenario.objects.all():
 for s in Option.objects.all():
     s.delete()
 
+for u in User.objects.all():
+    u.delete()
 '''
 # scores => permutation
 # [1 3 5 5]  => [2 1 0 0]
@@ -61,10 +64,10 @@ except:
     data['email'] = 'afakeema8il@gmail.com'
     data['username'] = 'otheruser'
     form = UserForm(data)
-    creator = form.save()
-    creator.set_password('')
-    creator.is_active = True
-    creator.save()
+    otheruser = form.save()
+    otheruser.set_password('')
+    otheruser.is_active = True
+    otheruser.save()
 
 d = [
     {'question':'Who would you prefer to help the most in an accident?',
@@ -73,14 +76,17 @@ d = [
                 'A female teen',
                 'A middle aged man']
     },
-    {'question':'What breakfast food do you prefer the most?',
-    'options':[ 'Omelette',
-                'Cereal',
-                'Bagel',
-                'Oatmeal']
+    {'question':'Who would you prefer to help the most in an accident?',
+    'options':[ 'A banker',
+                'A student',
+                'A doctor',
+                'A mayor']
     },
-    {'question':'What additives do you prefer the most in coffee or tea?',
-    'options':['Sugar', 'Cream', 'Honey', 'None (plain)']
+    {'question':'Who would you prefer to help the most in an accident?',
+    'options':[ 'The mother', 
+                'The father', 
+                'The baby', 
+                'The grandparents']
     }
 ]
 

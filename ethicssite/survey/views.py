@@ -23,6 +23,9 @@ from scipy.stats import rankdata
 from collections import Counter
 import numpy as np
 
+# voting rules. Not ML but used with the ML stuff
+from survey.pref_pl.voting_rules import Borda_winner,maximin_winner,plurality_winner
+
 # for REST framework
 from .serializers import *
 from rest_framework import viewsets
@@ -402,11 +405,13 @@ def survey_info(request,parent_id):
 
         seed_rule = bag[0]
         score_per_scen = [[] for _ in seed_rule.scenarios.all()]
-        
-        for s in Survey.objects.filter(ruleset_id=seed_rule.id):
-            for i,scen in enumerate(s.scenarios.all()):
-                score_per_scen[i].append(scen.get_scores())
 
+        for s in Survey.objects.filter(ruleset_id=seed_rule.id):
+            if s.num_scenarios() == seed_rule.num_scenarios():
+                for i,scen in enumerate(s.scenarios.all()):
+                    score_per_scen[i].append(scen.get_scores())
+
+        arr = score_per_scen
         # also store the scores as rankings. high values are preferred
         # returns ranks inside of each vote [9,2,5,0] => [1,3,2,4]
         ranks_per_scen = rankdata(10-np.array(score_per_scen),'ordinal',axis=2)
@@ -416,15 +421,30 @@ def survey_info(request,parent_id):
                             for s in score_per_scen
                             ]
 
+        # parsing the rankings to get ranks for each option
         op_rank_per_scen = []
         for s in ranks_per_scen:
             per_scen = []
             for i,_ in enumerate(s[0]):
                 votes = Counter(np.array(s)[:,i])
-                ranks = [votes[i+1] for i,_ in enumerate(s[0])]
+                ranks = [votes[j+1] for j,_ in enumerate(s[0])]
                 per_scen.append(ranks)
             op_rank_per_scen.append(per_scen)
-        context = {'rule': seed_rule, 'answer_dist': op_rank_per_scen, 'pl_gammas':gammas_per_scen}
+
+
+        # calculating voting rule winners
+        
+        voting_results = [{  
+            'borda':Borda_winner(votes-1)[1].tolist(),
+            'plurality': plurality_winner(votes-1)[1].tolist(),
+            'maximin':maximin_winner(votes-1)[1].tolist()}
+                for votes in ranks_per_scen]
+
+        context = {
+            'rule': seed_rule, 
+            'answer_dist': op_rank_per_scen, 
+            'pl_gammas':gammas_per_scen,
+            'voting_results': voting_results}
         return render(request, 'survey/survey_info.html', context)
 
 # =============================

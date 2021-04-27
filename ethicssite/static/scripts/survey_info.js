@@ -70,15 +70,21 @@ function make_subcharts(area,data){
         newdiv.append(rightdiv)
         area.append(newdiv)
 
-        newdiv.find('canvas').each(function(j){
-            $(this).parent().parent().prepend('<b>Option '+(i*2+j+1)+'</b>')
-            make_chart(
-                'pie',
-                $(this).parent(),
-                'Rank ',
-                data[j])
-        })
     }
+    area.find('canvas').each(function(j){
+        parsed_data = []
+        for(i = 0; i < data.length; i++){
+            parsed_data.push(data[i][j])
+        }
+
+
+        $(this).parent().parent().prepend('<b>Rank '+(j+1)+'</b>')
+        make_chart(
+            'pie',
+            $(this).parent(),
+            'Option ',
+            parsed_data)
+    })
         
 }
     
@@ -94,6 +100,8 @@ function fill_charts(q_idx){
         ml_output[q_idx-1])
         
         // Survey Data Chart
+
+    
     make_subcharts(
         $('#survey-results .manycharts'),
         survey_output[q_idx-1])
