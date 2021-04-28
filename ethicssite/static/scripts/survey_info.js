@@ -11,9 +11,6 @@ function make_chart(chart_type,parent,col_prefix,data){
         labels.push(col_prefix + i)
     }
 
-    // parent.remove('a')
-    // parent.parent().append('<a>'+title+'</a>')
-
     // reset canvase
     parent.find('canvas').remove()
     parent.append('<canvas style="width:100%"></canvas>')
@@ -36,95 +33,125 @@ function make_chart(chart_type,parent,col_prefix,data){
         },
         options: {
             responsive: true, 
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+            legend: {display: false},
+            plugins: {
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: Math.round,
+                    font: {weight: 'bold'}
+                }
+            }
         }
     });
 }
 
-function make_subcharts(area,data){
-    // first reset
-    console.log(Math.ceil(data.length/2))
+function show_votes(area,data){
     area.children().remove()
-    for(var i = 0; i < Math.ceil(data.length/2); i++){
-        newdiv = $('<div>', {class:'charts-row'})
-        
-        leftdiv = $('<div>',{class:'smallchart'})
-        leftdiv.append(
-            $('<div>',{class:'smallframe'}).append(
-                '<canvas></canvas>'
-            )
+
+    table = $('<table>')
+
+    table.append(show_votingrule(data, 'Borda'))
+    table.append(show_votingrule(data, 'Plurality'))
+    table.append(show_votingrule(data, 'Maximin'))
+    area.append(table)
+}
+
+function show_votingrule(data, type){
+    // area.children().remove()
+    slot = $('<tr>')
+    slot.append(
+        $('<td>').html(type)
+        ).append(
+            $('<td>').html('<b>'+data[type.toLowerCase()].join(' > ')+'</b>')
         )
-        // leftdiv.find('.smallframe').append('<canvas></canvas>')
-        // leftdiv.append('<canvas></canvas>')
-        
-        newdiv.append(leftdiv)
-        console.log(i)
-        rightdiv = $('<div>',{class:'smallchart'})
-        if(i*2+1<data.length)
-            rightdiv.append($('<div>',{class:'smallframe'}).append(
-                '<canvas></canvas>'
-            )   
-        )
-            // rightdiv.find('.smallframe').append('<canvas></canvas>')    
-            // rightdiv.append('<canvas></canvas>')    
-        newdiv.append(rightdiv)
-        area.append(newdiv)
 
-    }
-    area.find('canvas').each(function(j){
-        parsed_data = []
-        for(i = 0; i < data.length; i++){
-            parsed_data.push(data[i][j])
-        }
-
-
-        $(this).parent().parent().prepend('<b>Rank '+(j+1)+'</b>')
-        make_chart(
-            'pie',
-            $(this).parent(),
-            'Option ',
-            parsed_data)
-    })
-        
+    return slot
 }
     
 function fill_charts(q_idx){
     $('.showoptions').find('.onequestion').hide()
     $('.showoptions').find('.onequestion').eq(q_idx-1).show()
     
+    $('#survey-results select').hide()
+    $('#survey-results select').eq(q_idx-1).show()    
+
+    shared_legend(ml_output[q_idx-1].length)
+
     // ML chart
     make_chart(
         'pie',
         $('#ml-results .onechart'),
         'Option ',
         ml_output[q_idx-1])
-        
-        // Survey Data Chart
 
-    
-    make_subcharts(
-        $('#survey-results .manycharts'),
-        survey_output[q_idx-1])
-            
+    make_chart(
+        'pie',
+        $('#survey-results .onechart'),
+        'Option ',
+        survey_output[q_idx-1][0]
+    )
 }
 
+function shared_legend(len){
+    labels = []
+    data = []
+    for(i = 0; i < len; i++){
+        labels.push('Option '+(i+1))
+        data.push('')
+    }
+
+    ctx = $('.shared-legend canvas')[0].getContext('2d')
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data:data,
+                backgroundColor: get_color('cb-Set1',len,'80'),
+                borderColor: get_color('cb-Set1',len,'FF'),
+                borderWidth: 1,
+                hidden:true
+            }]
+        },
+        options:{
+            maintainAspectRatio: false,
+        }
+    });
+}
 
 // ========================
 // ==========MAIN==========
 // ========================
 
 $(document).ready(() => {
-    if (!$(".user_area .my_survey").hasClass("selected")) {
+    if (!$(".user_area .my_survey").hasClass("selected")){
         $(".user_area .option").removeClass("selected");
-        $(".user_area .my_survey").addClass("selected");
-    }
+        $(".user_area .my_survey").addClass("selected"); }
     fill_charts(1)
+    show_votes($('#show-votes .raw-data'),survey_voting_results[0])
+    show_votes($('#show-votes .ml-data'),pl_voting_results[0])
 });
 
 // ========================
 // ======INPUT EVENTS======
 // ========================
-
-$(document).on('change','select',function(){
+$(document).on('change','select.question',function(){
     fill_charts($(this).val())
+})
+
+$(document).on('change','select.option',function(){
+    make_chart(
+        'pie',
+        $('#survey-results .onechart'),
+        'Option ',
+        survey_output[$('select.question').val()-1][$(this).val()-1]
+    )
+})
+
+$(document).on('change','select.voting-rule',function(){
+    idx = $('select.question').val()-1
+    show_votes($('#show-votes'),survey_voting_results[idx])
+    show_votes($('#show-votes .ml-data'),pl_voting_results[idx])
 })

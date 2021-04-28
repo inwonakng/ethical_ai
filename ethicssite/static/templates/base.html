@@ -22,8 +22,11 @@
   <script type="text/javascript" src="{% static '/scripts/jquery-ui.min.js' %}"></script>
 
   <!-- CDNs for ChartJS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" /> -->
+  
+  <script type="text/javascript" src="{% static '/scripts/chartjs-plugin-datalabels.js' %}"></script>
 
   <!-- palette.js for use in chart -->
   <script type="text/javascript" src="{% static '/scripts/palette.js' %}" crossorigin="anonymous"></script>
@@ -37,7 +40,7 @@
 <body>
   
   <nav>
-    <li><a href="http://127.0.0.1:8000/">Ethical Voting Platform</a></li>
+    <li><a href="http://127.0.0.1:8000/">Voting Platform</a></li>
     <li><a href="http://127.0.0.1:8000/about">About</a></li>
     <li><a href="{% url 'survey:rules' %}">Create</a></li>
     <li><a href="{% url 'votingsim:start' %}">Try Voting Rules</a></li>

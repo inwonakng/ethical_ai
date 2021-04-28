@@ -25,6 +25,7 @@ import numpy as np
 
 # voting rules. Not ML but used with the ML stuff
 from survey.pref_pl.voting_rules import Borda_winner,maximin_winner,plurality_winner
+from .pref_pl.pl_voting import *
 
 # for REST framework
 from .serializers import *
@@ -433,18 +434,24 @@ def survey_info(request,parent_id):
 
 
         # calculating voting rule winners
-        
         voting_results = [{  
-            'borda':Borda_winner(votes-1)[1].tolist(),
-            'plurality': plurality_winner(votes-1)[1].tolist(),
-            'maximin':maximin_winner(votes-1)[1].tolist()}
+            'borda':(np.argsort(-Borda_winner(votes-1)[1])+1).tolist(),
+            'plurality': (np.argsort(-plurality_winner(votes-1)[1])+1).tolist(),
+            'maximin':(np.argsort(-maximin_winner(votes-1)[1])+1).tolist()}
                 for votes in ranks_per_scen]
+        
+        pl_voting = [{
+            'borda':(PL_Borda(np.array(g))[1]+1).tolist(),
+            'plurality':(PL_plurality(np.array(g))[1]+1).tolist(),
+            'maximin':(PL_maximin(np.array(g))[1]+1).tolist()}   
+                for g in gammas_per_scen]
 
         context = {
             'rule': seed_rule, 
             'answer_dist': op_rank_per_scen, 
             'pl_gammas':gammas_per_scen,
-            'voting_results': voting_results}
+            'survey_voting_results': voting_results,
+            'pl_voting_results': pl_voting}
         return render(request, 'survey/survey_info.html', context)
 
 # =============================

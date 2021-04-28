@@ -5,25 +5,29 @@
 }
 
 .chartblock{
-    padding:10px;
+    padding-top:10px;
     /* flex:1; */
     display:flex;
     align-items: center;
     flex-direction: column;
     width:50%;
-    min-height:500px;
 }
 
 .charts-container{
     display:flex;
     width:100%;
+    /* height:320px; */
 }
 
 .showoptions{
+    display: flex;
     background: aliceblue;
     border: rgb(84, 175, 175) 1px solid;
     padding: 15px;
     border-radius: 10px;
+    width: 100%;
+    align-items: center;
+    flex-direction:column;
 }
 
 .onequestion ol{
@@ -40,6 +44,7 @@
 }
 
 .manycharts{
+    padding:10px;
     display:flex;
     flex-direction:column;
     width:100%;
@@ -64,5 +69,49 @@
 
 .onechart{
     width:100%;
-    height:100%;
+    /* height:280px; */
+    padding-bottom: 10px;
+}
+
+.voting-results{
+    display: flex;
+    background: aliceblue;
+    border: rgb(84, 175, 175) 1px solid;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    align-items: center;
+    flex-direction:column;
+    margin-top:10px;
+}
+
+.shared-legend{
+    width:100%;
+    height:50px;
+    margin-top: 10px;
+    margin-bottom: -20px;
+}
+
+#show-votes{
+    display:flex;
+    border:rgb(41, 106, 136) solid 1px;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    background-color: rgb(221, 221, 221);
+}
+
+.voteranks{
+    margin:10px;
+}
+
+.voting-outer{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.voteranks td{
+    border: black solid 1px;
+    padding: 3px 20px;
 }

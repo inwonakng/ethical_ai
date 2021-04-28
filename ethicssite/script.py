@@ -70,19 +70,19 @@ except:
     otheruser.save()
 
 d = [
-    {'question':'Who would you prefer to help the most in an accident?',
+    {'question':'Who would you help first in an accident?',
     'options':[ 'A young boy', 
                 'An old lady', 
                 'A female teen',
                 'A middle aged man']
     },
-    {'question':'Who would you prefer to help the most in an accident?',
+    {'question':'Who would you help first in an accident?',
     'options':[ 'A banker',
                 'A student',
                 'A doctor',
                 'A mayor']
     },
-    {'question':'Who would you prefer to help the most in an accident?',
+    {'question':'Who would you help first in an accident?',
     'options':[ 'The mother', 
                 'The father', 
                 'The baby', 
