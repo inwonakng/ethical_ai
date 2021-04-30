@@ -418,7 +418,7 @@ def survey_info(request,parent_id):
         ranks_per_scen = rankdata(10-np.array(score_per_scen),'ordinal',axis=2)
 
         # this is where the learned values are stored
-        gammas_per_scen = [ mixpl(s,len(s[0]),1)[0][1:].tolist()
+        gammas_per_scen = [ (100*mixpl(s,len(s[0]),1)[0][1:]).tolist()
                             for s in score_per_scen
                             ]
 

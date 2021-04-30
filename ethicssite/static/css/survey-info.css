@@ -16,7 +16,7 @@
 .charts-container{
     display:flex;
     width:100%;
-    /* height:320px; */
+    height:400px;
 }
 
 .showoptions{
@@ -69,7 +69,7 @@
 
 .onechart{
     width:100%;
-    /* height:280px; */
+    height:90%;
     padding-bottom: 10px;
 }
 

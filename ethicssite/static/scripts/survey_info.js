@@ -35,12 +35,19 @@ function make_chart(chart_type,parent,col_prefix,data){
             responsive: true, 
             maintainAspectRatio: false,
             legend: {display: false},
+
             plugins: {
                 datalabels: {
+                    color:'#000',
+                    display:true,
                     anchor: 'end',
-                    align: 'top',
-                    formatter: Math.round,
-                    font: {weight: 'bold'}
+                    align: 'start',
+                    formatter: function(value){return Math.round(value)+'%'},
+                    offset: 2,
+                    font: {
+                        weight: 'bold',
+                        size: 18,
+                    }
                 }
             }
         }
