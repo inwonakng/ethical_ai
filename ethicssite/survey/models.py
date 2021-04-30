@@ -12,7 +12,6 @@ from itertools import combinations as comb
 from survey.generation import Generator as gen
 from django.db.models import Q
 import time
-from copy import deepcopy
 
 '''User Profile models'''
 class UserProfile(models.Model):
@@ -209,6 +208,10 @@ class Survey(models.Model):
     
     def get_scenarios(self):
         return self.scenarios.all()
+    
+    def num_scenarios(self):
+        return len(self.scenarios.all())
+
     def getlastindex(self):
         return len(self.scenarios.all())-1
 
@@ -219,20 +222,26 @@ class FeatureScore(models.Model):
 
 class Scenario(models.Model):
     options = models.ManyToManyField('Option')
+    question = models.CharField(max_length=500,default="Assign scores to the options")
 
     def object_form(self):
         return [o.object_form()
                     for o in self.options.all()]
-
+    
+    def get_scores(self):
+        return [o.score for o in self.options.all()]
+        
     def get_options(self):
         return self.options.all()
-
-    def makecopy(self):
-        new_copy = deepcopy(self)
+    
+    # There are definitely better ways of doing this. 
+    # For now, we do it manually because of the foreignkey relations
+    def copy(self):
+        new_copy = Scenario(question=self.question)
         new_copy.id = None
         new_copy.save()
         for o in self.options.all():
-            new_copy.options.add(o)
+            new_copy.options.add(o.copy())
         new_copy.save()
         return new_copy
 
@@ -255,6 +264,12 @@ class Option(models.Model):
     
     def get_attributes(self):
         return self.attributes.all()
+
+    def copy(self):
+        new_option = Option(name=self.name,text=self.text)
+        new_option.save()
+        return new_option
+
  
 # Holds ruleset ID and scenario model
 class TempScenarios(models.Model):
@@ -271,9 +286,7 @@ class RuleSet(models.Model):
     choice_categs = models.ManyToManyField('ListCateg')
     range_categs = models.ManyToManyField('RangeCateg')
     badcombos = models.ManyToManyField('BadCombo')
-    # generative_survey = models.OneToManyField('Survey') # ISSUE OneToMany (get this working) or ManyToMany
-    # # https://stackoverflow.com/questions/6928692/how-to-express-a-one-to-many-relationship-in-django
-
+    
     same_categories = models.IntegerField(null=True, default=2)
     creation_time = models.DateTimeField(auto_now = True)
     number_of_answers = models.IntegerField(null=True, default=0)
@@ -286,9 +299,12 @@ class RuleSet(models.Model):
     prompt = models.TextField(null=False,default='Default prompt!')
     # this field is only populated if not generative
 
-    scenarios = models.ManyToManyField("Scenario")    
+    scenarios = models.ManyToManyField("Scenario")
 
+    def get_scenarios(self):
+        return list(self.scenarios.all())
     '''These accessor functions are for the generator to use'''
+
 
     def num_scenarios(self):
         return len(self.scenarios.all())
@@ -501,9 +517,9 @@ def json_to_ruleset(d,user,title,prompt):
             rule_set.badcombos.add(bad_combo)
     else:
         for v in d:
-            scen = Scenario()
+            scen = Scenario(question=v['question'])
             scen.save()
-            for i,s in enumerate(v):
+            for i,s in enumerate(v['options']):
                 op = Option()
                 op.name = 'Option '+ str(i)
                 op.text = s

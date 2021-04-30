@@ -1,46 +1,114 @@
 {% extends 'survey/side_bar.html' %}
 
-{% block script %}
-<script>
-    $(document).ready(() => {
-        if (!$(".user_area .my_survey").hasClass("selected")) {
-            $(".user_area .option").removeClass("selected");
-            $(".user_area .my_survey").addClass("selected");
-        }
-    });
-    $(document).ready(function() {
-       var ctx = document.getElementById('totalResponses').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Total Users', 'Total Responses'],
-                datasets: [{
-                    data: {{numberOfResponses|safe}},
-                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
-                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
-                    borderWidth: 1
-                }]
-            },
-        });
-    });
-</script>
-{% endblock %}
-
 {% block main_content %}
 {% load static %}
+<script type="text/javascript" src="{% static '/scripts/survey_info.js' %}"></script>
 
+<!-- storing variables to be used in js -->
+<script>
+    const survey_output = JSON.parse("{{ answer_dist }}")
+    const ml_output = JSON.parse("{{ pl_gammas }}")
+    // oof... json doesn't like single quotes
+    // but can't use single quotes for django template so we have to do this
+    const s_voting_buf = "{{ survey_voting_results|safe }}"
+    const survey_voting_results = JSON.parse(s_voting_buf.replaceAll('\'','"'))
+
+    const p_voting_buf = "{{ pl_voting_results|safe }}"
+    const pl_voting_results = JSON.parse(p_voting_buf.replaceAll('\'','"'))
+</script>
 <!-- main content should go here -->
 <div class="questions_col">
-    <h1>{{ rules.rule_title }}</h1>
+    <h1>{{ rule.rule_title }}</h1>
     <div class="container-fluid">
-        <b>Prompt:</b><br>{{rules.prompt}}<br><br>
-        <b>Generative:</b><br>{{rules.generative}}<br><br>
-        <b>Number of responses:</b><br>{{rules.number_of_answers}}<br><br>
-        <b>Data created:</b><br>{{rules.creation_time}}<br><br>
-        <b>Visualization of Data:</b><br>{{rules.creation_time}}<br>
-        <canvas id="totalResponses"></canvas>
+        <b>Prompt:</b><br>{{rule.prompt}}<br>
+        <b>Number of responses:</b><br>{{rule.number_of_answers}}<br>
+        <b>Data created:</b><br>{{rule.creation_time}}<br><br>
+        
+        <div class="display-results">
+            <div class="showoptions">
+                <div>
+                    <label for="question">Select question: </label>
+                    <select name="question" class="question">
+                        {% for r in answer_dist %}
+                        <option value="{{forloop.counter}}">{{forloop.counter}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% for q in rule.get_scenarios %}
+                <div style="display:none" class="onequestion">
+                    <b class="quesion-text">Q: {{ q.question }}</b>
+                    <ol class="options">
+                        {% for o in q.get_options %}
+                        <li>{{ o.text }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="shared-legend">
+                <canvas></canvas>
+            </div>
+            <div class="charts-container">
+                <div id="survey-results" class="chartblock">
+                    <b>Ranking distribution for Survey data</b>
+                    <div class="onechart">
+                        <canvas></canvas>
+                    </div>
+                    <div>
+                        Ranked  
+                        {% for r in answer_dist %}
+                        <select class="option">
+                            {% for o in r %}
+                                {% if forloop.counter == 1%}
+                            <option value={{forloop.counter}}>{{forloop.counter}}st</option>
+                                {% elif forloop.counter == 2%}
+                            <option value={{forloop.counter}}>{{forloop.counter}}nd</option>
+                                {% elif forloop.counter == 3%}
+                            <option value={{forloop.counter}}>{{forloop.counter}}rd</option>
+                                {% else %}
+                            <option value={{forloop.counter}}>{{forloop.counter}}th</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div id="ml-results" class="chartblock">
+                    <b>Predicted for first place</b>
+                    <div class="onechart">
+                        <canvas></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="voting-results">
+                <b>Results from applying rankings to voting rules</b>
+                <div>
+                    Voting rule:
+                    <select class="voting-rule">
+                        <option value="Plurality">Plurality</option>
+                        <option value="Borda">Borda</option>
+                        <option value="Maximin">Maximin</option>
+                    </select>
+                </div>
+                <div id="show-votes">
+                    <div class="voting-outer">
+                        <b>Voting from survey data</b>
+                        <div class="raw-data voteranks">
+                            
+                        </div>
+                    </div>
+                    <div class="voting-outer">
+                        <b>Voting from ML output</b>
+                        <div class="ml-data voteranks">
+    
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <br>
-        <b>Download Data</b><br><a href="{% url 'survey:survey_exporter' parent_id=rules.id|add:"-1" %}">Click here to download all of the data from this survey!</a><br><br>
+        <b>Download Data</b><br><a href="{% url 'survey:survey_exporter' parent_id=rule.id|add:"-1" %}">Click here to download all of the data from this survey!</a><br><br>
     </div>
 </div>
 

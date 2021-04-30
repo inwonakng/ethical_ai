@@ -14,25 +14,13 @@
         <p id="prompt" style="background-color: #609CE2; color: #000000">{{rule.prompt}}</p>
         <div id="survey" class="question">
             <div class="question">
+                <b>Question: {{scenario.question}}</b>
+                <br><br>
                 <table>
-                    <tr class="top">
-                        <td>Options</td>
-                        {% if rule.generative %}
-                            {% for attr in scenario.get_attr_names%}    
-                                <td>
-                                    {{attr}}
-                                </td>
-                            {% endfor %}
-                        {% else %}
-                            <td>
-                                Explanation
-                            </td>
-                        {% endif %}
-                    </tr>
                     {% for option in scenario.get_options %}
                         <tr>
                             <td>
-                                Option {{forloop.counter}}:
+                                Option {{forloop.counter}}
                             </td>
                             {% if rule.generative %}
                                 {% for attr in option.get_attributes%}    
@@ -59,15 +47,17 @@
         <div class="question">
             {% for option in scenario.get_options %}
                 <div class="question">
-                    <p class="option-score">Option {{forloop.counter}}</p>
+                    <b class="option-score">Option {{forloop.counter}}</b>
+                    <a>0</a>
                     <div class="slidecontainer">
                         <input type="range" id="slider{{forloop.counter0}}" name="slider{{forloop.counter0}}" 
-                            min="0" max="10" class="slider" value=0>
+                        min="0" max="10" class="slider" value=0>
                     </div>
+                    <a>10</a>
                 </div>
                 <!-- passing back the review boolean in hidden form -->
-                <input name="is_review" value={{is_review}} style="display: none;">
             {% endfor %}
+            <input name="is_review" value={{is_review}} style="display: none;">
         </div>
         <div class="question">
             {% if is_review == 0%}

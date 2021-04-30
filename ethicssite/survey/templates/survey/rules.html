@@ -9,15 +9,14 @@
   <div class = "rule-col">
     <div class = 'rules_container'>
       <div class = "prompt">
-        <h3 class="title">Create your survey outline</h3>
+        <h3 class="title">Create your survey</h3>
       </div>
       
       <div class = "options">
         {% csrf_token %} 
-        <form action="/rules/lookup"><input type="submit" style="color: #0F0F0F" value="View existing rules"></form>
         <p>Would you like to set your own options or generate them?</p>
         <button id = "generate_rules" type="button">Generate options</button>
-        <button id = "set_rules" type="button">Set my own options</button>
+        <button id = "set_rules" type="button">Set my own options</button> -->
 
         <!-- <form action="/saverule" method='POST'>{% csrf_token %} -->
           <br>
@@ -34,23 +33,11 @@
           <label for="final_type">If I remove this, saving fails</label>
           <input type="text" id="final_type" name="final_type" style="display: none;">
 
-          <div class="card-input">            
-              <div class="add_rules_card card">
-                <!-- <input class="box__file" type="file" name="files[]" id="rule_file" accept=".json"/> -->
-                <input type="file" name="files[]" class="box__file" id="rule_file">
-                <label for="rule_file"><strong>Click to choose a file</strong></label>
-                <a id="filename"></a>
-              </div>
-          </div>
-
-
           <div class="card-input">
             <div id = "container2">
             </div>
             <div class="custom_rules_card card"><p class="p_card">Add more questions</p></div>
           </div>
-          
-          
           
           <div id = "container3">
           </div>
@@ -67,6 +54,4 @@
     </div>
   </div>
 </div>
-
-
 {% endblock %}
