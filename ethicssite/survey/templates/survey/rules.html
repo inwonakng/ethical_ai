@@ -14,7 +14,6 @@
       
       <div class = "options">
         {% csrf_token %} 
-        <!-- <form action="/rules/lookup"><input type="submit" value="View existing rules"></form>
         <p>Would you like to set your own options or generate them?</p>
         <button id = "generate_rules" type="button">Generate options</button>
         <button id = "set_rules" type="button">Set my own options</button> -->
@@ -22,15 +21,16 @@
         <!-- <form action="/saverule" method='POST'>{% csrf_token %} -->
           <br>
           <br>
-          Title:
+          <label for="rule_name">Title:</label>
           <br>
-          <input type="text" id="rule_name" class="ruletitle" placeholder="Title for your survey">
+          <input type="text" id="rule_name" class="ruletitle" placeholder="Title for your survey"></input>
           <br>
           <br>
-          Description:
+          <label for="rule_prompt">Description:</label>
           <br>
           <textarea type="text" id="rule_prompt" class="ruleprompt" placeholder="Prompt (explanation) for your survey!"></textarea>
           <br>
+          <label for="final_type">If I remove this, saving fails</label>
           <input type="text" id="final_type" name="final_type" style="display: none;">
 
           <div class="card-input">
@@ -38,8 +38,6 @@
             </div>
             <div class="custom_rules_card card"><p class="p_card">Add more questions</p></div>
           </div>
-          
-          
           
           <div id = "container3">
           </div>
@@ -49,13 +47,11 @@
           <br>
           <!-- i couldn't find a better way to format the data well, so here we go -->
           <!-- this is easier than using a form, because the input size should be dynamic -->
-          <input type="submit" onclick = "parse_data()" value="Save" />
+          <input type="submit" onclick = "parse_data()" style="color: #0F0F0F;" value="Save" />
           
         <!-- </form> -->
       </div>
     </div>
   </div>
 </div>
-
-
 {% endblock %}

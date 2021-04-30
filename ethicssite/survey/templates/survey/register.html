@@ -17,25 +17,25 @@
                     {% csrf_token %}
                     <fieldset class="form-group" style="text-align:left">
                         <label for="email">Email</label>
-                        <input class="form-control" id="reg_email" name="email" placeholder="Enter your email" value=""
+                        <input id="email" class="form-control" id="reg_email" name="email" placeholder="Enter your email" value=""
                             size="50" autofocus />
                     </fieldset>
 
                     <fieldset class="form-group" style="text-align:left">
-                        <label for="username">Username</label>
-                        <input class="form-control" id="reg_username" name="username" placeholder="Enter your username"
+                        <label for="reg_username">Username</label>
+                        <input id="reg_username" class="form-control" name="username" placeholder="Enter your username"
                             value="" size="50" />
                     </fieldset>
 
                     <fieldset class="form-group" style="text-align:left">
-                        <label for="password1">Password</label>
-                        <input type="password" class="form-control" id="reg_password" name="password1"
+                        <label for="reg_password1">Password</label>
+                        <input id="reg_password1" type="password" class="form-control" name="password1"
                             placeholder="Enter your password" value="" size="50" />
                     </fieldset>
 
                     <fieldset class="form-group " style="text-align:left">
-                        <label for="password2">Confirm Password</label>
-                        <input type="password" class="form-control" id="reg_password" name="password2"
+                        <label for="reg_password2">Confirm Password</label>
+                        <input id="reg_password2" type="password" class="form-control" name="password2"
                             placeholder="Confirm your password" value="" size="50" />
                     </fieldset>
                     <button type="submit" class="btn btn-success" style="margin-top:28px;height:36px;width:92px;">Register</button>

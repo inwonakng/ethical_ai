@@ -21,36 +21,36 @@
     <div class="question_nav">
       <div class="basic_nav">
         <div class="first_line">
-          <div class="title">RANK BY:</div>
-          <div class="input_wrap">
+          <div class="title" style="color: #000000">RANK BY:</div>
+          <div class = "input_wrap">
             <form action="trending">
               {% if by == 'trending' %}
-              <input type="radio" id="trending" name="ranking" checked onClick="javascript:this.parentNode.submit()">
+              <input type="radio" id = "trending" name="ranking" checked onClick="javascript:this.parentNode.submit()"></input>
               {% else %}
-              <input type="radio" id="trending" name="ranking" onClick="javascript:this.parentNode.submit()">
+              <input type="radio" id = "trending" name="ranking" onClick="javascript:this.parentNode.submit()"></input>
               {% endif %}
-              <label for="trending">Trending</label>
+              <label for="trending" style="color: #000000">Trending</label>
             </form>
           </div>
-          <div class="input_wrap">
+          <div class = "input_wrap">
             <form action="latest">
               {% if by == 'latest' %}
-              <input type="radio" id="latest" name="ranking" checked onClick="javascript:this.parentNode.submit()">
+              <input type="radio" id = "latest" name="ranking" checked onClick="javascript:this.parentNode.submit()"></input>
               {% else %}
-              <input type="radio" id="latest" name="ranking" onClick="javascript:this.parentNode.submit()">
+              <input type="radio" id = "latest" name="ranking" onClick="javascript:this.parentNode.submit()"></input>
               {% endif %}
-              <label for="Latest">Latest</label>
+              <label for="latest" style="color: #000000">Latest</label>
             </form>
           </div>
   
         </div>
         <div class="second_line">
-          <div class="title">LAYOUT:</div>
+          <div class="title" style="color: #000000">LAYOUT:</div>
           <div class="input_wrap">
             <input type="radio" id="method1" name="layout" checked>
-            <label for="method1">Cards</label>
+            <label for="method1" style="color: #000000">Cards</label>
           </div>
-          <div class="title filter">FILTER</div>
+          <div class="title filter" style="color: #000000">FILTER</div>
         </div>
       </div>
       <div class="filter_options"></div>
@@ -87,7 +87,7 @@
   <!-- right column -->
   <div class="side_col">
     <div class="side_card first" style="height:300px;">
-      <div class="trend_title" style="background-image: url({% static 'img/14035064.png' %});">
+      <div class = "trend_title" style = "background-color: black; background-image: url({% static 'img/14035064.png' %});">
         Most Viewed Question
       </div>
       <div class="content"></div>
