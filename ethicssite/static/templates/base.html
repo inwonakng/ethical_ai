@@ -43,7 +43,7 @@
     <li><a href="http://127.0.0.1:8000/">Voting Platform</a></li>
     <li><a href="http://127.0.0.1:8000/about">About</a></li>
     <li><a href="{% url 'survey:rules' %}">Create</a></li>
-    <li><a href="{% url 'votingsim:start' %}">Try Voting Rules</a></li>
+    <li><a href="">Try Voting Rules</a></li>
     {% if not request.user.is_authenticated %}
       <li><a href="" data-bs-toggle="modal" data-bs-target="#registerPopUp">Register</a></li>
       <li><a href="" data-bs-toggle="modal" data-bs-target="#loginPopUp">Login</a></li>

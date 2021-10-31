@@ -9,6 +9,7 @@ import numpy as np
 from scipy.stats import rankdata
 from collections import Counter
 
+print('ok')
 
 data = {
     'password1': 'XJLK2@dX',
@@ -44,9 +45,6 @@ for u in User.objects.all():
 # example:
 # def clean_sco(scores):
 
-
-    
-
 try:
     creator = User.objects.get(username = "user")
 except:
@@ -54,7 +52,7 @@ except:
     data['username'] = 'user'
     form = UserForm(data)
     creator = form.save()
-    creator.set_password('user')
+    creator.set_password('password')
     creator.is_active = True
     creator.save()
 

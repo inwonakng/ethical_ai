@@ -22,12 +22,12 @@ LOGIN_URL = '/login'
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'SECRET_KEY_PLACEHOLDER'
+SECRET_KEY = 'ob6l+bz=k@@owvlmu$3ua-@%pv$5g2$*m8eczmknb7d*wwqypy'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,9 +87,9 @@ WSGI_APPLICATION = 'ethicssite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysqldb',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'ethical_db',
+        'USER': 'ethical_admin',
+        'PASSWORD': '?MoNoreRe$$etPW9xz',
         'OPTIONS': {
             # Tell MySQLdb to connect with 'utf8mb4' character set
             'charset': 'utf8mb4',

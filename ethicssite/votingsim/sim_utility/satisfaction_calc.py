@@ -1,6 +1,6 @@
 import numpy as np
 from time import time
-# functions for generating preference profiles
+#%% functions for generating preference profiles
 def permutation(lst):
     """
     function to create permutations of a given list
@@ -40,7 +40,7 @@ def gen_pref_profile(N,m):
         votes.append(gen_random_vote(m))
     return np.array(votes)
 
-# functions for calculating winners (multiwinner version)
+#%% functions for calculating winners (multiwinner version)
 # TODO: Need to write a multi-round version (have function as parameters)
     
 def Copeland_winner(votes):
@@ -321,3 +321,23 @@ def Consistency_efficiency(voting_rule, N=250, m=6, profiles=1000):
                     # print("Alternative %d. Comparison %d takes %lf s, cnt_v = %d"%(w, cnt, toc-tic, cnt_v))
         print("profiles = %d, Comparisons = %d, Consistent = %d"%(profiles, cnt, cnt_v))
     return 0
+
+#%%
+
+def main():
+    print("Consistency efficiency results for m = 6")
+    # print("Copeland")
+    # Consistency_efficiency(Copeland_winner)
+    # print("STV")
+    # Consistency_efficiency(STV_winner, profiles = 100)
+    print("maximin")
+    Consistency_efficiency(maximin_winner, profiles = 100, N=1000)
+
+    # print("Condorcet efficiency results for m = 8")
+    # print("STV")
+    # Condorcet_efficiency(STV_winner)
+    # print("Borda")
+    # Condorcet_efficiency(Borda_winner)
+    
+if __name__ == "__main__":
+    main()
