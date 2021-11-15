@@ -66,20 +66,29 @@ def run_simulation(request):
     voting_ef = round(np.mean(EFF, axis=0)[0] ,3)
     
     return JsonResponse({
-            'tabledata':{
-                # The display names go in columns
-                'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness', 
-                            # 'Consistency', 'Monotonicity'
-                            ],
-                # The values go in rows
-                'rows': [
-                    ['Copeland',    '1.00',     voting_uf],
-                    ['Maximin',     '1.00',     voting_uf],
-                    ['Borda',       voting_ef,     voting_uf],
-                    ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                    ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                ]
-            },
+            'display':[
+
+                # if we are displaying more than one privacy value, 
+                # we simply add to this list with the value for privacy instead of 'sample'
+                {
+                    'privacy': 'sample',
+                    'tabledata':{
+                        # The display names go in columns
+                        'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness', 
+                                    # 'Consistency', 'Monotonicity'
+                                    ],
+                        # The values go in rows
+                        'rows': [
+                            ['Copeland',    '1.00',     voting_uf],
+                            ['Maximin',     '1.00',     voting_uf],
+                            ['Borda',       voting_ef,     voting_uf],
+                            ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
+                            ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
+                        ]
+                    }
+                    
+                },
+            ],
             'remark': 'No traditional or newly designed voting rules empirically satisfy the requirements.',
             'learned_models':[
                 {'name': 'LVR1',
