@@ -30,7 +30,8 @@ def run_simulation(request):
                         'gr_fair_req':      0.80,
                         'conc_eff_req':     0.95,
                         'privacy_req':      'low',
-                        'sim_runtime':      'mid',}
+                        'sim_runtime':      'mid',
+                        'is_sample':        'true'}
     
     input_keys = ['no_candidates,''group_ratio','gr_fair_req', 'privacy_req','sim_runtime',
                   'consistency', 'neutrality', 'monotonicity']
