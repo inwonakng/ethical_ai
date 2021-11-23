@@ -1,14 +1,11 @@
-# Spring Semester TODO:
-### Convert the app to frontend/backend separate!
-- After some tries with the views, I came to the conclusion that it would be easier to turn the django backend to provide the json for the javascript frontend to consume.
-- learning from last semester, we will discuss this early on, and make a decision and stick to it.
-- already the django template is getting messy, and our application needs to be able to display more complex analysis screens in the future, which will result in a lot of bloated code.
-- We can do this parellely, if anyone wants to take a crack at setting up a react/vue frontend application.
-## Pages to finish:
-- My survey
-- My taken survey
-- Survey Review page at the end
+# Overview
 
+This is a part of the crowdsourcing application the team at RPI have been developing. 
+This app contains features to randomly generate/share surveys as well as recording the outcomes.
+The main application is currently going through a re-write to improve on user interactibility.
+
+It also conaints the necessary APIs for the voting-rule demo. 
+Those files can be found under `ethicssite/ethicssite/votingsim`
 
 
 # CODING STYLE GUIDE
