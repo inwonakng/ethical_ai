@@ -76,15 +76,20 @@ def run_simulation(request):
                     'privacy': 'sample',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
-                        'rows': [
-                            ['Copeland',    '1.00',     voting_uf],
-                            ['Maximin',     '1.00',     voting_uf],
-                            ['Borda',       voting_ef,     voting_uf],
-                            ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                            ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                        ],
+                        'rows': {
+                            'traditional': [
+                                ['Copeland',    '1.00',     voting_uf],
+                                ['Maximin',     '1.00',     voting_uf],
+                                ['Borda',       voting_ef,     voting_uf],
+                            ],
+                            'learned': [
+                                ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
+                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
+                            ]                        
+                        },
                         'remark': 'No traditional or newly designed voting rules empirically satisfy the requirements.',
-                    }}]
+                    }
+                    }]
     else:  # If this case, we only return the traditional output
         print('surprise!!')
         tables = [{
@@ -92,41 +97,53 @@ def run_simulation(request):
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
                         # The values go in rows
-                        'rows': [
-                            ['Copeland',    '1.00',     voting_uf],
-                            ['Maximin',     '1.00',     voting_uf],
-                            ['Borda',       voting_ef,     voting_uf],
-                            ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                            ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                        ],
+                        'rows': {
+                            'traditional': [
+                                ['Copeland',    '1.00',     voting_uf],
+                                ['Maximin',     '1.00',     voting_uf],
+                                ['Borda',       voting_ef,     voting_uf],
+                            ],
+                            'learned': [
+                                ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
+                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
+                            ],
+                        },
                         'remark': 'Low privacy results',      
-                    }      
+                    },
                 },
                 {
                     'privacy': 'low',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
-                        'rows': [
-                            ['Copeland',    '1.00',     voting_uf],
-                            ['Maximin',     '1.00',     voting_uf],
-                            ['Borda',       voting_ef,     voting_uf],
-                            ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                            ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                        ],
+                        'rows': {
+                            'traditional': [
+                                ['Copeland',    '1.00',     voting_uf],
+                                ['Maximin',     '1.00',     voting_uf],
+                                ['Borda',       voting_ef,     voting_uf],
+                            ],
+                            'learned': [
+                                ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
+                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
+                            ],
+                        },
                         'remark': 'Low privacy results.'
-                    }
+                    },
                 },
                 {
                     'privacy': 'mid',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
-                        'rows': [
-                            ['Copeland',    '1.00',     voting_uf],
-                            ['Maximin',     '1.00',     voting_uf],
-                            ['Borda',       voting_ef,     voting_uf],
-                            ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                            ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                        ],
+                        'rows': {
+                            'traditional': [
+                                ['Copeland',    '1.00',     voting_uf],
+                                ['Maximin',     '1.00',     voting_uf],
+                                ['Borda',       voting_ef,     voting_uf],
+                            ],
+                            'learned': [
+                                ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
+                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
+                            ],
+                        },
                         'remark': 'Mid privacy results.'
                     }
                 },
@@ -134,17 +151,19 @@ def run_simulation(request):
                     'privacy': 'high',
                     'tabledata':{
                         # The display names go in columns
-                        'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness', 
-                                    # 'Consistency', 'Monotonicity'
-                                    ],
+                        'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
                         # The values go in rows
-                        'rows': [
-                            ['Copeland',    '1.00',     voting_uf],
-                            ['Maximin',     '1.00',     voting_uf],
-                            ['Borda',       voting_ef,     voting_uf],
-                            ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                            ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                        ],
+                        'rows': {
+                            'traditional': [
+                                ['Copeland',    '1.00',     voting_uf],
+                                ['Maximin',     '1.00',     voting_uf],
+                                ['Borda',       voting_ef,     voting_uf],
+                            ],
+                            'learned': [
+                                ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
+                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
+                            ]
+                        },
                         'remark': 'Mid privacy results.',
                     },
                     },
