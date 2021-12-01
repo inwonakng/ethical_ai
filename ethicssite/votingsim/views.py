@@ -22,7 +22,9 @@ def run_simulation(request):
     print('ethicalapp: im here')
     # return JsonResponse('ok',safe=False)
 
+    # If the user does not fill out some inputs, the key will simply not exist in the 'input' variable
     input = json.loads(request.body.decode())
+
 
     print(input)
 
