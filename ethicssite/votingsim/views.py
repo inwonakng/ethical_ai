@@ -93,7 +93,7 @@ def run_simulation(request):
     else:  # If this case, we only return the traditional output
         print('surprise!!')
         tables = [{
-                    'privacy': 'sample',
+                    'privacy': 'none',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
                         # The values go in rows
@@ -108,7 +108,7 @@ def run_simulation(request):
                                 ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
                             ],
                         },
-                        'remark': 'Low privacy results',      
+                        'remark': 'Low privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.',      
                     },
                 },
                 {
@@ -126,7 +126,7 @@ def run_simulation(request):
                                 ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
                             ],
                         },
-                        'remark': 'Low privacy results.'
+                        'remark': 'Low privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.'
                     },
                 },
                 {
@@ -144,7 +144,7 @@ def run_simulation(request):
                                 ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
                             ],
                         },
-                        'remark': 'Mid privacy results.'
+                        'remark': 'Mid privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.'
                     }
                 },
                 {
@@ -164,7 +164,7 @@ def run_simulation(request):
                                 ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
                             ]
                         },
-                        'remark': 'Mid privacy results.',
+                        'remark': 'Mid privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.',
                     },
                     },
             ]
