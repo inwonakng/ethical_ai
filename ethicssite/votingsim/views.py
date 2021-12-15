@@ -35,7 +35,8 @@ def run_simulation(request):
                         'conc_eff_req':     0.95,
                         'privacy_req':      'low',
                         'sim_runtime':      'mid',
-                        'is_sample':        'true'}
+                        'is_sample':        'true',
+                        'output_type':      'traditional'}
     
     input_keys = ['no_candidates,''group_ratio','gr_fair_req', 'privacy_req','sim_runtime',
                   'consistency', 'neutrality', 'monotonicity']
@@ -47,21 +48,6 @@ def run_simulation(request):
         z = 1-z
     n1 = int(20*z)
     n2 = 20 - n1
-    
-    # generate fair voting rules
-    
-    df = gen_dataset(n1, n2, m)
-    xgboost_all, beta, uf, eff, sw = learn_voting_rule(df, n1, n2, m) 
-    uf = 1-(n2)/(n1+n2) * uf
-    srt_lvr = np.argsort(np.abs(uf-input['gr_fair_req']))
-    lvr1 = xgboost_all[srt_lvr[0]]
-    lvr2 = xgboost_all[srt_lvr[1]]
-    
-    base = f'{settings.BASE_DIR}/votingsim'
-
-    lvr1_bin = codecs.encode(pickle.dumps(lvr1),'base64').decode()
-    lvr2_bin = codecs.encode(pickle.dumps(lvr2),'base64').decode()
-
 
     # get info for other voting rules
     
@@ -71,61 +57,67 @@ def run_simulation(request):
     voting_ef = round(np.mean(EFF, axis=0)[0] ,3)
     
 
-    if len(input) < 4:  # If this case, we only return the traditional output
+    if input['output-type'] == 'traditional':  # If this case, we only return the traditional output
         tables = [{
                     'privacy': 'sample',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
-                        'rows': {
-                            'traditional': [
+                        'rows': [
                                 ['Copeland',    '1.00',     voting_uf],
                                 ['Maximin',     '1.00',     voting_uf],
                                 ['Borda',       voting_ef,     voting_uf],
-                            ],
-                            'learned': [
-                                ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                            ]                        
-                        },
+                        ],
                         'remark': 'No traditional or newly designed voting rules empirically satisfy the requirements.',
                     }
                     }]
+
+        
+        return JsonResponse({
+                    'display':tables
+                },safe=False)
     else:  # If this case, we only return the traditional output
+        
+        # Only in this case generate fair voting rules
+        
+        df = gen_dataset(n1, n2, m)
+        xgboost_all, beta, uf, eff, sw = learn_voting_rule(df, n1, n2, m) 
+        uf = 1-(n2)/(n1+n2) * uf
+        srt_lvr = np.argsort(np.abs(uf-input['gr_fair_req']))
+        lvr1 = xgboost_all[srt_lvr[0]]
+        lvr2 = xgboost_all[srt_lvr[1]]
+        
+        base = f'{settings.BASE_DIR}/votingsim'
+
+        lvr1_bin = codecs.encode(pickle.dumps(lvr1),'base64').decode()
+        lvr2_bin = codecs.encode(pickle.dumps(lvr2),'base64').decode()
+
         print('surprise!!')
         tables = [{
                     'privacy': 'none',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
                         # The values go in rows
-                        'rows': {
-                            'traditional': [
+                        'rows':[ 
                                 ['Copeland',    '1.00',     voting_uf],
                                 ['Maximin',     '1.00',     voting_uf],
                                 ['Borda',       voting_ef,     voting_uf],
-                            ],
-                            'learned': [
                                 ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
                                 ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                            ],
-                        },
-                        'remark': 'Low privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.',      
+                        ],
+                        'remark': 'No privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.',      
                     },
                 },
                 {
                     'privacy': 'low',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
-                        'rows': {
-                            'traditional': [
+                        'rows': [
                                 ['Copeland',    '1.00',     voting_uf],
                                 ['Maximin',     '1.00',     voting_uf],
                                 ['Borda',       voting_ef,     voting_uf],
-                            ],
-                            'learned': [
                                 ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
-                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                            ],
-                        },
+                                ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],   
+                        ],
                         'remark': 'Low privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.'
                     },
                 },
@@ -133,17 +125,13 @@ def run_simulation(request):
                     'privacy': 'mid',
                     'tabledata':{
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
-                        'rows': {
-                            'traditional': [
+                        'rows': [
                                 ['Copeland',    '1.00',     voting_uf],
                                 ['Maximin',     '1.00',     voting_uf],
                                 ['Borda',       voting_ef,     voting_uf],
-                            ],
-                            'learned': [
                                 ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
                                 ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                            ],
-                        },
+                        ],
                         'remark': 'Mid privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.'
                     }
                 },
@@ -153,33 +141,30 @@ def run_simulation(request):
                         # The display names go in columns
                         'columns': ['Voting Rule','Condorcet Efficiency','Group Fairness'],
                         # The values go in rows
-                        'rows': {
-                            'traditional': [
+                        'rows': [
                                 ['Copeland',    '1.00',     voting_uf],
                                 ['Maximin',     '1.00',     voting_uf],
                                 ['Borda',       voting_ef,     voting_uf],
-                            ],
-                            'learned': [
                                 ['LVR1',        round(eff[srt_lvr[0]], 3),     round(uf[srt_lvr[0]], 3) ],
                                 ['LVR2',        round(eff[srt_lvr[1]], 3),     round(uf[srt_lvr[1]], 3) ],
-                            ]
-                        },
+                        ],
                         'remark': 'Mid privacy results.\nNo traditional or newly designed voting rules empirically satisfy the requirements.',
                     },
-                    },
+                },
             ]
+
+        return JsonResponse({
+                    'display':tables,
+                    'learned_models':[
+                        {'name': 'LVR1',
+                        'type':'xgboost',
+                        'raw_data':lvr1_bin},
+                        {'name': 'LVR2',
+                        'type':'xgboost',
+                        'raw_data':lvr2_bin}
+                    ]
+                },safe=False)
     
-    return JsonResponse({
-            'display':tables,
-            'learned_models':[
-                {'name': 'LVR1',
-                'type':'xgboost',
-                'raw_data':lvr1_bin},
-                {'name': 'LVR2',
-                'type':'xgboost',
-                'raw_data':lvr2_bin}
-            ]
-        },safe=False)
 
 @csrf_exempt
 def get_sampleoutput(request):
